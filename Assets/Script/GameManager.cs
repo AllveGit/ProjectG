@@ -22,24 +22,21 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         // 플레이어를 생성합니다. PhotonNetwork.Instancte로 생성해야만 네트워크 통신을 할 수 있습니다.
         if(playerPrefab == null)
-            Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+            Debug.LogError("플레이어 프리팹이 NULL 입니다.'", this);
         else
         {
             // 씬이 새로로드되어 GameManager가 새로 생성되어도 이미 생성한 플레이어가 있는지 체크합니다.
             if (PlayerManager.localPlayerInstance == null)
             {
-                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
+                Debug.LogFormat("플레이어를 생성합니다.", Application.loadedLevelName);
                 PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
             }
             else
-                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                Debug.LogFormat("플레이어가 이미 로드 되었습니다.{0}", SceneManagerHelper.ActiveSceneName);
         }
     }
 
     #region Photon Callbacks
-    /// <summary>
-    /// 사용자가 방에서 나갔을때 호출 됩니다.
-    /// </summary>
     public override void OnLeftRoom()
     {
         SceneManager.LoadScene(0);
@@ -48,33 +45,30 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         // 다른 player가 접속될때 현재 방인원수의 따라 새로 맵이 로드됩니다.
-        Debug.LogFormat("OnPlayerEnteredRoom() {0}", newPlayer.NickName);
+        Debug.LogFormat("다른 플레이어가 참가하였습니다() {0}", newPlayer.NickName);
 
         // 자신이 마스터 클라이언트일 경우만(방장)
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient);
+            Debug.LogFormat("방장이 방에 참가하였습니다.{0}", PhotonNetwork.IsMasterClient);
             LoadArena();
         }
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.LogFormat("OnPlayerLeftRoom() {0}", otherPlayer.NickName);
+        Debug.LogFormat("다른 플레이어가 나갔습니다() {0}", otherPlayer.NickName);
 
         // 자신이 마스터 클라이언트일 경우만(방장)
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient);
+            Debug.LogFormat("방장이 방에서 나갔습니다.{0}", PhotonNetwork.IsMasterClient);
             LoadArena();
         }
     }
 
     #endregion
 
-    /// <summary>
-    /// 방에서 나가는 처리를 위해 wrap한 메소드입니다.
-    /// </summary>
     #region Public Methods
     public void LeaveRoom()
     {

@@ -67,7 +67,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+        Debug.Log("마스터 서버에 연결되었습니다.");
 
         if (isConnected)
             PhotonNetwork.JoinRandomRoom();
@@ -84,16 +84,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Room 참가에 실패했을시 호출되는 Callback함수입니다.
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRooom });
+        Debug.Log("랜덤 방 참가에 실패하여 OnJoinRandomRoom 호출되었습니다.");
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = maxPlayersPerRooom;
+        PhotonNetwork.CreateRoom(null, roomOptions);
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+        Debug.Log("랜덤 방 참가에 성공하여 OnJoinedRoom 호출되었습니다.");
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            Debug.Log("We load the Room for 1");
+            Debug.Log("1인용 맵을 로드합니다.");
             PhotonNetwork.LoadLevel("RoomFor1");
         }
     }
