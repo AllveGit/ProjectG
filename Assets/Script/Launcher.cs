@@ -57,9 +57,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarningFormat("연결 종료되었습니다.", cause);
-
-        progressLabel.SetActive(false);
-        controlPanel.SetActive(true);
     }
 
     public override void OnJoinedLobby()
@@ -76,7 +73,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
             Debug.Log("1인용 맵을 로드합니다.");
-            PhotonNetwork.LoadLevel("RoomFor1");
+            PhotonNetwork.LoadLevel("RoomFor3");
         }
     }
 
