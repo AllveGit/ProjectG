@@ -16,14 +16,11 @@ public class PlayerAnimatorManager : MonoBehaviourPun
         animator = GetComponent<Animator>();
         if (!animator)
             Debug.LogError("PlayerAnimator is Missing Animator Component", this);
-
-
     }
     void Update()
     {
         if (photonView.IsMine == false && PhotonNetwork.IsConnected == true)
             return;
-
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");

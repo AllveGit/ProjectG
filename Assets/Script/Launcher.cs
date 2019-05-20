@@ -9,11 +9,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     /// <summary>
     /// Game Verision 변수입니다.
     /// </summary>
-    string strGameVersion = "1";
+    string gameVersion = "1";
 
     [Tooltip("한 방당 최대로 접속할 수 있는 유저의 숫자입니다.")]
     [SerializeField]
-    private byte maxPlayersPerRooom = 4;
+    private byte maxPlayersPerRoom = 4;
 
     [Tooltip("InputFiled와 플레이 버튼이 들어가있는 Panel 입니다.")]
     [SerializeField]
@@ -42,7 +42,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.GameVersion = strGameVersion;
+            PhotonNetwork.GameVersion = gameVersion;
             PhotonNetwork.ConnectUsingSettings();
         }
     }
@@ -56,7 +56,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarningFormat("연결 종료되었습니다.", cause);
+        Debug.LogWarningFormat("서버와의 연결이 종료되었습니다.", cause);
     }
 
     public override void OnJoinedLobby()
@@ -68,7 +68,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("랜덤 방 참가에 성공하여 OnJoinedRoom 호출되었습니다.");
+        Debug.Log("랜덤 방 참가에 성공했습니다.");
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
@@ -79,10 +79,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("랜덤 방 참가에 실패하여 OnJoinRandomRoom 호출되었습니다.");
+        Debug.Log("랜덤 방 참가에 실패했습니다.");
 
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = maxPlayersPerRooom;
+        roomOptions.MaxPlayers = maxPlayersPerRoom;
+
+        Debug.Log("새 방을 생성합니다.");
         PhotonNetwork.CreateRoom(null, roomOptions);
     }
     #endregion

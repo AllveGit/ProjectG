@@ -6,13 +6,12 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-//이 스크립트를 컴포넌트에 추가할시 자동으로 아래 컴포넌트를 추가합니다 존재하지않을시 에러를 표시합니다.
+// 이 스크립트를 컴포넌트에 추가할시 자동으로 아래 컴포넌트를 추가합니다 존재하지않을시 에러를 표시합니다.
 [RequireComponent(typeof(InputField))]
 public class PlayerNameInputField : MonoBehaviour
 {
     // 사용자 이름을 저장할 PlayerPrefab의 키 입니다.
     const string playerNamePrefKey = "PlayerName";
-
 
     private void Start()
     {
@@ -33,7 +32,6 @@ public class PlayerNameInputField : MonoBehaviour
 
         // Network 상 플레이어 이름을 설정합니다.
         PhotonNetwork.NickName = defaultName;
-       
     }
 
     public void SetPlayerName(string value)

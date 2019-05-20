@@ -1607,8 +1607,8 @@ MonoBehaviour:
   beamPrefab: {fileID: 7042126172895929540, guid: 327b623250c878b4f88de49e4016734d,
     type: 3}
   beamFirePos: {fileID: 6843582883595522682}
-  fHealth: 1
-  fLaunchWaitTime: 0.5
+  playerHealth: 1
+  launchWaitTime: 0.5
 --- !u!114 &6386558190656300459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1634,7 +1634,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 309968e1f01a57544b40f439684d199f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vTarget: {fileID: 6468847356228146003}
+  targetObject: {fileID: 0}
+  followSpeed: 8
   vLocalCameraPos: {x: 0, y: 7, z: -5}
   vAddLookAt: {x: 0, y: 2, z: 0}
 --- !u!143 &5588340267283740063
