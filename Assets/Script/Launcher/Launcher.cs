@@ -72,8 +72,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            Debug.Log("1인용 맵을 로드합니다.");
-            PhotonNetwork.LoadLevel("RoomFor3");
+            Debug.Log("Match을 로드합니다.");
+            PhotonNetwork.LoadLevel("Match");
         }
     }
 

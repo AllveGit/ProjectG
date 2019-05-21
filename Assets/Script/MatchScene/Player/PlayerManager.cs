@@ -8,15 +8,12 @@ using Photon.Pun.Demo.PunBasics;
 
 public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interface 구현.
 {
-    public static GameObject localPlayerInstance;
-
+    //플레이어 총알 프리팹입니다.
     [SerializeField]
-    private GameObject beamPrefab = null;
+    private GameObject beamPrefab;
+    // 플레이어가 총알을 발사하는 프리팹입니다.
     [SerializeField]
-    private GameObject beamFirePos = null;
-
-    // 플레이어 체력
-    public float playerHealth = 1f;
+    private GameObject beamFirePos;
 
     // 발사가 가능 여부를 체크하는 변수 입니다. true : 발사 가능.
     private bool launchable = true;
@@ -24,6 +21,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
     // 발사 쿨타임
     [SerializeField]
     private float launchWaitTime = 0.5f;
+
+
+    // 플레이어 체력
+    public float playerHealth = 1f;
 
     #region IPunOvervable
     // 데이터를 전송하는 CallBack 함수입니다 무조건 PhotonView Observed Compenents에 넣어야만 작동합니다.
@@ -46,31 +47,25 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
 
     private void Awake()
     {
-        if (photonView.IsMine)
-            PlayerManager.localPlayerInstance = gameObject;
-
         if (beamPrefab == null)
             Debug.LogError("PlayerManager beamPrefab 변수가 초기화 되지 않았습니다.");
         if (beamFirePos == null)
             Debug.LogError("PlayerManager beamFirPos 변수가 초기화 되지 않았습니다.");
-
-        // 새로운 플레이어가 들어올때마다 맵 레벨이 바뀌기 때문에 로컬 플레이어가 씬 전환으로 삭제되는걸 방지합니다.
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        PlayerCamera _cameraWork = gameObject.GetComponent<PlayerCamera>();
+        PlayerCamera PlayerCamera = gameObject.GetComponent<PlayerCamera>();
 
-        if (_cameraWork != null)
+        if (PlayerCamera != null)
         {
-            _cameraWork.targetObject = this.gameObject;
+            PlayerCamera.targetObject = this.gameObject;
 
             if (photonView.IsMine)
-                _cameraWork.OnTargeting();
+                PlayerCamera.OnTargeting();
         }
         else
-            Debug.LogError("<Color=Red><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+            Debug.LogError("PlayerPrefab에 PlayerCamera Component가 없습니다.!", this);
     }
 
     private void Update()

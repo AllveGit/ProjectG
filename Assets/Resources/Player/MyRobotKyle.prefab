@@ -1607,8 +1607,8 @@ MonoBehaviour:
   beamPrefab: {fileID: 7042126172895929540, guid: 327b623250c878b4f88de49e4016734d,
     type: 3}
   beamFirePos: {fileID: 6843582883595522682}
-  playerHealth: 1
   launchWaitTime: 0.5
+  playerHealth: 1
 --- !u!114 &6386558190656300459
 MonoBehaviour:
   m_ObjectHideFlags: 0
