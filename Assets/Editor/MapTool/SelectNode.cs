@@ -11,6 +11,11 @@ public class SelectNode : EditorWindow
 
     public static MapData mapInfo { get { return mapData; } }
 
+    Texture2D BGTexture;
+
+    Rect BGSection;
+    Rect MainSection;
+
     NodeState m_State = NodeState.NODE_SPACE;
 
     public GameObject spacePrefab;
@@ -47,10 +52,26 @@ public class SelectNode : EditorWindow
         waterMaterial = Resources.Load<Material>("MapTool/Material/Water");
 
         mapData = (MapData)ScriptableObject.CreateInstance(typeof(MapData));
+
+        BGTexture = Resources.Load<Texture2D>("MapTool/MapToolBG");
     }
 
     private void OnGUI()
     {
+        BGSection.x = 0;
+        BGSection.y = 0;
+        BGSection.width = Screen.width;
+        BGSection.height = 150;
+
+        GUI.DrawTexture(BGSection, BGTexture);
+
+        MainSection.x = 0;
+        MainSection.y = 150;
+        MainSection.width = Screen.width;
+        MainSection.height = Screen.height - 150;
+
+        GUILayout.BeginArea(MainSection);
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("NodeState");
         m_State = (NodeState)EditorGUILayout.EnumPopup(m_State);
@@ -124,10 +145,7 @@ public class SelectNode : EditorWindow
             SaveData();
         }
 
-        //if (GUILayout.Button("LOAD", GUILayout.Height(30)))
-        //{
-
-        //}
+        GUILayout.EndArea();
     }
 
     void SaveData()

@@ -4,6 +4,11 @@ using UnityEditor;
 
 public class CreateGrid : EditorWindow
 {
+    Texture2D BGTexture;
+
+    Rect BGSection;
+    Rect MainSection;
+
     int Width = 0;
     int Height = 0;
 
@@ -17,7 +22,8 @@ public class CreateGrid : EditorWindow
 
     private void OnEnable()
     {
-        
+
+        BGTexture = Resources.Load<Texture2D>("MapTool/MapToolBG");
     }
 
     private void OnGUI()
@@ -28,6 +34,20 @@ public class CreateGrid : EditorWindow
     //맵툴 GUI 렌더
     void RenderGUI()
     {
+        BGSection.x = 0;
+        BGSection.y = 0;
+        BGSection.width = Screen.width;
+        BGSection.height = 80;
+
+        GUI.DrawTexture(BGSection, BGTexture);
+
+        MainSection.x = 0;
+        MainSection.y = 80;
+        MainSection.width = Screen.width;
+        MainSection.height = Screen.height - 80;
+
+        GUILayout.BeginArea(MainSection);
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Grid Width ");
         Width = EditorGUILayout.IntField(Width);
@@ -42,5 +62,7 @@ public class CreateGrid : EditorWindow
         {
             FindObjectOfType<GridManager>().SettingGrid(Width, Height);
         }
+
+        GUILayout.EndArea();
     }
 }

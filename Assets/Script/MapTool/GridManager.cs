@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    Texture2D BGTexture;
+
+    Rect BGSection;
+    Rect MainSection;
+
     private GameObject[] m_GridArr;
     private GameObject GridNode;
 
@@ -17,6 +22,14 @@ public class GridManager : MonoBehaviour
 
     public void SettingGrid(int _Width, int _Height)
     {
+        if(transform.childCount > 0)
+        {
+            for(int i = transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+        }
+
         GridNode = Resources.Load<GameObject>("MapTool/GridNode");
 
         Width = _Width;
