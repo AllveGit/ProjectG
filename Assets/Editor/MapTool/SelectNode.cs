@@ -157,6 +157,7 @@ public class SelectNode : EditorWindow
         datapath = datapath + DataName + ".asset";
         AssetDatabase.CreateAsset(mapData, datapath);
 
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
