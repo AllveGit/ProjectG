@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayButtonScript : MonoBehaviour
+public class MatchButtonFolding : MonoBehaviour
 {
     private RectTransform playerButtonMaskRT = null;
 

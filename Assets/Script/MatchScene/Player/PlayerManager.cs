@@ -99,7 +99,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
     {
         launchable = false;
 
-        GameObject BeamObject = PhotonNetwork.Instantiate(beamPrefab.name, beamFirePos.transform.position, beamFirePos.transform.rotation);
+        GameObject BeamObject = PhotonNetwork.Instantiate("Player/" + beamPrefab.name, beamFirePos.transform.position, beamFirePos.transform.rotation);
         yield return new WaitForSeconds(launchWaitTime);
 
         launchable = true;
