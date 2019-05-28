@@ -22,7 +22,6 @@ public class CreateGrid : EditorWindow
 
     private void OnEnable()
     {
-
         BGTexture = Resources.Load<Texture2D>("MapTool/MapToolBG");
     }
 

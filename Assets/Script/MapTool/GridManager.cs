@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    Texture2D BGTexture;
-
-    Rect BGSection;
-    Rect MainSection;
-
     private GameObject[] m_GridArr;
     private GameObject GridNode;
 
