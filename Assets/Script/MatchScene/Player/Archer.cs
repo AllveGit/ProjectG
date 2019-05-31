@@ -8,7 +8,7 @@ public class Archer : BasePlayer
     {
     }
 
-    public override void Death()
+    public override void OnPlayerDeath()
     {
     }
 
@@ -19,15 +19,20 @@ public class Archer : BasePlayer
     
     void Start()
     {
-        
+        playerCamera.TargetObject = this.gameObject;
+
+        if (photonView.IsMine)
+        {
+            playerCamera.IsTargeting = true;
+        }
     }
     void Update()
     {
-        Move();
+        MoveCalculate();
     }
 
     private void FixedUpdate()
     {
-        MoveRotation();
+        RotateCalculate();
     }
 }

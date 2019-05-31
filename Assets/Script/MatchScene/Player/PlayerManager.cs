@@ -59,10 +59,10 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
 
         if (PlayerCamera != null)
         {
-            PlayerCamera.targetObject = this.gameObject;
+            PlayerCamera.TargetObject = this.gameObject;
 
             if (photonView.IsMine)
-                PlayerCamera.OnTargeting();
+                PlayerCamera.IsTargeting = true;
         }
         else
             Debug.LogError("PlayerPrefab에 PlayerCamera Component가 없습니다.!", this);
