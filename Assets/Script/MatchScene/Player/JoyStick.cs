@@ -10,6 +10,11 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
     private Image jsImg;
     private Vector3 inputVector;
 
+    public float Horizontal { get => inputVector.x; }
+    public float Vertical { get => inputVector.y; }
+
+    public Vector3 MovementAmount { get => new Vector3(Horizontal, 0.0f, Vertical); }
+
     void Start()
     {
         bgImg = GetComponent<Image>();
@@ -27,8 +32,9 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
 
             inputVector = new Vector3(Pos.x, Pos.y, 0).normalized;
 
-            jsImg.rectTransform.anchoredPosition = new Vector2(inputVector.x * (bgImg.rectTransform.sizeDelta.x / 2),
-                                                                            inputVector.y * (bgImg.rectTransform.sizeDelta.y / 2));
+            jsImg.rectTransform.anchoredPosition =
+                new Vector2(inputVector.x * (bgImg.rectTransform.sizeDelta.x / 2),
+                            inputVector.y * (bgImg.rectTransform.sizeDelta.y / 2));
         }
     }
 
@@ -42,15 +48,4 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
         inputVector = Vector3.zero;
         jsImg.rectTransform.anchoredPosition = Vector3.zero;
     }
-
-    public float GetHorVal()
-    {
-        return inputVector.x;
-    }
-
-    public float GetVerVal()
-    {
-        return inputVector.y;
-    }
-
 }

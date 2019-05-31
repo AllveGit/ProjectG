@@ -24,7 +24,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
 
 
     // 플레이어 체력
-    public float playerHealth = 1f;
+    public float playerHealth = 1.0f;
 
     #region IPunOvervable
     // 데이터를 전송하는 CallBack 함수입니다 무조건 PhotonView Observed Compenents에 넣어야만 작동합니다.
@@ -59,7 +59,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable // Interf
 
         if (PlayerCamera != null)
         {
-            PlayerCamera.TargetObject = this.gameObject;
+            PlayerCamera.TargetObject = gameObject;
 
             if (photonView.IsMine)
                 PlayerCamera.IsTargeting = true;

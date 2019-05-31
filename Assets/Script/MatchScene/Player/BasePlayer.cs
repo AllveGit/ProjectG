@@ -7,16 +7,16 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
-    JoyStick MoveJoyStick;
+    private JoyStick MoveJoyStick;
     private Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
 
     private void Awake()
     {
-        MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
 
-        rigidbody = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        playerCamera = GetComponent<PlayerCamera>();
+        rigidbody       = GetComponent<Rigidbody>();
+        animator        = GetComponent<Animator>();
+        playerCamera    = GetComponent<PlayerCamera>();
     }
 
     private void Start()
@@ -25,11 +25,14 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
     public void MoveCalculate()
     {
-        //float v = Input.GetAxis("Vertical"); // 수직
-        //float h = Input.GetAxis("Horizontal"); // 수평
+        // movementAmount = MoveJoyStick.MovementAmount * moveSpeed * Time.deltaTime;
 
-        movementAmount = new Vector3(MoveJoyStick.GetHorVal(), 0f, MoveJoyStick.GetVerVal()).normalized * moveSpeed * Time.deltaTime;
+        float v = Input.GetAxis("Vertical"); // 수직
+        float h = Input.GetAxis("Horizontal"); // 수평
+        
+        movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
     }
+
     public void RotateCalculate()
     {
         if (movementAmount.magnitude < 0.01f)
@@ -58,7 +61,6 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
  */
 public abstract partial class BasePlayer
 {
-   
     [SerializeField]
     private int curHP = 0; // 플레이어의 HP
 
@@ -81,7 +83,7 @@ public abstract partial class BasePlayer
     private int maxShieldPower = 0; // 플레이어의 쉴드(추가 체력) 최대치
 
     [SerializeField]
-    [Range(0f, 1f)]
+    [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
 }
 
