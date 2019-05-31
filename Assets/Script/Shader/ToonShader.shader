@@ -19,7 +19,7 @@
 
 		void vert(inout appdata_full v)
 		{
-			v.vertex.xyz = v.vertex.xyz + v.normal.xyz * 0.015f;
+			v.vertex.xyz = v.vertex.xyz + v.normal.xyz * 0.035f;
 		}
 
         struct Input
@@ -40,7 +40,7 @@
 		}
         ENDCG
 
-		//cull back
+		cull back
 		//2Pass
 		CGPROGRAM
 

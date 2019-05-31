@@ -7,10 +7,13 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
+    JoyStick MoveJoyStick;
     private Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
 
     private void Awake()
     {
+        MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         playerCamera = GetComponent<PlayerCamera>();
@@ -22,10 +25,10 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
     public void MoveCalculate()
     {
-        float v = Input.GetAxis("Vertical"); // 수직
-        float h = Input.GetAxis("Horizontal"); // 수평
+        //float v = Input.GetAxis("Vertical"); // 수직
+        //float h = Input.GetAxis("Horizontal"); // 수평
 
-        movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+        movementAmount = new Vector3(MoveJoyStick.GetHorVal(), 0f, MoveJoyStick.GetVerVal()).normalized * moveSpeed * Time.deltaTime;
     }
     public void RotateCalculate()
     {
