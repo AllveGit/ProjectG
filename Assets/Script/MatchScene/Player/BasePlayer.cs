@@ -7,44 +7,53 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private JoyStick MoveJoyStick = null;
-    private Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
+    protected JoyStick MoveJoyStick = null;
+    protected JoyStick SkillJoyStick = null;
+    protected Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
    
     private void Awake()
     {
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
 
         rigidbody       = GetComponent<Rigidbody>();
         if (rigidbody == null)
-            Debug.LogError("BasePlayer.cs : 20 / rigidbody을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs : 19 / rigidbody을 가져오지 못했습니다.");
         animator        = GetComponent<Animator>();
         if (animator == null)
-            Debug.LogError("BasePlayer.cs : 23 / animator를 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs : 22 / animator를 가져오지 못했습니다.");
         photonView      = GetComponent<PhotonView>();
         if (photonView == null)
-            Debug.LogError("BasePlayer.cs : 26 / photonView을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs : 25 / photonView을 가져오지 못했습니다.");
 
         if(photonView.IsMine)
         {
             playerCamera = GetComponent<PlayerCamera>();
-            playerCamera.TargetObject = this.gameObject;
-            playerCamera.IsTargeting = true;
+            playerCamera.TargetObject   = gameObject;
+            playerCamera.IsTargeting    = true;
         }
 
         if (MoveJoyStick == null)
-            Debug.LogError("BasePlayer.cs : 30 / JoyStick을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs : 35 / JoyStick을 가져오지 못했습니다.");
+        if (SkillJoyStick == null)
+            Debug.LogError("BasePlayer.cs : 39 / SkillJoyStick을 가져오지 못했습니다.");
+
+        // 이벤트 핸들러에 등록
+        SkillJoyStick.OnUpEvent     += OnSkillJoyStickUp;
+        SkillJoyStick.OnDownEvent   += OnSkillJoyStickDown;
     }
 
     public void MoveCalculate()
     {
-        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
+        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
         if (photonView.IsMine)
         {
             // 키보드
             float v = Input.GetAxis("Vertical"); // 수직
             float h = Input.GetAxis("Horizontal"); // 수평
             movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
-            // movementAmount = MoveJoyStick.MovementAmount * moveSpeed * Time.deltaTime;
+            
+            movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
         }
     }
 
@@ -65,12 +74,23 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         }
     }
 
-    public abstract void OnPlayerDeath();
-    public abstract void Attack();
-    public abstract void UltimateSkill();
+    public void OnSkillJoyStickUp(Vector3 pedPosition)
+    {
+        UltimateSkill();
+    }
 
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {}
+    public void OnSkillJoyStickDown(Vector3 pedPosition)
+    {
+
+    }
+
+    public abstract void Attack();          // 기본공격을 사용하기 위한 함수
+    public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
+
+    public abstract void OnPlayerDeath();   // 플레이어가 죽을 때 호출됨
+    public abstract void OnAttacked(int damage); // 플레이어가 공격당할 때 호출됨
+
+    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {}
 }
 
 /*
@@ -113,7 +133,7 @@ public abstract partial class BasePlayer
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
     public PlayerCamera playerCamera { get; private set; } = null;
-    public PhotonView photonView { get; private set; } = null;
+    public new PhotonView photonView { get; private set; } = null;
 
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }

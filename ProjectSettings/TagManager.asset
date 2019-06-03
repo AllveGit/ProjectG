@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - JoyStick
+  - SkillJoyStick
   layers:
   - Default
   - TransparentFX

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
@@ -10,10 +11,13 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
     private Image jsImg;
     private Vector3 inputVector;
 
+    public event UnityAction<Vector3> OnUpEvent;
+    public event UnityAction<Vector3> OnDownEvent;
+
     public float Horizontal { get => inputVector.x; }
     public float Vertical { get => inputVector.y; }
 
-    public Vector3 MovementAmount { get => new Vector3(Horizontal, 0.0f, Vertical); }
+    public Vector3 Amount { get => new Vector3(Horizontal, 0.0f, Vertical); }
 
     void Start()
     {
@@ -40,11 +44,13 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
 
     public virtual void OnPointerDown(PointerEventData ped)
     {
+        OnDownEvent?.Invoke(ped.position);
         OnDrag(ped);
     }
 
     public virtual void OnPointerUp(PointerEventData ped)
     {
+        OnUpEvent?.Invoke(ped.position);
         inputVector = Vector3.zero;
         jsImg.rectTransform.anchoredPosition = Vector3.zero;
     }
