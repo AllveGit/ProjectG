@@ -7,8 +7,9 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private JoyStick MoveJoyStick;
+    private JoyStick MoveJoyStick = null;
     private Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
+   
 
     private void Awake()
     {
@@ -17,33 +18,49 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         rigidbody       = GetComponent<Rigidbody>();
         animator        = GetComponent<Animator>();
         playerCamera    = GetComponent<PlayerCamera>();
-    }
+        photonView      = GetComponent<PhotonView>();
 
-    private void Start()
-    {
+        if(playerCamera != null && photonView.IsMine)
+        {
+            playerCamera.TargetObject = this.gameObject;
+            playerCamera.IsTargeting = true;   
+        }
+
+        if (MoveJoyStick == null)
+            Debug.LogError("BasePlayer.cs : 30 / JoyStick을 가져오지 못했습니다.");
     }
 
     public void MoveCalculate()
     {
-        // movementAmount = MoveJoyStick.MovementAmount * moveSpeed * Time.deltaTime;
+        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
+        if (photonView.IsMine)
+        {
+            // 키보드
+            float v = Input.GetAxis("Vertical"); // 수직
+            float h = Input.GetAxis("Horizontal"); // 수평
 
-        float v = Input.GetAxis("Vertical"); // 수직
-        float h = Input.GetAxis("Horizontal"); // 수평
-        
-        movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+            v = MoveJoyStick.Vertical;
+            h = MoveJoyStick.Horizontal;
+            Debug.Log("joy V : " + v + " joy H : " + h);
+            
+            movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+        }
     }
 
     public void RotateCalculate()
     {
-        if (movementAmount.magnitude < 0.01f)
+        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
+        if (photonView.IsMine)
         {
-            animator.SetFloat("Speed", 0);
-            return;
+            if (movementAmount.magnitude < 0.01f)
+            {
+                animator.SetFloat("Speed", 0);
+                return;
+            }
+            animator.SetFloat("Speed", movementAmount.magnitude);
+            rigidbody.velocity = movementAmount;
+            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
         }
-
-        animator.SetFloat("Speed", movementAmount.magnitude);
-        rigidbody.velocity = movementAmount;
-        rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
     }
 
     public abstract void OnPlayerDeath();
@@ -51,8 +68,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     public abstract void UltimateSkill();
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-    }
+    {}
 }
 
 /*
@@ -95,6 +111,7 @@ public abstract partial class BasePlayer
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
     public PlayerCamera playerCamera { get; private set; } = null;
+    public PhotonView photonView { get; private set; } = null;
 
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }

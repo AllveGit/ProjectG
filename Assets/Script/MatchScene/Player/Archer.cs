@@ -16,15 +16,8 @@ public class Archer : BasePlayer
     {
     }
 
-    
     void Start()
     {
-        playerCamera.TargetObject = this.gameObject;
-
-        if (photonView.IsMine)
-        {
-            playerCamera.IsTargeting = true;
-        }
     }
     void Update()
     {
