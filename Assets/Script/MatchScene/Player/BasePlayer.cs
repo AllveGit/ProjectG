@@ -7,6 +7,24 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
+
+    #region PhotonCallBack
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 전송, 수신은 순서 맞춰서
+        if (stream.IsWriting)
+        {
+            // 메시지 전송
+            // stream.SendNext()
+        }
+        else
+        {
+            // 메시지 수신
+            // stream.ReceiveNext();
+        }
+    }
+
+    #endregion
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
     protected Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
