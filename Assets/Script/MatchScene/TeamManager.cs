@@ -22,9 +22,6 @@ public class TeamManager : MonoBehaviour
 
     public bool IsAttackable(string myTag, string targetTag)
     {
-        if (myTag == targetTag)
-            return false;
-
         return true;
     }
 }

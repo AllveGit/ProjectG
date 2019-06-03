@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 
-public class IceArrow : MonoBehaviour
+public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
 {
     private const int    BaseDamage         = 150;      // 기본 스킬 데미지
     private const float  Coefficient        = 2.0f;     // 스킬 계수
@@ -30,7 +30,6 @@ public class IceArrow : MonoBehaviour
         direction   = inDirection;
 
         transform.rotation = Quaternion.LookRotation(inDirection);
-
         StartCoroutine(Timer());
     }
 
@@ -60,6 +59,7 @@ public class IceArrow : MonoBehaviour
         {
             BasePlayer player = collision.gameObject.GetComponent<BasePlayer>();
             player.OnAttacked(skillDamage);
+
             PhotonNetwork.Destroy(this.gameObject);
         }
     }
@@ -71,5 +71,10 @@ public class IceArrow : MonoBehaviour
         PhotonNetwork.Destroy(this.gameObject);
 
         yield break;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+
     }
 }
