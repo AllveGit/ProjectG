@@ -16,14 +16,20 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
 
         rigidbody       = GetComponent<Rigidbody>();
+        if (rigidbody == null)
+            Debug.LogError("BasePlayer.cs : 20 / rigidbody을 가져오지 못했습니다.");
         animator        = GetComponent<Animator>();
-        playerCamera    = GetComponent<PlayerCamera>();
+        if (animator == null)
+            Debug.LogError("BasePlayer.cs : 23 / animator를 가져오지 못했습니다.");
         photonView      = GetComponent<PhotonView>();
+        if (photonView == null)
+            Debug.LogError("BasePlayer.cs : 26 / photonView을 가져오지 못했습니다.");
 
-        if(playerCamera != null && photonView.IsMine)
+        if(photonView.IsMine)
         {
+            playerCamera = GetComponent<PlayerCamera>();
             playerCamera.TargetObject = this.gameObject;
-            playerCamera.IsTargeting = true;   
+            playerCamera.IsTargeting = true;
         }
 
         if (MoveJoyStick == null)
@@ -38,12 +44,8 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             // 키보드
             float v = Input.GetAxis("Vertical"); // 수직
             float h = Input.GetAxis("Horizontal"); // 수평
-
-            v = MoveJoyStick.Vertical;
-            h = MoveJoyStick.Horizontal;
-            Debug.Log("joy V : " + v + " joy H : " + h);
-            
             movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+            // movementAmount = MoveJoyStick.MovementAmount * moveSpeed * Time.deltaTime;
         }
     }
 
@@ -57,8 +59,9 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
                 animator.SetFloat("Speed", 0);
                 return;
             }
-            animator.SetFloat("Speed", movementAmount.magnitude);
-            rigidbody.velocity = movementAmount;
+
+            animator.SetFloat("Speed", movementAmount.magnitude * 10);
+            rigidbody.MovePosition(transform.position + movementAmount);
             rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
         }
     }
