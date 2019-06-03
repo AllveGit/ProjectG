@@ -34,7 +34,8 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
     [SerializeField]
     protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
-   
+    [SerializeField]
+    protected GameObject basicAttackPrefab = null; // 평타 프리팹
     private void Awake()
     {
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
@@ -109,7 +110,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
     public void OnSkillJoyStickUp(Vector3 pedPosition)
     {
-        UltimateSkill();
+        Attack();
         isFocusOnAttack = false;
     }
 

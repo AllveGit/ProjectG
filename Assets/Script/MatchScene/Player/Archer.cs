@@ -10,6 +10,25 @@ public class Archer : BasePlayer
 
     public override void Attack()
     {
+        if (photonView.IsMine == false)
+            return;
+
+        animator.SetBool("Attack", true);
+
+        StartCoroutine(DelaySpawn(delegate (Vector3 direction)
+        {
+            if (direction == Vector3.zero)
+                return;
+
+            GameObject projectile = PhotonNetwork.Instantiate(
+                "Skill/" + basicAttackPrefab.name,
+                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+                transform.rotation);
+
+            if (projectile != null)
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+
+        }, SkillJoyStick.Amount, 0.6f));
     }
 
     public override void OnPlayerDeath()
@@ -36,7 +55,6 @@ public class Archer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
         }, SkillJoyStick.Amount, 0.6f));
-
     }
 
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
