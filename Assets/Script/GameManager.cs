@@ -26,7 +26,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
-            PhotonNetwork.Instantiate("Player/" + this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            string str = "Player/" + this.playerPrefab.name + "/" + this.playerPrefab.name;
+            PhotonNetwork.Instantiate("Player/" + this.playerPrefab.name + "/" + this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            Debug.Log(str);
         }
     }
 

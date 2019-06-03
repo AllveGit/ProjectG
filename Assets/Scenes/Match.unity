@@ -191,7 +191,7 @@ PrefabInstance:
         type: 3}
       propertyPath: playerPrefab
       value: 
-      objectReference: {fileID: 8317972356379412901, guid: 019cb8c8e7bf6cb4d85086a1563fd52c,
+      objectReference: {fileID: 6412446611274019663, guid: 6a937a7a669d36a45a93c788bd076b5a,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bce103d7b128f9d4bb2b1e2492f2801a, type: 3}
@@ -1876,7 +1876,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 613.2, y: 20.342848}
+  m_AnchoredPosition: {x: 613.2, y: 20.342896}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2030149769
