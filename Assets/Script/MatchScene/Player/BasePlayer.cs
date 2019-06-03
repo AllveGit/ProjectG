@@ -10,7 +10,6 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     private JoyStick MoveJoyStick = null;
     private Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
    
-
     private void Awake()
     {
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
