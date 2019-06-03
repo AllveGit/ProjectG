@@ -17,10 +17,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     string gameVersion = "1";
 
-    [Tooltip("한 방당 최대로 접속할 수 있는 유저의 숫자입니다.")]
-    [SerializeField]
-    private byte maxPlayersPerRoom = 4;
-
     [Tooltip("InputFiled와 플레이 버튼이 들어가있는 Panel 입니다.")]
     [SerializeField]
 
@@ -29,7 +25,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject progressLabel = null;
 
-    public bool isConnected { get; private set; } = false;
+    public bool IsConnected { get; private set; } = false;
 
     private AutoMatchType currentMatchType = AutoMatchType.AutoMatch_None; 
 
@@ -128,16 +124,4 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
-
-    //public void Connect()
-    //{
-    //    isConnected = true;
-    //
-    //    progressLabel.SetActive(true);
-    //    controlPanel.SetActive(false);
-    //
-    //    if (isConnected)
-    //        PhotonNetwork.JoinRandomRoom();
-    //}
-
 }

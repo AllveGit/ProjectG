@@ -27,7 +27,13 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     #endregion
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
-    protected Vector3 movementAmount = new Vector3(0f, 0f, 0f); // 플레이어의 이동량
+    protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
+    protected Vector3 attackDirection = Vector3.zero;
+
+    protected bool isFocusOnAttack = false;
+
+    [SerializeField]
+    protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
    
     private void Awake()
     {
@@ -72,14 +78,19 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
             
             movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
+
+            attackDirection = SkillJoyStick.Amount;
         }
     }
 
-    public void RotateCalculate()
+    public virtual void RotateCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
         if (photonView.IsMine)
         {
+            if(isFocusOnAttack)
+                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackDirection), rotationLerpSpeed);
+
             if (movementAmount.magnitude < 0.01f)
             {
                 animator.SetFloat("Speed", 0);
@@ -88,25 +99,43 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
             animator.SetFloat("Speed", movementAmount.magnitude * 10);
             rigidbody.MovePosition(transform.position + movementAmount);
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
+
+            if(isFocusOnAttack == false)
+                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
+
+            Debug.Log(isFocusOnAttack);
         }
     }
 
     public void OnSkillJoyStickUp(Vector3 pedPosition)
     {
         UltimateSkill();
+        isFocusOnAttack = false;
     }
 
     public void OnSkillJoyStickDown(Vector3 pedPosition)
     {
-
+        isFocusOnAttack = true;
     }
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
-
     public abstract void OnPlayerDeath();   // 플레이어가 죽을 때 호출됨
-    public abstract void OnAttacked(int damage); // 플레이어가 공격당할 때 호출됨
+
+    // 플레이어가 공격당할 때 호출됨
+    public void OnAttacked(int damage)
+    {
+        shieldPower -= damage;
+
+        if (shieldPower < 0)
+        {
+            CurHP -= shieldPower;
+            shieldPower = 0;
+        }
+
+        if (CurHP < 0)
+            CurHP = 0;
+    }
 
     void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {}
 }
@@ -141,6 +170,7 @@ public abstract partial class BasePlayer
     [SerializeField]
     [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
+
 }
 
 /*
@@ -160,4 +190,5 @@ public abstract partial class BasePlayer
     public int AttackDamage { get => attackDamage; set => attackDamage = value; }
     public int ShieldPower { get => shieldPower; set => shieldPower = value; }
     public int MaxShieldPower { get => maxShieldPower; set => maxShieldPower = value; }
+    public float RotationLerpSpeed { get => rotationLerpSpeed; set => rotationLerpSpeed = value; }
 }

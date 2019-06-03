@@ -10,13 +10,11 @@ public class TeamManager : MonoBehaviour
         Instance = this;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -24,6 +22,9 @@ public class TeamManager : MonoBehaviour
 
     public bool IsAttackable(string myTag, string targetTag)
     {
+        if (myTag == targetTag)
+            return false;
+
         return true;
     }
 }

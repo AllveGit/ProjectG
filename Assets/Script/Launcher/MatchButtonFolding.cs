@@ -14,7 +14,6 @@ public class MatchButtonFolding : MonoBehaviour
     
     [SerializeField]
     private float fLerpSpeed = 0.1f;
-    private float fLerpDistance = 0f;
 
     void Start()
     {
@@ -27,8 +26,6 @@ public class MatchButtonFolding : MonoBehaviour
     {
         if (IsWorking)
             return;
-
-        fLerpDistance = 0f;
 
         if (IsUnFold)
             StartCoroutine("FoldingTap");

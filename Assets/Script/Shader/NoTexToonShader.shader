@@ -21,7 +21,7 @@
 		{
 			v.vertex.xyz = v.vertex.xyz + v.normal.xyz * 0.035f;
 		}
-
+		
 		struct Input
 		{
 			float4 color : COLOR;

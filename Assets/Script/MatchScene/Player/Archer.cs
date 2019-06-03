@@ -6,8 +6,7 @@ using Photon.Pun;
 
 public class Archer : BasePlayer
 {
-    [SerializeField]
-    private GameObject ultimateSkillPrefab = null;
+    delegate void AttackCallback(Vector3 direction);
 
     public override void Attack()
     {
@@ -19,17 +18,50 @@ public class Archer : BasePlayer
 
     public override void UltimateSkill()
     {
-        Vector3 direction = SkillJoyStick.Amount;
+        animator.SetBool("Attack", true);
 
-        if (direction == Vector3.zero)
-            return;
+        StartCoroutine(DelaySpawn(delegate (Vector3 direction)
+        {
+            if (direction == Vector3.zero)
+                return;
 
-        GameObject projectile = PhotonNetwork.Instantiate(
-            "Skill/" + ultimateSkillPrefab.name,
-            transform.position,
-            transform.rotation);
-        
-        projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
+            GameObject projectile = PhotonNetwork.Instantiate(
+                "Skill/" + ultimateSkillPrefab.name,
+                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+                transform.rotation);
+
+            if (projectile != null)
+                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
+        }, SkillJoyStick.Amount, 0.6f));
+    }
+
+    // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
+    public override void RotateCalculate()
+    {
+        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
+        if (photonView.IsMine)
+        {
+            if (isFocusOnAttack)
+            {
+                rigidbody.rotation = Quaternion.Slerp(transform.rotation,
+                    Quaternion.LookRotation(attackDirection), RotationLerpSpeed);
+            }
+
+            if (movementAmount.magnitude < 0.01f)
+            {
+                animator.SetFloat("Speed", 0);
+                return;
+            }
+
+            animator.SetFloat("Speed", movementAmount.magnitude * 10);
+            rigidbody.MovePosition(transform.position + movementAmount);
+
+            Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
+            rot += new Vector3(0, -90, 0);
+
+            if (isFocusOnAttack == false)
+                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rot), RotationLerpSpeed);
+        }
     }
 
     void Start()
@@ -46,8 +78,10 @@ public class Archer : BasePlayer
         RotateCalculate();
     }
 
-    public override void OnAttacked(int damage)
+    IEnumerator DelaySpawn(AttackCallback attackCallback, Vector3 direction, float delay)
     {
-        CurHP -= damage;
+        yield return new WaitForSeconds(delay);
+        attackCallback(direction);
+        yield break;
     }
 }

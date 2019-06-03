@@ -60,6 +60,7 @@ public class IceArrow : MonoBehaviour
         {
             BasePlayer player = collision.gameObject.GetComponent<BasePlayer>();
             player.OnAttacked(skillDamage);
+            PhotonNetwork.Destroy(this.gameObject);
         }
     }
 
