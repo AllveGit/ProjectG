@@ -11,16 +11,17 @@ public class Launcher : MonoBehaviourPunCallbacks
         AutoMatch_None = 0,
         AutoMatch_1vs1 = 2,
         AutoMatch_2vs2 = 4,
-        AutoMatch_3vs3 = 8,
+        AutoMatch_3vs3 = 6,
     }
 
 
-    string gameVersion = "1";
+    private string gameVersion = "1";
+    private bool onMatching = false;
 
     [Tooltip("InputFiled와 플레이 버튼이 들어가있는 Panel 입니다.")]
     [SerializeField]
-
     private GameObject controlPanel = null;
+
     [Tooltip("Connecting 중임을 알리는 Text UI 입니다.")]
     [SerializeField]
     private GameObject progressLabel = null;
@@ -68,15 +69,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("매칭 성공!");
-
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
-            Debug.Log("Match을 로드합니다.");
-            PhotonNetwork.LoadLevel("Match");
-        }
+        Debug.Log("매칭 시작!");
+        onMatching = true;
     }
-
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("매칭 실패!");
@@ -91,6 +86,26 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(null, roomOption);
     }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
+            {
+                Debug.Log("매칭이 완료되어 게임을 시작합니다.");
+                PhotonNetwork.LoadLevel("Match");
+            }
+            else
+            {
+
+            }
+        }
+    }
+    public override void OnLeftRoom()
+    {
+        onMatching = false;
+    }
+
     #endregion
 
     public void Matching1vs1()
@@ -124,4 +139,5 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
+
 }
