@@ -6,12 +6,19 @@ using Photon.Pun;
 
 public class Archer : BasePlayer
 {
+    private GameObject ExplosionPrefab;
+
     delegate void AttackCallback(Vector3 direction);
 
     public override void Attack()
     {
         if (photonView.IsMine == false)
             return;
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject Temp = PhotonNetwork.Instantiate("Effect/Explosion/Explosion", this.transform.position, Quaternion.identity);
+        }
 
         animator.SetBool("Attack", true);
 
@@ -88,6 +95,7 @@ public class Archer : BasePlayer
 
     void Start()
     {
+        ExplosionPrefab = Resources.Load<GameObject>("Effect/Explosion/Explosion");
     }
 
     void Update()
