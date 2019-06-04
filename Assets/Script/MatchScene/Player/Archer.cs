@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class Archer : BasePlayer
 {
+    [SerializeField]
     private GameObject ExplosionPrefab;
 
     delegate void AttackCallback(Vector3 direction);
@@ -15,10 +16,6 @@ public class Archer : BasePlayer
         if (photonView.IsMine == false)
             return;
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject Temp = PhotonNetwork.Instantiate("Effect/Explosion/Explosion", this.transform.position, Quaternion.identity);
-        }
 
         animator.SetBool("Attack", true);
 
@@ -101,6 +98,12 @@ public class Archer : BasePlayer
     void Update()
     {
         MoveCalculate();
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameObject Temp = PhotonNetwork.Instantiate("Effect/Explosion/Explosion", this.transform.position, Quaternion.EulerAngles(new Vector3(-90, 0, 0)));
+        }
     }
 
     private void LateUpdate()

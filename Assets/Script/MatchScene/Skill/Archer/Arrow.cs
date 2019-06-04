@@ -21,7 +21,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void Cast(BasePlayer inOwnerPlayer, int attackDamage, Vector3 inDirection)
