@@ -6,12 +6,13 @@ using Photon.Realtime;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    enum AutoMatchType
+    enum MatchType
     {
-        AutoMatch_None = 0,
-        AutoMatch_1vs1 = 2,
-        AutoMatch_2vs2 = 4,
-        AutoMatch_3vs3 = 6,
+        Match_None = 0,
+        Match_Debug = 1,
+        Match_1vs1 = 2,
+        Match_2vs2 = 4,
+        Match_3vs3 = 6,
     }
 
 
@@ -28,13 +29,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public bool IsConnected { get; private set; } = false;
 
-    private AutoMatchType currentMatchType = AutoMatchType.AutoMatch_None; 
+    private MatchType currentMatchType = MatchType.Match_None; 
 
     private void Awake()
     {
         // 자동 동기화.
         PhotonNetwork.AutomaticallySyncScene = true;
-     }
+    }
 
     void Start()
     {
@@ -46,6 +47,49 @@ public class Launcher : MonoBehaviourPunCallbacks
             PhotonNetwork.GameVersion = gameVersion;
             PhotonNetwork.ConnectUsingSettings();
         }
+    }
+
+    public void Matching1vs1()
+    {
+        currentMatchType = MatchType.Match_1vs1;
+        Matching();
+    }
+
+    public void Matching2vs2()
+    {
+        currentMatchType = MatchType.Match_2vs2;
+        Matching();
+    }
+
+    public void Matching3vs3()
+    {
+        currentMatchType = MatchType.Match_3vs3;
+        Matching();
+    }
+
+
+    public void MatchingDebug()
+    {
+        progressLabel.SetActive(true);
+        controlPanel.SetActive(false);
+
+        currentMatchType = MatchType.Match_Debug;
+        PhotonNetwork.JoinRandomRoom(null, 0);
+    }
+
+
+    private void Matching()
+    {
+        if (currentMatchType == MatchType.Match_None)
+            return;
+
+        progressLabel.SetActive(true);
+        controlPanel.SetActive(false);
+
+        ExitGames.Client.Photon.Hashtable roomProperty
+            = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
+
+        PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
 
     #region PhotonCallBack
@@ -63,12 +107,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("로비에 연결되었습니다.");
+
         progressLabel.SetActive(false);
         controlPanel.SetActive(true);
     }
 
     public override void OnJoinedRoom()
     {
+        if(currentMatchType == MatchType.Match_Debug)
+        {
+            PhotonNetwork.LoadLevel("Match");
+            return;
+        }
+
         Debug.Log("매칭 시작!");
         onMatching = true;
     }
@@ -76,13 +127,22 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("매칭 실패!");
 
-        ExitGames.Client.Photon.Hashtable roomProperty
-            = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
-
+        ExitGames.Client.Photon.Hashtable roomProperty = null;
         RoomOptions roomOption = new RoomOptions();
-        roomOption.MaxPlayers = (byte)currentMatchType;
+
+        if (currentMatchType == MatchType.Match_Debug)
+        {
+            roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
+            roomOption.MaxPlayers = 0;
+        }
+        else
+        {
+            roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
+            roomOption.MaxPlayers = (byte)currentMatchType;
+        }
+
         roomOption.CustomRoomProperties = roomProperty;
-        roomOption.CustomRoomPropertiesForLobby = new string[] {"MT"};
+        roomOption.CustomRoomPropertiesForLobby = new string[] { "MT" };
 
         PhotonNetwork.CreateRoom(null, roomOption);
     }
@@ -95,10 +155,6 @@ public class Launcher : MonoBehaviourPunCallbacks
                 Debug.Log("매칭이 완료되어 게임을 시작합니다.");
                 PhotonNetwork.LoadLevel("Match");
             }
-            else
-            {
-
-            }
         }
     }
     public override void OnLeftRoom()
@@ -107,37 +163,5 @@ public class Launcher : MonoBehaviourPunCallbacks
     }
 
     #endregion
-
-    public void Matching1vs1()
-    {
-        currentMatchType = AutoMatchType.AutoMatch_1vs1;
-        Matching();
-    }
-
-    public void Matching2vs2()
-    {
-        currentMatchType = AutoMatchType.AutoMatch_2vs2;
-        Matching();
-    }
-
-    public void Matching3vs3()
-    {
-        currentMatchType = AutoMatchType.AutoMatch_3vs3;
-        Matching();
-    }
-
-    private void Matching()
-    {
-        if (currentMatchType == AutoMatchType.AutoMatch_None)
-            return;
-
-        progressLabel.SetActive(true);
-        controlPanel.SetActive(false);
-
-        ExitGames.Client.Photon.Hashtable roomProperty
-            = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType} };
-
-        PhotonNetwork.JoinRandomRoom(roomProperty, 0);
-    }
 
 }

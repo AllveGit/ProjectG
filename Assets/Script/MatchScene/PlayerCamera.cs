@@ -22,12 +22,6 @@ public class PlayerCamera : MonoBehaviour
     [Tooltip("Targeting할 오브젝트 기준 더한 lookat 값입니다.")]
     public Vector3 vAddLookAt = new Vector3(0f, 0f, 0f);
 
-    void Start()
-    {
-        if (TargetObject == null)
-            Debug.LogError("PlayerCamera : Targeting GameObject가 null입니다");
-    }
-
     private void FixedUpdate()
     {
         if (isTargeting)

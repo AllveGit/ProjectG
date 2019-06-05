@@ -15,11 +15,6 @@ public class Archer : BasePlayer
         if (photonView.IsMine == false)
             return;
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject Temp = PhotonNetwork.Instantiate("Effect/Explosion/Explosion", this.transform.position, Quaternion.identity);
-        }
-
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelaySpawn(delegate (Vector3 direction)
