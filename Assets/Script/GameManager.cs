@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [System.Obsolete]
     private void Start()
     {
+
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
         if(playerPrefab == null)
             Debug.LogError("플레이어 프리팹이 null 입니다.", this);

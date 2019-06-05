@@ -61,7 +61,9 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (!photonView.IsMine) return;
 
-        if (TeamManager.Instance.IsAttackable(ownerPlayer.tag, collision.gameObject.tag))
+        if (!collision.gameObject.tag.Equals("Player")) return;
+
+        if (TeamManager.Instance.IsAttackable(ownerPlayer.playerTeam, collision.gameObject.GetComponent<BasePlayer>().playerTeam))
         {
             BasePlayer player = collision.gameObject.GetComponent<BasePlayer>();
             player.OnAttacked(skillDamage);

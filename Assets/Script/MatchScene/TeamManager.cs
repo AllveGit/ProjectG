@@ -4,24 +4,49 @@ using UnityEngine;
 
 public class TeamManager : MonoBehaviour
 {
-    public static TeamManager Instance;
+    public enum PlayerTeam
+    {
+        NoneTeam = 0,
+        RedTeam = 1,
+        BlueTeam = 2,
+        Solo = 3,
+    }
+
+    public static TeamManager Instance = null;
+
+    private PlayerTeam PrevCollocateTeam = PlayerTeam.NoneTeam;
+    public int RedTeamCount { get; set; } = 0;
+    public int BlueTeamCount { get; set; } = 0;
+
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    void Start()
+    public void InitializeTeam()
     {
-        
+        RedTeamCount = 0;
+        BlueTeamCount = 0;
     }
 
-    void Update()
+    public void CollocateTeam(GameObject player)
     {
-        
+        if (player.tag.Equals("Player"))
+        {
+
+        }
     }
 
-    public bool IsAttackable(string myTag, string targetTag)
+    public bool IsAttackable(PlayerTeam myTeam, PlayerTeam targetTeam)
     {
-        return true;
+        if (!myTeam.Equals(targetTeam))
+            return true;
+
+        return false;
     }
 }

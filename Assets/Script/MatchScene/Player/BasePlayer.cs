@@ -7,7 +7,7 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
-
+    
     #region PhotonCallBack
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -25,6 +25,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     }
 
     #endregion
+    public TeamManager.PlayerTeam playerTeam { get; private set; }
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
@@ -137,7 +138,10 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             CurHP = 0;
     }
 
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {}
+    [PunRPC]
+    void SetTeam(TeamManager.PlayerTeam inPlayerTeam)
+    {
+    }
 }
 
 /*
@@ -171,6 +175,7 @@ public abstract partial class BasePlayer
     [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
 
+    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) { }
 }
 
 /*

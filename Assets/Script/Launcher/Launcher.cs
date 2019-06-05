@@ -114,6 +114,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        if (Photon.Pun.PhotonNetwork.IsMasterClient)
+            TeamManager.Instance.
+
         if(currentMatchType == MatchType.Match_Debug)
         {
             PhotonNetwork.LoadLevel("Match");
@@ -130,17 +133,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         ExitGames.Client.Photon.Hashtable roomProperty = null;
         RoomOptions roomOption = new RoomOptions();
 
-        if (currentMatchType == MatchType.Match_Debug)
-        {
-            roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
-            roomOption.MaxPlayers = 0;
-        }
-        else
-        {
-            roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
-            roomOption.MaxPlayers = (byte)currentMatchType;
-        }
+        roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
 
+        if (currentMatchType == MatchType.Match_Debug)
+            roomOption.MaxPlayers = 0;
+        else
+            roomOption.MaxPlayers = (byte)currentMatchType;
+    
         roomOption.CustomRoomProperties = roomProperty;
         roomOption.CustomRoomPropertiesForLobby = new string[] { "MT" };
 
@@ -150,6 +149,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
             {
                 Debug.Log("매칭이 완료되어 게임을 시작합니다.");

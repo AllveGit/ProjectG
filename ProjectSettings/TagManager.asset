@@ -6,8 +6,6 @@ TagManager:
   tags:
   - JoyStick
   - SkillJoyStick
-  - RedTeam
-  - BlueTeam
   layers:
   - Default
   - TransparentFX
