@@ -63,29 +63,30 @@ public class Archer : BasePlayer
     public override void RotateCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
-        if (photonView.IsMine)
+
+        if (!photonView.IsMine) return;
+
+        if (isFocusOnAttack)
         {
-            if (isFocusOnAttack)
-            {
-                rigidbody.rotation = Quaternion.Slerp(transform.rotation,
-                    Quaternion.LookRotation(attackDirection), RotationLerpSpeed);
-            }
-
-            if (movementAmount.magnitude < 0.01f)
-            {
-                animator.SetFloat("Speed", 0);
-                return;
-            }
-
-            animator.SetFloat("Speed", movementAmount.magnitude * 10);
-            rigidbody.MovePosition(transform.position + movementAmount);
-
-            Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
-            rot += new Vector3(0, -90, 0);
-
-            if (isFocusOnAttack == false)
-                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rot), RotationLerpSpeed);
+            rigidbody.rotation = Quaternion.Slerp(transform.rotation,
+                Quaternion.LookRotation(attackDirection), RotationLerpSpeed);
         }
+
+        if (movementAmount.magnitude < 0.01f)
+        {
+            animator.SetFloat("Speed", 0);
+            return;
+        }
+
+        animator.SetFloat("Speed", movementAmount.magnitude * 10);
+        rigidbody.MovePosition(transform.position + movementAmount);
+
+        Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
+        rot += new Vector3(0, -90, 0);
+
+        if (isFocusOnAttack == false)
+            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rot), RotationLerpSpeed);
+
     }
 
     void Start()

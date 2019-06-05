@@ -21,7 +21,6 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //throw new System.NotImplementedException();
     }
 
     public void Cast(BasePlayer inOwnerPlayer, int attackDamage, Vector3 inDirection)
@@ -31,7 +30,9 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
         direction   = inDirection;
 
         transform.rotation = Quaternion.LookRotation(inDirection);
-        StartCoroutine(Timer());
+
+        if (photonView.IsMine)
+            StartCoroutine(Timer());
     }
 
     void Awake()
@@ -49,6 +50,8 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine) return;
+
         rigidbody.MovePosition(
            transform.position
            + direction * ProjectileSpeed * Time.deltaTime);

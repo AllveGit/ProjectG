@@ -6,14 +6,20 @@ public class BunnyGirl : BasePlayer
 {
     public override void Attack()
     {
+        if (!photonView.IsMine) return;
+
     }
 
     public override void OnPlayerDeath()
     {
+        if (!photonView.IsMine) return;
+
     }
 
     public override void UltimateSkill()
     {
+        if (!photonView.IsMine) return;
+
     }
 
     void Start()

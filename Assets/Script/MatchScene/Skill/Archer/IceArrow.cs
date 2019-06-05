@@ -30,7 +30,9 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
         direction   = inDirection;
 
         transform.rotation = Quaternion.LookRotation(inDirection);
-        StartCoroutine(Timer());
+
+        if (photonView.IsMine)
+            StartCoroutine(Timer());
     }
 
     void Awake()
@@ -48,9 +50,11 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine) return;
+
         rigidbody.MovePosition(
-            transform.position
-            + direction * ProjectileSpeed * Time.deltaTime);
+        transform.position
+        + direction * ProjectileSpeed * Time.deltaTime);
     }
 
     private void OnCollisionEnter(Collision collision)

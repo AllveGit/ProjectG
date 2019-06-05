@@ -71,41 +71,40 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     public void MoveCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
-        if (photonView.IsMine)
-        {
-            // 키보드
-            float v = Input.GetAxis("Vertical"); // 수직
-            float h = Input.GetAxis("Horizontal"); // 수평
-            movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
-            
-            movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
+        if (!photonView.IsMine) return;
 
-            attackDirection = SkillJoyStick.Amount;
-        }
+        // 키보드
+        float v = Input.GetAxis("Vertical"); // 수직
+        float h = Input.GetAxis("Horizontal"); // 수평
+        movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+
+        movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
+
+        attackDirection = SkillJoyStick.Amount;
+
     }
 
     public virtual void RotateCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
-        if (photonView.IsMine)
+        if (!photonView.IsMine) return;
+
+        if (isFocusOnAttack)
+            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackDirection), rotationLerpSpeed);
+
+        if (movementAmount.magnitude < 0.01f)
         {
-            if(isFocusOnAttack)
-                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackDirection), rotationLerpSpeed);
-
-            if (movementAmount.magnitude < 0.01f)
-            {
-                animator.SetFloat("Speed", 0);
-                return;
-            }
-
-            animator.SetFloat("Speed", movementAmount.magnitude * 10);
-            rigidbody.MovePosition(transform.position + movementAmount);
-
-            if(isFocusOnAttack == false)
-                rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
-
-            Debug.Log(isFocusOnAttack);
+            animator.SetFloat("Speed", 0);
+            return;
         }
+
+        animator.SetFloat("Speed", movementAmount.magnitude * 10);
+        rigidbody.MovePosition(transform.position + movementAmount);
+
+        if (isFocusOnAttack == false)
+            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
+
+        Debug.Log(isFocusOnAttack);
     }
 
     public void OnSkillJoyStickUp(Vector3 pedPosition)

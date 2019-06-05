@@ -1542,7 +1542,6 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   rotationLerpSpeed: 0.15
-  ExplosionPrefab: {fileID: 0}
 --- !u!1 &6456299336314754777
 GameObject:
   m_ObjectHideFlags: 0
