@@ -59,6 +59,8 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!photonView.IsMine) return;
+
         if (TeamManager.Instance.IsAttackable(ownerPlayer.tag, collision.gameObject.tag))
         {
             BasePlayer player = collision.gameObject.GetComponent<BasePlayer>();
@@ -72,7 +74,7 @@ public class Arrow : MonoBehaviourPunCallbacks, IPunObservable
     {
         yield return new WaitForSeconds(destroyTime);
 
-        PhotonNetwork.Destroy(this.gameObject);
+        if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
 
         yield break;
     }

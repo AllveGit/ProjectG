@@ -1447,16 +1447,16 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Death
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Hurt
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Speed
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Attack
   m_SynchronizeLayers:
   - SynchronizeType: 0

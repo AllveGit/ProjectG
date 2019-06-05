@@ -59,6 +59,8 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!photonView.IsMine) return;
+
         if (TeamManager.Instance.IsAttackable(ownerPlayer.tag, collision.gameObject.tag))
         {
             BasePlayer player = collision.gameObject.GetComponent<BasePlayer>();
