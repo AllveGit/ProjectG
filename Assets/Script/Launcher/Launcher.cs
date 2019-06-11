@@ -4,7 +4,10 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Launcher : MonoBehaviourPunCallbacks
+using TeamOption = TeamManager.PlayerTeam;
+using PhotonHashTable = ExitGames.Client.Photon.Hashtable;
+
+public partial class Launcher : MonoBehaviourPunCallbacks
 {
     enum MatchType
     {
@@ -14,7 +17,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         Match_2vs2 = 4,
         Match_3vs3 = 6,
     }
-
 
     private string gameVersion = "1";
     private bool onMatching = false;
@@ -29,7 +31,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public bool IsConnected { get; private set; } = false;
 
-    private MatchType currentMatchType = MatchType.Match_None; 
+    private MatchType currentMatchType = MatchType.Match_None;
 
     private void Awake()
     {
@@ -86,13 +88,18 @@ public class Launcher : MonoBehaviourPunCallbacks
         progressLabel.SetActive(true);
         controlPanel.SetActive(false);
 
-        ExitGames.Client.Photon.Hashtable roomProperty
-            = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
+        PhotonHashTable roomProperty
+            = new PhotonHashTable() { { "MT", currentMatchType } };
 
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
+}
 
-    #region PhotonCallBack
+/*
+ * 포톤 네트워크의 콜백함수들입니다.
+ */
+public partial class Launcher : MonoBehaviourPunCallbacks
+{
     public override void OnConnectedToMaster()
     {
         Debug.Log("마스터 서버에 연결되었습니다.");
@@ -114,10 +121,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (Photon.Pun.PhotonNetwork.IsMasterClient)
-            TeamManager.Instance.
+        if (PhotonNetwork.IsMasterClient)
+        {
+            TeamManager.Instance.ClearTeamMemberCount();
 
-        if(currentMatchType == MatchType.Match_Debug)
+            TeamOption teamOption = (TeamOption)Random.RandomRange(0, 2);
+            PhotonHashTable playerProperties = new PhotonHashTable() { { "TEAM", teamOption } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+
+            TeamManager.Instance.AddTeamMember(teamOption);
+        }
+
+        if (currentMatchType == MatchType.Match_Debug)
         {
             PhotonNetwork.LoadLevel("Match");
             return;
@@ -130,16 +145,16 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("매칭 실패!");
 
-        ExitGames.Client.Photon.Hashtable roomProperty = null;
+        PhotonHashTable roomProperty = null;
         RoomOptions roomOption = new RoomOptions();
 
-        roomProperty = new ExitGames.Client.Photon.Hashtable() { { "MT", currentMatchType } };
+        roomProperty = new PhotonHashTable() { { "MT", currentMatchType } };
 
         if (currentMatchType == MatchType.Match_Debug)
             roomOption.MaxPlayers = 0;
         else
             roomOption.MaxPlayers = (byte)currentMatchType;
-    
+
         roomOption.CustomRoomProperties = roomProperty;
         roomOption.CustomRoomPropertiesForLobby = new string[] { "MT" };
 
@@ -149,7 +164,24 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            
+            PhotonHashTable playerProperties = null;
+            TeamOption playerTeam = TeamOption.NoneTeam;
+
+            if (TeamManager.Instance.BlueTeamCount == TeamManager.Instance.RedTeamCount)
+                playerTeam = (TeamOption)Random.RandomRange(0, 2);
+            else
+            {
+                int redCnt = TeamManager.Instance.RedTeamCount;
+                int blueCnt = TeamManager.Instance.BlueTeamCount;
+
+                playerTeam =  (redCnt < blueCnt) ? TeamOption.RedTeam : TeamOption.BlueTeam;
+            }
+
+            playerProperties = new PhotonHashTable() { { "TEAM", playerTeam } };
+            newPlayer.SetCustomProperties(playerProperties);
+
+            TeamManager.Instance.AddTeamMember(playerTeam);
+
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
             {
                 Debug.Log("매칭이 완료되어 게임을 시작합니다.");
@@ -162,6 +194,5 @@ public class Launcher : MonoBehaviourPunCallbacks
         onMatching = false;
     }
 
-    #endregion
-
 }
+

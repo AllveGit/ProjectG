@@ -25,7 +25,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     }
 
     #endregion
-    public TeamManager.PlayerTeam playerTeam { get; private set; }
+    public TeamManager.PlayerTeam playerTeam { get; set; }
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
@@ -138,9 +138,10 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             CurHP = 0;
     }
 
-    [PunRPC]
-    void SetTeam(TeamManager.PlayerTeam inPlayerTeam)
+    //Debug함수입니다.
+    void OnGUI()
     {
+        GUILayout.TextField(playerTeam.ToString());
     }
 }
 

@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 
+/*
+ * 이 매니져는 매치씬 안에서만 유효한 매니져입니다. 절대 다른 씬에서 사용할 생각하지 마세요.
+ */
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager Instance;
@@ -23,15 +26,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     [System.Obsolete]
     private void Start()
     {
-
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
-        if(playerPrefab == null)
+        if (playerPrefab == null)
             Debug.LogError("플레이어 프리팹이 null 입니다.", this);
         else
         {
             Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
             string path = $"Player/{this.playerPrefab.name}/{this.playerPrefab.name}";
-            PhotonNetwork.Instantiate(path, playerSpawnPos, Quaternion.identity, 0);
+
+            GameObject player = PhotonNetwork.Instantiate(path, playerSpawnPos, Quaternion.identity, 0);
+
+            /*
+             * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
+             */
+            player.GetComponent<BasePlayer>().playerTeam = (TeamManager.PlayerTeam)PhotonNetwork.LocalPlayer.CustomProperties["TEAM"];
         }
     }
 
