@@ -77,6 +77,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
         currentMatchType = MatchType.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new PhotonHashTable() { { "TEAM", TeamOption.Solo }, { "SPAWN", 0 } });
     }
 
 
@@ -121,12 +123,18 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchType.Match_Debug))
         {
             TeamManager.Instance.ClearTeamMemberCount();
 
             TeamOption teamOption = (TeamOption)Random.RandomRange(0, 2);
             PhotonHashTable playerProperties = new PhotonHashTable() { { "TEAM", teamOption } };
+
+            if (teamOption.Equals(TeamOption.BlueTeam))
+                playerProperties.Add("SPAWN", 0);
+            else
+                playerProperties.Add("SPAWN", 3);
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
 
             TeamManager.Instance.AddTeamMember(teamOption);
@@ -162,7 +170,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchType.Match_Debug))
         {
             PhotonHashTable playerProperties = null;
             TeamOption playerTeam = TeamOption.NoneTeam;
@@ -178,8 +186,13 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             }
 
             playerProperties = new PhotonHashTable() { { "TEAM", playerTeam } };
-            newPlayer.SetCustomProperties(playerProperties);
 
+            if (playerTeam.Equals(TeamOption.BlueTeam))
+                playerProperties.Add("SPAWN", TeamManager.Instance.BlueTeamCount);
+            else if (playerTeam.Equals(TeamOption.RedTeam))
+                playerProperties.Add("SPAWN", 3 + TeamManager.Instance.RedTeamCount);
+
+            newPlayer.SetCustomProperties(playerProperties);
             TeamManager.Instance.AddTeamMember(playerTeam);
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)

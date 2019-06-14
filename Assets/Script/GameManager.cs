@@ -11,6 +11,9 @@ using Photon.Realtime;
  */
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField]
+    private GameObject spawnZone = null;
+
     public static GameManager Instance;
 
     [Tooltip("네트워크를 통해 생성할 플레이어 프리팹입니다.")]
@@ -26,6 +29,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     [System.Obsolete]
     private void Start()
     {
+        if (spawnZone == null)
+            Debug.LogError("GameManager에  spawnZone이란 변수가 초기화 되지 않았습니다.");
+
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
         if (playerPrefab == null)
             Debug.LogError("플레이어 프리팹이 null 입니다.", this);
@@ -34,7 +40,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
             string path = $"Player/{this.playerPrefab.name}/{this.playerPrefab.name}";
 
-            GameObject player = PhotonNetwork.Instantiate(path, playerSpawnPos, Quaternion.identity, 0);
+            int spawnZoneIndex= (int)PhotonNetwork.LocalPlayer.CustomProperties["SPAWN"];
+            Transform spawnZoneElement = spawnZone.transform.GetChild(spawnZoneIndex);
+
+            GameObject player = PhotonNetwork.Instantiate(path, spawnZoneElement.position 
+                , spawnZoneElement.rotation, 0);
 
             /*
              * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
