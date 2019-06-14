@@ -6,6 +6,8 @@ TagManager:
   tags:
   - JoyStick
   - SkillJoyStick
+  - Attack
+  - Skill
   layers:
   - Default
   - TransparentFX

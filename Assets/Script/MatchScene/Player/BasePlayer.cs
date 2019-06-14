@@ -119,12 +119,20 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         isFocusOnAttack = true;
     }
 
-    public abstract void Attack();          // 기본공격을 사용하기 위한 함수
-    public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
-    public abstract void OnPlayerDeath();   // 플레이어가 죽을 때 호출됨
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (!photonView.IsMine) return;
 
-    // 플레이어가 공격당할 때 호출됨
-    public void OnAttacked(int damage)
+        if (collision.gameObject.tag.Equals("Skill"))
+        {
+            BaseAttack attack = collision.gameObject.GetComponent<BaseAttack>();
+            if (attack.ownerPlayer == this.gameObject) return;
+
+            attack.GiveAttack(this);
+        }
+    }
+
+    public void OnDamaged(int damage)
     {
         shieldPower -= damage;
 
@@ -138,10 +146,16 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             CurHP = 0;
     }
 
+    public abstract void Attack();          // 기본공격을 사용하기 위한 함수
+    public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
+    public abstract void OnPlayerDeath();   // 플레이어가 죽을 때 호출됨
+
+
     //Debug함수입니다.
     void OnGUI()
     {
-        GUILayout.TextField(playerTeam.ToString());
+        if (photonView.IsMine)
+            GUILayout.TextField(playerTeam.ToString());
     }
 }
 

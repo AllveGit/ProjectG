@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 5514040316262958117}
   m_Layer: 0
   m_Name: Arrow
-  m_TagString: Untagged
+  m_TagString: Skill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,6 +145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66b90640403611047886876b07f90a54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileSpeed: 10
+  attackDamage: 0
   destroyTime: 3
 --- !u!54 &5514040316262958117
 Rigidbody:

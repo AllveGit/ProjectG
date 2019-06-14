@@ -23,6 +23,7 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField]
     private float       destroyTime     = 10;       // 삭제까지의 대기시간
 
+
     public void Cast(BasePlayer inOwnerPlayer, int attackDamage, Vector3 inDirection)
     {
         ownerPlayer = inOwnerPlayer;
@@ -59,6 +60,7 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
+        /*
         if (!photonView.IsMine) return;
 
         if (!collision.gameObject.tag.Equals("Player")) return;
@@ -70,6 +72,7 @@ public class IceArrow : MonoBehaviourPunCallbacks, IPunObservable
 
             PhotonNetwork.Destroy(this.gameObject);
         }
+         */
     }
 
     IEnumerator Timer()
