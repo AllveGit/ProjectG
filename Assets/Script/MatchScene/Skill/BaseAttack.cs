@@ -6,8 +6,8 @@ using Photon.Pun;
 /*
  * BaseAttack 객체의 변수와 Propertie 입니다.
  */
-public abstract partial class BaseAttack : MonoBehaviour
-{
+public abstract partial class BaseAttack : MonoBehaviourPun
+{ 
     [SerializeField]
     protected float projectileSpeed = 10.0f;
     [SerializeField]
@@ -25,20 +25,19 @@ public abstract partial class BaseAttack : MonoBehaviour
     #endregion
 
     public new Rigidbody rigidbody { get; protected set; }
-    public PhotonView photonView { get; protected set; }
     public BasePlayer ownerPlayer { get; private set; }
 }
 
 
-public abstract partial class BaseAttack : MonoBehaviour
+public abstract partial class BaseAttack : MonoBehaviourPun
 {
+
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
-        photonView = GetComponent<PhotonView>();
     }
 
-    public void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 inDirection)
+    public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 inDirection)
     {
         ownerPlayer = inOwnerPlayer;
         attackDamage = inAttackDamage;
@@ -54,7 +53,18 @@ public abstract partial class BaseAttack : MonoBehaviour
     public virtual void GiveAttack(BasePlayer player)
     {
         player.OnDamaged(attackDamage);
-        if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            if (other.gameObject == ownerPlayer.gameObject)
+                return ;
+
+            if (photonView.IsMine)
+                PhotonNetwork.Destroy(this.gameObject);
+        }
     }
 
     IEnumerator Timer()

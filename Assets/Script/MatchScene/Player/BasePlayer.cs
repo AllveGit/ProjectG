@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
 
-public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
+public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
     
     #region PhotonCallBack
@@ -48,9 +48,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         animator        = GetComponent<Animator>();
         if (animator == null)
             Debug.LogError("BasePlayer.cs : 22 / animator를 가져오지 못했습니다.");
-        photonView      = GetComponent<PhotonView>();
-        if (photonView == null)
-            Debug.LogError("BasePlayer.cs : 25 / photonView을 가져오지 못했습니다.");
+
 
         if(photonView.IsMine)
         {
@@ -119,13 +117,13 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         isFocusOnAttack = true;
     }
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider collider)
     {
         if (!photonView.IsMine) return;
 
-        if (collision.gameObject.tag.Equals("Skill"))
+        if (collider.gameObject.tag.Equals("Skill"))
         {
-            BaseAttack attack = collision.gameObject.GetComponent<BaseAttack>();
+            BaseAttack attack = collider.gameObject.GetComponent<BaseAttack>();
             if (attack.ownerPlayer == this.gameObject) return;
 
             attack.GiveAttack(this);
@@ -201,7 +199,6 @@ public abstract partial class BasePlayer
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
     public PlayerCamera playerCamera { get; private set; } = null;
-    public new PhotonView photonView { get; private set; } = null;
 
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }
