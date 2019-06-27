@@ -53,18 +53,23 @@ public abstract partial class BaseAttack : MonoBehaviourPun
     public virtual void GiveAttack(BasePlayer player)
     {
         player.OnDamaged(attackDamage);
+
+        // 총알 삭제구문. 
+        
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            if (other.gameObject == ownerPlayer.gameObject)
-                return ;
+        if (photonView.IsMine == false)
+            return;
 
-            if (photonView.IsMine)
-                PhotonNetwork.Destroy(this.gameObject);
-        }
+        if (other.CompareTag("Player") == false)
+            return;
+
+        BasePlayer player = other.GetComponent<BasePlayer>();
+        player.OnDamaged(AttackDamage);
+
+        PhotonNetwork.Destroy(this.gameObject);
     }
 
     IEnumerator Timer()

@@ -117,19 +117,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         isFocusOnAttack = true;
     }
 
-    public void OnTriggerEnter(Collider collider)
-    {
-        if (!photonView.IsMine) return;
-
-        if (collider.gameObject.tag.Equals("Skill"))
-        {
-            BaseAttack attack = collider.gameObject.GetComponent<BaseAttack>();
-            if (attack.ownerPlayer == this.gameObject) return;
-
-            attack.GiveAttack(this);
-        }
-    }
-
     public void OnDamaged(int damage)
     {
         shieldPower -= damage;
