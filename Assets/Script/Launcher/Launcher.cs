@@ -4,19 +4,18 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-using TeamOption = TeamManager.PlayerTeam;
+using TeamOption = Enums.TeamOption;
+
+using MatchOption = Enums.MatchType;
+
+using PlayerProperties = Enums.PlayerProperties;
+
+using RoomPropoerties = Enums.RoomProperties;
+
 using PhotonHashTable = ExitGames.Client.Photon.Hashtable;
 
 public partial class Launcher : MonoBehaviourPunCallbacks
 {
-    enum MatchType
-    {
-        Match_None = 0,
-        Match_Debug = 1,
-        Match_1vs1 = 2,
-        Match_2vs2 = 4,
-        Match_3vs3 = 6,
-    }
 
     private string gameVersion = "1";
     private bool onMatching = false;
@@ -29,9 +28,9 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject progressLabel = null;
 
-    public bool IsConnected { get; private set; } = false;
+    private MatchOption currentMatchType = MatchOption.Match_None;
 
-    private MatchType currentMatchType = MatchType.Match_None;
+    public bool IsConnected { get; private set; } = false;
 
     private void Awake()
     {
@@ -53,19 +52,19 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public void Matching1vs1()
     {
-        currentMatchType = MatchType.Match_1vs1;
+        currentMatchType = MatchOption.Match_1vs1;
         Matching();
     }
 
     public void Matching2vs2()
     {
-        currentMatchType = MatchType.Match_2vs2;
+        currentMatchType = MatchOption.Match_2vs2;
         Matching();
     }
 
     public void Matching3vs3()
     {
-        currentMatchType = MatchType.Match_3vs3;
+        currentMatchType = MatchOption.Match_3vs3;
         Matching();
     }
 
@@ -75,26 +74,78 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         progressLabel.SetActive(true);
         controlPanel.SetActive(false);
 
-        currentMatchType = MatchType.Match_Debug;
+        currentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new PhotonHashTable() { { "TEAM", TeamOption.Solo }, { "SPAWN", 0 } });
+        PhotonNetwork.LocalPlayer.SetCustomProperties(new PhotonHashTable() { { PlayerProperties.TEAM.ToString(), TeamOption.Solo },
+            { PlayerProperties.SPAWNPOS.ToString(), 0 } });
     }
 
 
     private void Matching()
     {
-        if (currentMatchType == MatchType.Match_None)
+        if (currentMatchType == MatchOption.Match_None)
             return;
 
         progressLabel.SetActive(true);
         controlPanel.SetActive(false);
 
         PhotonHashTable roomProperty
-            = new PhotonHashTable() { { "MT", currentMatchType } };
+            = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), currentMatchType } };
 
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
+
+
+    private RoomOptions GetMatchingRoomOption(MatchOption type)
+    {
+        PhotonHashTable roomProperty = null;
+        RoomOptions roomOption = new RoomOptions();
+
+        roomProperty = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), currentMatchType } };
+
+        if (type.Equals(MatchOption.Match_Debug)) roomOption.MaxPlayers = 0;
+        else roomOption.MaxPlayers = (byte)type;
+
+        roomOption.CustomRoomProperties = roomProperty;
+        roomOption.CustomRoomPropertiesForLobby = new string[] { RoomPropoerties.MATCHTYPE.ToString() };
+
+        return roomOption;
+    }
+
+    private PhotonHashTable GetPlayerProperties(TeamOption playerTeam)
+    {
+        PhotonHashTable playerProperties = new PhotonHashTable();
+
+        playerProperties.Add(PlayerProperties.TEAM.ToString(), playerTeam);
+
+        if (playerTeam.Equals(TeamOption.BlueTeam))
+            playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), TeamManager.Instance.BlueTeamCount);
+        else if (playerTeam.Equals(TeamOption.RedTeam))
+            playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 3 + TeamManager.Instance.RedTeamCount);
+        else
+            playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 0);
+
+        return playerProperties;
+    }
+
+    private TeamOption GetPlayerTeam()
+    {
+        TeamOption playerTeam = TeamOption.NoneTeam;
+
+        if (TeamManager.Instance.BlueTeamCount == TeamManager.Instance.RedTeamCount)
+            playerTeam = (TeamOption)Random.RandomRange(0, 2);
+        else
+        {
+            int redCnt = TeamManager.Instance.RedTeamCount;
+            int blueCnt = TeamManager.Instance.BlueTeamCount;
+
+            playerTeam = (redCnt < blueCnt) ? TeamOption.RedTeam : TeamOption.BlueTeam;
+        }
+
+        return playerTeam;
+    }
+
 }
 
 /*
@@ -123,24 +174,17 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchType.Match_Debug))
+        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchOption.Match_Debug))
         {
             TeamManager.Instance.ClearTeamMemberCount();
 
-            TeamOption teamOption = (TeamOption)Random.RandomRange(0, 2);
-            PhotonHashTable playerProperties = new PhotonHashTable() { { "TEAM", teamOption } };
-
-            if (teamOption.Equals(TeamOption.BlueTeam))
-                playerProperties.Add("SPAWN", 0);
-            else
-                playerProperties.Add("SPAWN", 3);
-
-            PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
-
+            TeamOption teamOption = GetPlayerTeam();
             TeamManager.Instance.AddTeamMember(teamOption);
-        }
 
-        if (currentMatchType == MatchType.Match_Debug)
+            PhotonHashTable properties = GetPlayerProperties(teamOption);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
+        }
+        else if (PhotonNetwork.IsMasterClient && currentMatchType == MatchOption.Match_Debug)
         {
             PhotonNetwork.LoadLevel("Match");
             return;
@@ -153,47 +197,16 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("매칭 실패!");
 
-        PhotonHashTable roomProperty = null;
-        RoomOptions roomOption = new RoomOptions();
-
-        roomProperty = new PhotonHashTable() { { "MT", currentMatchType } };
-
-        if (currentMatchType == MatchType.Match_Debug)
-            roomOption.MaxPlayers = 0;
-        else
-            roomOption.MaxPlayers = (byte)currentMatchType;
-
-        roomOption.CustomRoomProperties = roomProperty;
-        roomOption.CustomRoomPropertiesForLobby = new string[] { "MT" };
-
-        PhotonNetwork.CreateRoom(null, roomOption);
+        PhotonNetwork.CreateRoom(null, GetMatchingRoomOption(currentMatchType));
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchType.Match_Debug))
+        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchOption.Match_Debug))
         {
-            PhotonHashTable playerProperties = null;
-            TeamOption playerTeam = TeamOption.NoneTeam;
-
-            if (TeamManager.Instance.BlueTeamCount == TeamManager.Instance.RedTeamCount)
-                playerTeam = (TeamOption)Random.RandomRange(0, 2);
-            else
-            {
-                int redCnt = TeamManager.Instance.RedTeamCount;
-                int blueCnt = TeamManager.Instance.BlueTeamCount;
-
-                playerTeam =  (redCnt < blueCnt) ? TeamOption.RedTeam : TeamOption.BlueTeam;
-            }
-
-            playerProperties = new PhotonHashTable() { { "TEAM", playerTeam } };
-
-            if (playerTeam.Equals(TeamOption.BlueTeam))
-                playerProperties.Add("SPAWN", TeamManager.Instance.BlueTeamCount);
-            else if (playerTeam.Equals(TeamOption.RedTeam))
-                playerProperties.Add("SPAWN", 3 + TeamManager.Instance.RedTeamCount);
-
-            newPlayer.SetCustomProperties(playerProperties);
+            TeamOption playerTeam = GetPlayerTeam();
             TeamManager.Instance.AddTeamMember(playerTeam);
+
+            newPlayer.SetCustomProperties(GetPlayerProperties(playerTeam));
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
             {

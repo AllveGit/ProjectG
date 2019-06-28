@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
             string path = $"Player/{this.playerPrefab.name}/{this.playerPrefab.name}";
 
-            int spawnZoneIndex= (int)PhotonNetwork.LocalPlayer.CustomProperties["SPAWN"];
+            int spawnZoneIndex= (int)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.SPAWNPOS.ToString()];
             Transform spawnZoneElement = spawnZone.transform.GetChild(spawnZoneIndex);
 
             GameObject player = PhotonNetwork.Instantiate(path, spawnZoneElement.position 
@@ -49,7 +49,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             /*
              * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
              */
-            player.GetComponent<BasePlayer>().playerTeam = (TeamManager.PlayerTeam)PhotonNetwork.LocalPlayer.CustomProperties["TEAM"];
+            player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+            string team = Enums.PlayerProperties.TEAM.ToString();
         }
     }
 

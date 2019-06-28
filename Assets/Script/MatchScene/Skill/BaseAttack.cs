@@ -58,18 +58,50 @@ public abstract partial class BaseAttack : MonoBehaviourPun
         
     }
 
+    protected bool IsAttackable(Photon.Realtime.Player me, Photon.Realtime.Player enumy)
+    {
+        bool Attackable = false; ;
+
+        Enums.TeamOption myTeamOption = (Enums.TeamOption)me.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+        Enums.TeamOption enumyTeamOption = (Enums.TeamOption)enumy.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+
+        switch (myTeamOption)
+        {
+            case Enums.TeamOption.RedTeam:
+                if (enumyTeamOption == Enums.TeamOption.BlueTeam)
+                    Attackable = true;
+                break;
+            case Enums.TeamOption.BlueTeam:
+                if (enumyTeamOption == Enums.TeamOption.RedTeam)
+                    Attackable = true;
+                break;
+            case Enums.TeamOption.Solo:
+                Attackable = true;
+                break;
+        }
+        return Attackable;
+    }
+
+
     public void OnTriggerEnter(Collider other)
     {
         if (photonView.IsMine == false)
             return;
 
-        if (other.CompareTag("Player") == false)
-            return;
+        if (other.CompareTag("Player"))
+        {
+            BasePlayer player = other.GetComponent<BasePlayer>();
+            BaseCollisionProcess(player);
+        }
+    }
 
-        BasePlayer player = other.GetComponent<BasePlayer>();
-        player.OnDamaged(AttackDamage);
-
-        PhotonNetwork.Destroy(this.gameObject);
+    public virtual void BaseCollisionProcess(BasePlayer player)
+    {
+        if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
+        {
+            player.OnDamaged(AttackDamage);
+            PhotonNetwork.Destroy(this.gameObject);
+        }
     }
 
     IEnumerator Timer()

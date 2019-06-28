@@ -34,5 +34,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - SetTeam
   - DestroyBullet
+  - PRCTest
+  - RPCTest
+  - OnDamage
+  - DD
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -16,16 +16,19 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         {
             // 메시지 전송
             // stream.SendNext()
+
+            stream.SendNext(CurHP);
         }
         else
         {
             // 메시지 수신
             // stream.ReceiveNext();
+            CurHP = (int)stream.ReceiveNext();
         }
     }
 
     #endregion
-    public TeamManager.PlayerTeam playerTeam { get; set; }
+    public Enums.TeamOption playerTeam { get; set; }
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
@@ -119,11 +122,17 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     public void OnDamaged(int damage)
     {
+        this.photonView.RPC("DD", RpcTarget.MasterClient, damage);
+    }
+
+    [PunRPC]
+    private void DD(int damage)
+    {
         shieldPower -= damage;
 
         if (shieldPower < 0)
         {
-            CurHP -= shieldPower;
+            CurHP += shieldPower;
             shieldPower = 0;
         }
 
@@ -140,7 +149,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     void OnGUI()
     {
         if (photonView.IsMine)
-            GUILayout.TextField(playerTeam.ToString());
+            GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString());
     }
 }
 
