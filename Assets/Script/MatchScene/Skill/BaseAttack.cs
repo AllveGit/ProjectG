@@ -35,6 +35,7 @@ public abstract partial class BaseAttack : MonoBehaviourPun
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
+        
     }
 
     public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 inDirection)
@@ -94,7 +95,11 @@ public abstract partial class BaseAttack : MonoBehaviourPun
             BaseCollisionProcess(player);
         }
     }
-
+    
+    /*
+     * 만약 구현하는 공격의 프로세스가 기존 프로세스와 다를경우
+     * 이 함수를 상속받아 사용한다.
+     */
     public virtual void BaseCollisionProcess(BasePlayer player)
     {
         if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))

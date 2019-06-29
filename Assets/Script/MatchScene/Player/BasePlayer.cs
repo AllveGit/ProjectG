@@ -17,12 +17,14 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             // 메시지 전송
             // stream.SendNext()
 
+            stream.SendNext(ShieldPower);
             stream.SendNext(CurHP);
         }
         else
         {
             // 메시지 수신
             // stream.ReceiveNext();
+            ShieldPower = (int)stream.ReceiveNext();
             CurHP = (int)stream.ReceiveNext();
         }
     }
@@ -52,8 +54,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         if (animator == null)
             Debug.LogError("BasePlayer.cs : 22 / animator를 가져오지 못했습니다.");
 
-
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             playerCamera = GetComponent<PlayerCamera>();
             playerCamera.TargetObject   = gameObject;
@@ -122,22 +123,31 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     public void OnDamaged(int damage)
     {
-        this.photonView.RPC("DD", RpcTarget.MasterClient, damage);
+        photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
     }
 
+    /*
+     * 만약 부모클래스에 PunRPC 함수가 있고
+     * 상속받은 클래스가 사용한다면
+     * 꼭 virtual을 붙여주자 만약 안붙인다면
+     * Photon에서 이 함수를 찾지 못한다.
+     */
     [PunRPC]
-    private void DD(int damage)
+    protected virtual void RPCOnDamage(int damage)
     {
-        shieldPower -= damage;
-
-        if (shieldPower < 0)
+        if (photonView.IsMine)
         {
-            CurHP += shieldPower;
-            shieldPower = 0;
-        }
+            ShieldPower -= damage;
 
-        if (CurHP < 0)
-            CurHP = 0;
+            if (ShieldPower < 0)
+            {
+                CurHP -= Mathf.Abs(ShieldPower);
+                ShieldPower = 0;
+            }
+
+            if (CurHP < 0)
+                CurHP = 0;
+        }
     }
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
@@ -149,7 +159,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     void OnGUI()
     {
         if (photonView.IsMine)
-            GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString());
+            GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString() + " Shield : " + ShieldPower.ToString());
     }
 }
 
