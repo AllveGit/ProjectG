@@ -30,18 +30,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
 
     #endregion
-    public Enums.TeamOption playerTeam { get; set; }
-    protected JoyStick MoveJoyStick = null;
-    protected JoyStick SkillJoyStick = null;
-    protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
-    protected Vector3 attackDirection = Vector3.zero;
 
-    protected bool isFocusOnAttack = false;
-
-    [SerializeField]
-    protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
-    [SerializeField]
-    protected GameObject basicAttackPrefab = null; // 평타 프리팹
     private void Awake()
     {
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
@@ -146,14 +135,22 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             }
 
             if (CurHP < 0)
+            {
                 CurHP = 0;
+                OnPlayerDeath();
+            }
         }
     }
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
-    public abstract void OnPlayerDeath();   // 플레이어가 죽을 때 호출됨
 
+    public virtual void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
+    {
+        if (!photonView.IsMine) return;
+
+        animator.SetBool("Death", true);
+    }
 
     //Debug함수입니다.
     void OnGUI()
@@ -169,6 +166,23 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
  */
 public abstract partial class BasePlayer
 {
+    public Enums.TeamOption playerTeam { get; set; }
+
+    protected JoyStick MoveJoyStick = null;
+
+    protected JoyStick SkillJoyStick = null;
+
+    protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
+
+    protected Vector3 attackDirection = Vector3.zero;
+
+    protected bool isFocusOnAttack = false;
+
+    [SerializeField]
+    protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
+    [SerializeField]
+    protected GameObject basicAttackPrefab = null; // 평타 프리팹
+
     [SerializeField]
     private int curHP = 0; // 플레이어의 HP
 
@@ -194,7 +208,6 @@ public abstract partial class BasePlayer
     [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
 
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) { }
 }
 
 /*

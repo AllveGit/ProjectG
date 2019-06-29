@@ -33,9 +33,6 @@ public class Archer : BasePlayer
         }, SkillJoyStick.Amount, 0.6f));
     }
 
-    public override void OnPlayerDeath()
-    {
-    }
 
     public override void UltimateSkill()
     {
