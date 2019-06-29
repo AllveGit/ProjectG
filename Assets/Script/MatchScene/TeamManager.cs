@@ -31,4 +31,21 @@ public class TeamManager : MonoBehaviour
         else if (inPlayerTeam == TeamOption.BlueTeam) BlueTeamCount += iAddCount;
     }
 
+    public TeamOption CollocateTeam()
+    {
+        TeamOption playerTeam = TeamOption.NoneTeam;
+
+        if (BlueTeamCount == RedTeamCount)
+            playerTeam = (TeamOption)Random.RandomRange((int)TeamOption.RedTeam, (int)TeamOption.Solo);
+        else
+        {
+            int redCnt = RedTeamCount;
+            int blueCnt = BlueTeamCount;
+
+            playerTeam = (redCnt < blueCnt) ? TeamOption.RedTeam : TeamOption.BlueTeam;
+        }
+
+        return playerTeam;
+    }
+
 }

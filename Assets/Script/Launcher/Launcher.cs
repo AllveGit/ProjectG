@@ -97,7 +97,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     }
 
 
-    private RoomOptions GetMatchingRoomOption(MatchOption type)
+    private RoomOptions CreateMatchingRoomOption(MatchOption type)
     {
         PhotonHashTable roomProperty = null;
         RoomOptions roomOption = new RoomOptions();
@@ -113,7 +113,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         return roomOption;
     }
 
-    private PhotonHashTable GetPlayerProperties(TeamOption playerTeam)
+    private PhotonHashTable CreatePlayerProperties(TeamOption playerTeam)
     {
         PhotonHashTable playerProperties = new PhotonHashTable();
 
@@ -129,22 +129,6 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         return playerProperties;
     }
 
-    private TeamOption GetPlayerTeam()
-    {
-        TeamOption playerTeam = TeamOption.NoneTeam;
-
-        if (TeamManager.Instance.BlueTeamCount == TeamManager.Instance.RedTeamCount)
-            playerTeam = (TeamOption)Random.RandomRange(0, 2);
-        else
-        {
-            int redCnt = TeamManager.Instance.RedTeamCount;
-            int blueCnt = TeamManager.Instance.BlueTeamCount;
-
-            playerTeam = (redCnt < blueCnt) ? TeamOption.RedTeam : TeamOption.BlueTeam;
-        }
-
-        return playerTeam;
-    }
 
 }
 
@@ -178,10 +162,10 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         {
             TeamManager.Instance.ClearTeamMemberCount();
 
-            TeamOption teamOption = GetPlayerTeam();
+            TeamOption teamOption = TeamManager.Instance.CollocateTeam();
             TeamManager.Instance.AddTeamMember(teamOption);
 
-            PhotonHashTable properties = GetPlayerProperties(teamOption);
+            PhotonHashTable properties = CreatePlayerProperties(teamOption);
             PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
         }
         else if (PhotonNetwork.IsMasterClient && currentMatchType == MatchOption.Match_Debug)
@@ -197,16 +181,16 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("매칭 실패!");
 
-        PhotonNetwork.CreateRoom(null, GetMatchingRoomOption(currentMatchType));
+        PhotonNetwork.CreateRoom(null, CreateMatchingRoomOption(currentMatchType));
     }
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchOption.Match_Debug))
         {
-            TeamOption playerTeam = GetPlayerTeam();
+            TeamOption playerTeam = TeamManager.Instance.CollocateTeam();
             TeamManager.Instance.AddTeamMember(playerTeam);
 
-            newPlayer.SetCustomProperties(GetPlayerProperties(playerTeam));
+            newPlayer.SetCustomProperties(CreatePlayerProperties(playerTeam));
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
             {
