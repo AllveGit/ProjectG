@@ -24,6 +24,10 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject controlPanel = null;
 
+    [Tooltip("TouchToScreen Object 입니다")]
+    [SerializeField]
+    private GameObject touchToScreen = null;
+
     [Tooltip("Connecting 중임을 알리는 Text UI 입니다.")]
     [SerializeField]
     private GameObject progressLabel = null;
@@ -40,9 +44,12 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        progressLabel.SetActive(true);
         controlPanel.SetActive(false);
+        touchToScreen.SetActive(true);
+    }
 
+    public void Connect()
+    {
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.GameVersion = gameVersion;
@@ -71,8 +78,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public void MatchingDebug()
     {
-        progressLabel.SetActive(true);
-        controlPanel.SetActive(false);
+        controlPanel.SetActive(true);
+        touchToScreen.SetActive(false);
 
         currentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
@@ -152,7 +159,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log("로비에 연결되었습니다.");
 
-        progressLabel.SetActive(false);
+        touchToScreen.SetActive(false);
         controlPanel.SetActive(true);
     }
 

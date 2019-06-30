@@ -45,6 +45,7 @@ public class Archer : BasePlayer
                 projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
 
         }, SkillJoyStick.Amount, 0.6f));
+
     }
 
 

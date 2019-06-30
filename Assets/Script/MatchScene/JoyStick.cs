@@ -23,6 +23,7 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPoint
     {
         bgImg = GetComponent<Image>();
         jsImg = transform.GetChild(0).GetComponent<Image>();
+
     }
 
     public virtual void OnDrag(PointerEventData ped)
