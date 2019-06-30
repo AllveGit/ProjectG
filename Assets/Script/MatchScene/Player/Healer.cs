@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Healer : BasePlayer
 {
-    public override void Attack()
-    {
-        if (!photonView.IsMine) return;
-
-    }
-    public override void UltimateSkill()
-    {
-        if (!photonView.IsMine) return;
-
-    }
-
     void Start()
     {
     }
@@ -27,5 +16,16 @@ public class Healer : BasePlayer
     private void LateUpdate()
     {
         RotateCalculate();
+    }
+
+    public override void Attack()
+    {
+        if (!photonView.IsMine) return;
+
+    }
+    public override void UltimateSkill()
+    {
+        if (!photonView.IsMine) return;
+
     }
 }

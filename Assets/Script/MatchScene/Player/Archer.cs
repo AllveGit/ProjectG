@@ -7,8 +7,22 @@ using Photon.Pun;
 public class Archer : BasePlayer
 {
     private GameObject ExplosionPrefab;
-
     delegate void AttackCallback(Vector3 direction);
+ 
+    void Start()
+    {
+        ExplosionPrefab = Resources.Load<GameObject>("Effect/Explosion/Explosion");
+    }
+
+    void Update()
+    {
+        MoveCalculate();
+    }
+
+    private void LateUpdate()
+    {
+        RotateCalculate();
+    }
 
     public override void Attack()
     {
@@ -17,7 +31,7 @@ public class Archer : BasePlayer
 
         animator.SetBool("Attack", true);
 
-        StartCoroutine(DelaySpawn(delegate (Vector3 direction)
+        StartCoroutine(DelayAttack(delegate (Vector3 direction)
         {
             if (direction == Vector3.zero)
                 return;
@@ -41,7 +55,7 @@ public class Archer : BasePlayer
 
         animator.SetBool("Attack", true);
 
-        StartCoroutine(DelaySpawn(delegate (Vector3 direction)
+        StartCoroutine(DelayAttack(delegate (Vector3 direction)
         {
             if (direction == Vector3.zero)
                 return;
@@ -86,22 +100,8 @@ public class Archer : BasePlayer
 
     }
 
-    void Start()
-    {
-        ExplosionPrefab = Resources.Load<GameObject>("Effect/Explosion/Explosion");
-    }
 
-    void Update()
-    {
-        MoveCalculate();
-    }
-
-    private void LateUpdate()
-    {
-        RotateCalculate();
-    }
-
-    IEnumerator DelaySpawn(AttackCallback attackCallback, Vector3 direction, float delay)
+    IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
     {
         yield return new WaitForSeconds(delay);
         attackCallback(direction);
