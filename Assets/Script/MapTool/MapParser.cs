@@ -16,6 +16,13 @@ public class MapParser : MonoBehaviour
     [SerializeField]
     private int Height;
 
+    [SerializeField]
+    private float RealWidth;
+    [SerializeField]
+    private float RealHeight;
+
+    public float TileSize;
+
     void Awake()
     {
         m_mapData = Resources.Load<MapData>(dataPath + MapDataName);
@@ -32,10 +39,13 @@ public class MapParser : MonoBehaviour
         Width = m_mapData.Width;
         Height = m_mapData.Height;
 
+        RealWidth = Width * TileSize;
+        RealHeight = Height * TileSize;
+
         m_GridArr = new GameObject[Height * Width];
 
-        float x = -(Width / 2);
-        float y = -(Height / 2);
+        float x = -(RealWidth / 2);
+        float y = -(RealHeight / 2);
 
         for (int i = 0; i < Height; i++)
         {
@@ -46,33 +56,33 @@ public class MapParser : MonoBehaviour
                 switch (m_mapData.m_MapInfo[(i * Width) + j])
                 {
                     case "GRID_SPACE":
-                        Temp = Instantiate(m_mapData.spacePrefab, new Vector3(x + j, 0, y + i),
-                           Quaternion.identity, this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize)  , 0, y + (i * TileSize)),
+                           Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_WALL":
-                        Instantiate(m_mapData.spacePrefab, new Vector3(x + j, 0, y + i),
-                           Quaternion.identity, this.transform);
+                        Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
+                           Quaternion.Euler(-90, 0, 0), this.transform);
 
-                        Temp = Instantiate(m_mapData.wallPrefab, new Vector3(x + j, 1, y + i),
-                            Quaternion.identity, this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.wallPrefab, new Vector3(x + (j * TileSize), TileSize, y + (i * TileSize)),
+                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_BUSH":
-                        Instantiate(m_mapData.spacePrefab, new Vector3(x + j, 0, y + i),
-                            Quaternion.identity, this.transform);
+                        Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
+                            Quaternion.Euler(-90, 0, 0), this.transform);
 
-                        Temp = Instantiate(m_mapData.bushPrefab, new Vector3(x + j, 1, y + i),
-                            Quaternion.identity, this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.bushPrefab, new Vector3(x + (j * TileSize), TileSize, y + (i * TileSize)),
+                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_WATER":
-                        Instantiate(m_mapData.spacePrefab, new Vector3(x + j, 0, y + i),
-                            Quaternion.identity, this.transform);
+                        Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
+                            Quaternion.Euler(-90, 0, 0), this.transform);
 
-                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + j, 1, y + i),
-                            Quaternion.identity, this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + (j * TileSize), TileSize, y + (i * TileSize)),
+                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_SPAWN":
-                        Temp = Instantiate(m_mapData.spawnPrefab, new Vector3(x + j, 0, y + i),
-                            Quaternion.identity, this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.spawnPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
+                           Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     default:
                         Temp = new GameObject();

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -323,9 +323,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e67d09f9cbc8e4db76db424f9ab23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapDataName: Map1
+  MapDataName: Stage1MapData
   Width: 0
   Height: 0
+  RealWidth: 0
+  RealHeight: 0
+  TileSize: 1.27
 --- !u!4 &1500112919
 Transform:
   m_ObjectHideFlags: 0

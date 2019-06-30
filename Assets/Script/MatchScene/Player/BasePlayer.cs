@@ -7,7 +7,7 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
-    
+   
     #region PhotonCallBack
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
