@@ -22,7 +22,7 @@ MonoBehaviour:
     type: 3}
   spawnPrefab: {fileID: 6350797162750034364, guid: d65ebc39343f67e459ce13a83f5a0f32,
     type: 3}
-  waterPrefab: {fileID: 4795012485625148897, guid: 808a128abb9d250459ced270ad68933a,
+  waterPrefab: {fileID: 2314042583314434846, guid: 5867ee3f299e85041a78e4a60bfb211b,
     type: 3}
   m_MapInfo:
   - GRID_WALL
