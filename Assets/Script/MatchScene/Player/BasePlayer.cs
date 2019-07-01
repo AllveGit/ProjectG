@@ -171,7 +171,11 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             if (CurHP < 0)
             {
                 CurHP = 0;
+
+
                 OnPlayerDeath();
+
+
             }
         }
     }
@@ -198,7 +202,19 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         animator.SetBool("Death", true);
 
-        CountingScore();
+        Enums.TeamOption local = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+       
+        if (local == Enums.TeamOption.BlueTeam)
+        {
+            int score = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE];
+            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE] = score - 1;
+        }
+        else
+        {
+            int score = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE];
+            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE] = score - 1;
+        }
+
         StartCoroutine(Respawn(5f));
     }
 
@@ -219,6 +235,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         {
             int TeamScore = (int)PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] - 1;
             PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] = TeamScore;
+
             if (TeamScore <= 0)
             {
                 if (DeathTeam == Enums.RoomProperties.BLUDSCORE)

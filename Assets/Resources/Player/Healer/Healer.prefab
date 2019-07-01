@@ -1512,7 +1512,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: Hurt
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 0
 --- !u!114 &9067239046602061004
 MonoBehaviour:
