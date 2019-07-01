@@ -22,8 +22,6 @@ public class CharacterSelecter : MonoBehaviour
 
     void Start() 
     {
-
-
         maxIndex = (Enums.CharacterIndex)characterSprites.Length - 1;
     }
 

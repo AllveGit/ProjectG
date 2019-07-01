@@ -77,6 +77,8 @@ public class Archer : BasePlayer
 
         if (!photonView.IsMine) return;
 
+        if (animator.GetBool("Attack") == true) return;
+
         if (isFocusOnAttack)
         {
             rigidbody.rotation = Quaternion.Slerp(transform.rotation,

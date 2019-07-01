@@ -46,6 +46,5 @@ public class Healer : BasePlayer
     public override void UltimateSkill()
     {
         if (!photonView.IsMine) return;
-
     }
 }

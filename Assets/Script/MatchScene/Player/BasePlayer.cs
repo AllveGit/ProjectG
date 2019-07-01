@@ -38,10 +38,10 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         rigidbody       = GetComponent<Rigidbody>();
         if (rigidbody == null)
-            Debug.LogError("BasePlayer.cs : 19 / rigidbody을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs / rigidbody을 가져오지 못했습니다.");
         animator        = GetComponent<Animator>();
         if (animator == null)
-            Debug.LogError("BasePlayer.cs : 22 / animator를 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs / animator를 가져오지 못했습니다.");
 
         if (photonView.IsMine)
         {
@@ -51,9 +51,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         }
 
         if (MoveJoyStick == null)
-            Debug.LogError("BasePlayer.cs : 35 / JoyStick을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs / JoyStick을 가져오지 못했습니다.");
         if (SkillJoyStick == null)
-            Debug.LogError("BasePlayer.cs : 39 / SkillJoyStick을 가져오지 못했습니다.");
+            Debug.LogError("BasePlayer.cs / SkillJoyStick을 가져오지 못했습니다.");
 
         // 이벤트 핸들러에 등록
         SkillJoyStick.OnUpEvent     += OnSkillJoyStickUp;
@@ -65,6 +65,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
         if (!photonView.IsMine) return;
 
+        if (animator.GetBool("Attack") == true) return;
+
         // 키보드
         float v = Input.GetAxis("Vertical"); // 수직
         float h = Input.GetAxis("Horizontal"); // 수평
@@ -73,7 +75,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
 
         attackDirection = SkillJoyStick.Amount;
-
     }
 
     public virtual void RotateCalculate()
@@ -81,8 +82,10 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
         if (!photonView.IsMine) return;
 
+        if (animator.GetBool("Attack") == true) return;
+
         if (isFocusOnAttack)
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(attackDirection), rotationLerpSpeed);
+            rigidbody.rotation = Quaternion.LookRotation(attackDirection);
 
         if (movementAmount.magnitude < 0.01f)
         {
@@ -94,9 +97,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         rigidbody.MovePosition(transform.position + movementAmount);
 
         if (isFocusOnAttack == false)
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movementAmount), rotationLerpSpeed);
-
-        Debug.Log(isFocusOnAttack);
+            rigidbody.rotation = Quaternion.LookRotation(movementAmount);
     }
 
     public void OnSkillJoyStickUp(Vector3 pedPosition)
