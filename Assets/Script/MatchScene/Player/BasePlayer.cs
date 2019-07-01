@@ -7,7 +7,6 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
-    public bool Visible = true;
 
     #region PhotonCallBack
     public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -20,6 +19,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
             stream.SendNext(ShieldPower);
             stream.SendNext(CurHP);
+            stream.SendNext(IsBush);
         }
         else
         {
@@ -27,6 +27,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             // stream.ReceiveNext();
             ShieldPower = (int)stream.ReceiveNext();
             CurHP = (int)stream.ReceiveNext();
+            IsBush = (bool)stream.ReceiveNext();
         }
     }
 
@@ -59,6 +60,22 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // 이벤트 핸들러에 등록
         SkillJoyStick.OnUpEvent     += OnSkillJoyStickUp;
         SkillJoyStick.OnDownEvent   += OnSkillJoyStickDown;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (!photonView.IsMine) return;
+
+        if (other.CompareTag("RealBush"))
+            IsBush = true;
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (!photonView.IsMine) return;
+
+        if (other.CompareTag("RealBush"))
+            IsBush = false;
     }
 
     public void MoveCalculate()
@@ -124,28 +141,27 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     public void OnHideBush()
     {
-        if (!Visible && !photonView.IsMine)
+        if (!photonView.IsMine && IsBush)
         {
-            if(PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM] != 
-                this.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM])
-            {
-                for(int i = 0; i < transform.GetChildCount(); i++)
-                {
-                    transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
-        }
+            Enums.TeamOption MasterClientTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+            Enums.TeamOption MyTeam = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
-        else if(!photonView.IsMine)
-        {
-            if (PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM] !=
-                 this.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM])
+            if (MasterClientTeam == MyTeam)
             {
                 for (int i = 0; i < transform.GetChildCount(); i++)
-                {
                     transform.GetChild(i).gameObject.SetActive(true);
-                }
             }
+            else
+            {
+                for (int i = 0; i < transform.GetChildCount(); i++)
+                    transform.GetChild(i).gameObject.SetActive(false);
+            }
+
+        }
+        else if (!photonView.IsMine)
+        {
+            for (int i = 0; i < transform.GetChildCount(); i++)
+                transform.GetChild(i).gameObject.SetActive(true);
         }
     }
 
@@ -198,8 +214,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         animator.SetBool("Death", true);
     }
-
-
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
     {
@@ -265,8 +279,6 @@ public abstract partial class BasePlayer
     [SerializeField]
     [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
-
-    
 }
 
 /*
@@ -277,6 +289,9 @@ public abstract partial class BasePlayer
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
     public PlayerCamera playerCamera { get; private set; } = null;
+
+    public bool IsBush { get; set; } = false;
+
 
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }
