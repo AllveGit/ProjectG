@@ -19,7 +19,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
             stream.SendNext(ShieldPower);
             stream.SendNext(CurHP);
-            stream.SendNext(IsBush);
         }
         else
         {
@@ -27,7 +26,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             // stream.ReceiveNext();
             ShieldPower = (int)stream.ReceiveNext();
             CurHP = (int)stream.ReceiveNext();
-            IsBush = (bool)stream.ReceiveNext();
         }
     }
 
@@ -62,21 +60,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         SkillJoyStick.OnDownEvent   += OnSkillJoyStickDown;
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (!photonView.IsMine) return;
-
-        if (other.CompareTag("RealBush"))
-            IsBush = true;
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (!photonView.IsMine) return;
-
-        if (other.CompareTag("RealBush"))
-            IsBush = false;
-    }
 
     public void MoveCalculate()
     {
@@ -139,31 +122,31 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
 
-    public void OnHideBush()
-    {
-        if (!photonView.IsMine && IsBush)
-        {
-            Enums.TeamOption MasterClientTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-            Enums.TeamOption MyTeam = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+    //public void OnHideBush()
+    //{
+    //    if (!photonView.IsMine && IsBush)
+    //    {
+    //        Enums.TeamOption MasterClientTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+    //        Enums.TeamOption MyTeam = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
-            if (MasterClientTeam == MyTeam)
-            {
-                for (int i = 0; i < transform.GetChildCount(); i++)
-                    transform.GetChild(i).gameObject.SetActive(true);
-            }
-            else
-            {
-                for (int i = 0; i < transform.GetChildCount(); i++)
-                    transform.GetChild(i).gameObject.SetActive(false);
-            }
+    //        if (MasterClientTeam == MyTeam)
+    //        {
+    //            for (int i = 0; i < transform.GetChildCount(); i++)
+    //                transform.GetChild(i).gameObject.SetActive(true);
+    //        }
+    //        else
+    //        {
+    //            for (int i = 0; i < transform.GetChildCount(); i++)
+    //                transform.GetChild(i).gameObject.SetActive(false);
+    //        }
 
-        }
-        else if (!photonView.IsMine)
-        {
-            for (int i = 0; i < transform.GetChildCount(); i++)
-                transform.GetChild(i).gameObject.SetActive(true);
-        }
-    }
+    //    }
+    //    else if (!photonView.IsMine)
+    //    {
+    //        for (int i = 0; i < transform.GetChildCount(); i++)
+    //            transform.GetChild(i).gameObject.SetActive(true);
+    //    }
+    //}
 
     /*
      * 만약 부모클래스에 PunRPC 함수가 있고

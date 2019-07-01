@@ -1542,7 +1542,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7e5dad773a6414181dd1f133751885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Visible: 1
   ultimateSkillPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,
     type: 3}
   basicAttackPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,
@@ -2271,7 +2270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5963463848678037670
 Transform:
   m_ObjectHideFlags: 0

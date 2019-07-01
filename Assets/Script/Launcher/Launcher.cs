@@ -58,6 +58,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
         PhotonHashTable playerProperty = new PhotonHashTable();
         playerProperty.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
+        PhotonNetwork.SetPlayerCustomProperties(playerProperty);
 
         PhotonHashTable roomProperty
             = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };

@@ -603,7 +603,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2988912643817231108
 Transform:
   m_ObjectHideFlags: 0
@@ -2247,7 +2247,7 @@ GameObject:
   - component: {fileID: 6973422385254112847}
   m_Layer: 0
   m_Name: Archer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2338,9 +2338,9 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 3019096708644700663}
+  - {fileID: 5294013288854618094}
+  - {fileID: 6973422385254112847}
   viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0
@@ -2427,7 +2427,7 @@ MonoBehaviour:
   maxHP: 100
   moveSpeed: 4
   attackSpeed: 10
-  attackDamage: 10
+  attackDamage: 5
   shieldPower: 10
   maxShieldPower: 10
   rotationLerpSpeed: 0.15

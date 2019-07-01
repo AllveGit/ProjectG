@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  attackDamage: 3
+  attackDamage: 0
   destroyTime: 10
 --- !u!1 &8148909749430600576
 GameObject:

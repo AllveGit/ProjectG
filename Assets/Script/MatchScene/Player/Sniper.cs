@@ -10,7 +10,7 @@ public class Sniper : BasePlayer
 
     void Update()
     {
-        OnHideBush();
+   
         MoveCalculate();
     }
 

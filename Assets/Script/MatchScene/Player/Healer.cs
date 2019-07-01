@@ -12,7 +12,6 @@ public class Healer : BasePlayer
 
     void Update()
     {
-        OnHideBush();
         MoveCalculate();
     }
 
@@ -55,17 +54,11 @@ public class Healer : BasePlayer
                 "Skill/" + basicAttackPrefab.name,
               transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)),
               Quaternion.identity);
-  
-            //GameObject projectile = PhotonNetwork.Instantiate(
-            //    "Skill/" + basicAttackPrefab.name,
-            //    transform.position + transform.forward + new Vector3(0, 0.5f, 0),
-            //    transform.rotation);
 
             if (projectile != null)
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
 
         }, SkillJoyStick.Amount, 0.6f));
-
     }
     public override void UltimateSkill()
     {
