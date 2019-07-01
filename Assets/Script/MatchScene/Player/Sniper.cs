@@ -24,8 +24,9 @@ public class Sniper : BasePlayer
         if (photonView.IsMine == false)
             return;
 
-        if (animator.GetBool("Attack"))
+        if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
+
 
 
         animator.SetBool("Attack", true);

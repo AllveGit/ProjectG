@@ -34,5 +34,6 @@ MonoBehaviour:
   - RespawnSpaceship
   - RPCOnDamage
   - RPCOnHeal
+  - WinFailedCheck
   DisableAutoOpenWizard: 1
   ShowSettings: 1

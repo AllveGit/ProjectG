@@ -56,6 +56,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    public void Respawn(BasePlayer respawnObject)
+    {
+        int spawnIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.SPAWNPOS.ToString()];
+        Transform spawnZoneElement = spawnZone.transform.GetChild(spawnIndex);
+        respawnObject.transform.position = spawnZoneElement.position;
+
+    }
+
     #region Photon
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {

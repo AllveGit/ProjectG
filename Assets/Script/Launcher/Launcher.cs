@@ -77,6 +77,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         RoomOptions roomOption = new RoomOptions();
 
         roomProperty = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
+        roomProperty.Add(RoomPropoerties.REDSCORE.ToString(), 30);
+        roomProperty.Add(RoomPropoerties.BLUDSCORE.ToString(), 30);
 
         if (type.Equals(MatchOption.Match_Debug)) roomOption.MaxPlayers = 0;
         else roomOption.MaxPlayers = (byte)type;

@@ -196,12 +196,47 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         if (!photonView.IsMine) return;
 
         animator.SetBool("Death", true);
+
+        CountingScore();
+        StartCoroutine(Respawn(5f));
+    }
+
+    private void CountingScore()
+    {
+        Enums.TeamOption team = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+
+        if (team == Enums.TeamOption.BlueTeam)
+            photonView.RPC("WinFailedCheck", RpcTarget.Others, Enums.RoomProperties.BLUDSCORE);
+        else
+            photonView.RPC("WinFailedCheck", RpcTarget.Others, Enums.RoomProperties.REDSCORE);
+    }
+
+    [PunRPC]
+    private void WinFailedCheck(Enums.RoomProperties DeathTeam)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            int TeamScore = (int)PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] - 1;
+            PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] = TeamScore;
+            if (TeamScore <= 0)
+            {
+                //헤당 팀은 패배.
+            }
+        }
     }
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
     {
         yield return new WaitForSeconds(delay);
         attackCallback(direction);
+        yield break;
+    }
+
+    public IEnumerator Respawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.Instance.Respawn(this);
+        animator.SetBool("Death", false);
         yield break;
     }
 
