@@ -25,6 +25,9 @@ public class Healer : BasePlayer
         if (photonView.IsMine == false)
             return;
 
+        if (animator.GetBool("Attack"))
+            return;
+
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -46,6 +49,5 @@ public class Healer : BasePlayer
     public override void UltimateSkill()
     {
         if (!photonView.IsMine) return;
-
     }
 }

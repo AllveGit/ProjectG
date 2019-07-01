@@ -28,6 +28,10 @@ public class Archer : BasePlayer
         if (photonView.IsMine == false)
             return;
 
+        if (animator.GetBool("Attack"))
+            return;
+
+
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -53,6 +57,10 @@ public class Archer : BasePlayer
         if (photonView.IsMine == false)
             return;
 
+        if (animator.GetBool("Attack"))
+            return;
+
+
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -76,6 +84,8 @@ public class Archer : BasePlayer
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
 
         if (!photonView.IsMine) return;
+
+        if (animator.GetBool("Attack") == true) return;
 
         if (isFocusOnAttack)
         {

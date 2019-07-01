@@ -34,6 +34,8 @@ public class Enums : MonoBehaviour
         CHARACTER
     }
 
+    //이름 변경 금지 
+    // 경로로 쓰임
     public enum CharacterIndex
     {
         Healer,
