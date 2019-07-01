@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 1810596043051956346}
   m_Layer: 0
   m_Name: Sniper
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -679,8 +679,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3614a9a33122cde4d85003027ec85916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ultimateSkillPrefab: {fileID: 0}
-  basicAttackPrefab: {fileID: 0}
+  ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
+    type: 3}
+  basicAttackPrefab: {fileID: 2821756039891169347, guid: 13c0936bfaa931145864589b967bceca,
+    type: 3}
   curHP: 100
   maxHP: 100
   moveSpeed: 4
