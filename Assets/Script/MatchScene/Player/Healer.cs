@@ -12,6 +12,7 @@ public class Healer : BasePlayer
 
     void Update()
     {
+        OnHideBush();
         MoveCalculate();
     }
 

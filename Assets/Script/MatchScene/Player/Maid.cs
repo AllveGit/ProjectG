@@ -19,6 +19,7 @@ public class Maid : BasePlayer
 
     void Update()
     {
+        OnHideBush();
         MoveCalculate();
     }
 
