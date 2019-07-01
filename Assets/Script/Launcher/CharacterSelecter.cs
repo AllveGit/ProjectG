@@ -15,12 +15,12 @@ public class CharacterSelecter : MonoBehaviour
     public Sprite[] characterSprites;
 
     // 현재 선택된 인덱스
-    private int currentIndex = 0;
-    private int maxIndex = 0;
+    private Enums.CharacterIndex currentIndex = 0;
+    private Enums.CharacterIndex maxIndex = 0;
 
-    void Start()
+    void Start() 
     {
-        maxIndex = characterSprites.Length;
+        maxIndex = (Enums.CharacterIndex)characterSprites.Length;
     }
 
     void Update()
@@ -51,7 +51,7 @@ public class CharacterSelecter : MonoBehaviour
     {
         currentIndex++;
 
-        if (currentIndex > maxIndex)
+        if (currentIndex - 1 > maxIndex)
         {
             if (isCirculate)
             {
@@ -68,9 +68,9 @@ public class CharacterSelecter : MonoBehaviour
 
     private void Apply()
     {
-        if (characterSprites[currentIndex] == null)
+        if (characterSprites[(int)currentIndex] == null)
             return;
 
-        characterView.GetComponent<UnityEngine.UI.Image>().sprite = characterSprites[currentIndex];
+        characterView.GetComponent<UnityEngine.UI.Image>().sprite = characterSprites[(int)currentIndex];
     }
 }

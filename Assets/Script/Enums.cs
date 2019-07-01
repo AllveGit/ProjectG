@@ -33,4 +33,13 @@ public class Enums : MonoBehaviour
         HP,
         CHARACTER
     }
+
+    public enum CharacterIndex
+    {
+        Healer,
+        Maid,
+        Sniper,
+        Archer,
+    }
+
 }
