@@ -10,7 +10,7 @@ public class ScoreUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        scoreText = transform.GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        scoreText = GetComponent<UnityEngine.UI.Text>();
     }
 
     void LateUpdate()
