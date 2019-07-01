@@ -30,15 +30,35 @@ public class Healer : BasePlayer
 
         animator.SetBool("Attack", true);
 
+
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
         {
             if (direction == Vector3.zero)
                 return;
 
+            // 회전 행렬을 만듭니다.
+            Matrix4x4 matRot = Matrix4x4.identity;
+            matRot = Matrix4x4.Rotate(transform.rotation);
+
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
-                transform.rotation);
+              transform.position + matRot.MultiplyPoint(new Vector3(0.3f, 1f, 1.5f)),
+              Quaternion.identity);
+   
+
+            if (projectile != null)
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
+
+     
+            projectile = PhotonNetwork.Instantiate(
+                "Skill/" + basicAttackPrefab.name,
+              transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)),
+              Quaternion.identity);
+  
+            //GameObject projectile = PhotonNetwork.Instantiate(
+            //    "Skill/" + basicAttackPrefab.name,
+            //    transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+            //    transform.rotation);
 
             if (projectile != null)
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);

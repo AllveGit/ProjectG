@@ -97,7 +97,8 @@ public abstract partial class BaseAttack : MonoBehaviourPun
             BasePlayer player = other.GetComponent<BasePlayer>();
             BaseCollisionProcess(player);
         }
-      
+        else
+            PhotonNetwork.Destroy(this.gameObject);
     }
     
     /*
