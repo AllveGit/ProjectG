@@ -1545,6 +1545,7 @@ MonoBehaviour:
     type: 3}
   basicAttackPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,
     type: 3}
+  damagePopup: {fileID: 0}
   curHP: 100
   maxHP: 100
   moveSpeed: 4

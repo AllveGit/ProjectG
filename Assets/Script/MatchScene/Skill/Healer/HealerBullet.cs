@@ -18,6 +18,8 @@ public class HealerBullet : BaseAttack
             Enums.TeamOption team = (Enums.TeamOption)player.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM];
             Enums.TeamOption myTeam = (Enums.TeamOption)ownerPlayer.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM];
 
+    
+
             if (team == myTeam)
                 player.OnHeal(healValue);
         }
