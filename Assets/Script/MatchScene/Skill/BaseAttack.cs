@@ -38,6 +38,15 @@ public abstract partial class BaseAttack : MonoBehaviourPun
         
     }
 
+    public void Update()
+    {
+        if (!photonView.IsMine) return;
+
+        rigidbody.MovePosition(
+        transform.position
+        + direction * ProjectileSpeed * Time.deltaTime);
+    }
+
     public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 inDirection)
     {
         ownerPlayer = inOwnerPlayer;
@@ -51,13 +60,6 @@ public abstract partial class BaseAttack : MonoBehaviourPun
     }
 
     // 공격방식마다 추가적으로 해야할 작업이 있다면 이 함수를 오버라이딩 하세요
-    public virtual void GiveAttack(BasePlayer player)
-    {
-        player.OnDamaged(attackDamage);
-
-        // 총알 삭제구문. 
-        
-    }
 
     protected bool IsAttackable(Photon.Realtime.Player me, Photon.Realtime.Player enumy)
     {
@@ -91,9 +93,14 @@ public abstract partial class BaseAttack : MonoBehaviourPun
 
         if (other.CompareTag("Player"))
         {
+            if (other.gameObject == this.gameObject)
+                return;
+
             BasePlayer player = other.GetComponent<BasePlayer>();
             BaseCollisionProcess(player);
         }
+        else
+            PhotonNetwork.Destroy(this.gameObject);
     }
     
     /*

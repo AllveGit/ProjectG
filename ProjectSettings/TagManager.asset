@@ -8,6 +8,8 @@ TagManager:
   - SkillJoyStick
   - Attack
   - Skill
+  - Bush
+  - RealBush
   layers:
   - Default
   - TransparentFX

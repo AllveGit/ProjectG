@@ -75,8 +75,8 @@ public class MapParser : MonoBehaviour
                             Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_WATER":
-                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
-                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
+                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + (j * TileSize), 0.6f, y + (i * TileSize)),
+                            Quaternion.Euler(0, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_SPAWN":
                         Temp = Instantiate(m_mapData.spawnPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),

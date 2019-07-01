@@ -4,6 +4,14 @@ using UnityEngine;
 using Photon.Pun;
 public class Maid : BasePlayer
 {
+    // 연사 카운트
+    [SerializeField]
+    private int currentSpeakerCount = 0;
+
+    [SerializeField]
+    private int maxSpeakerCount = 5;
+
+    private float speakerDelay = 0.1f;
 
     void Start()
     {
@@ -35,15 +43,9 @@ public class Maid : BasePlayer
             if (direction == Vector3.zero)
                 return;
 
-            GameObject projectile = PhotonNetwork.Instantiate(
-                "Skill/" + basicAttackPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
-                transform.rotation);
+            StartCoroutine(MaidAttack(direction));
 
-            if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
-
-        }, SkillJoyStick.Amount, 0.6f));
+        }, SkillJoyStick.Amount, 0.4f));
     }
 
     public override void UltimateSkill()
@@ -51,4 +53,26 @@ public class Maid : BasePlayer
         if (!photonView.IsMine) return;
     }
 
+
+    // 연사 기본공격
+    IEnumerator MaidAttack(Vector3 direction)
+    {
+        currentSpeakerCount = 0;
+
+        while(currentSpeakerCount < maxSpeakerCount)
+        {
+            GameObject projectile = PhotonNetwork.Instantiate(
+            "Skill/" + basicAttackPrefab.name,
+            transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1.5f,
+            transform.rotation);
+
+            if (projectile != null)
+                projectile.GetComponent<MaidBullet>().Cast(this, AttackDamage, direction);
+            ++currentSpeakerCount;
+
+            yield return new WaitForSeconds(speakerDelay);
+        }
+
+        yield break;
+    }
 }

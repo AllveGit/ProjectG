@@ -41,7 +41,7 @@ public class Archer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+               transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1,
                 transform.rotation);
 
             if (projectile != null)

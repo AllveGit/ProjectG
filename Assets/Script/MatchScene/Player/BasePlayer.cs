@@ -7,9 +7,9 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
-   
+ 
     #region PhotonCallBack
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         // 전송, 수신은 순서 맞춰서
         if (stream.IsWriting)
@@ -116,6 +116,11 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
     }
 
+    public void OnHeal(int heal)
+    {
+        photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
+    }
+
     /*
      * 만약 부모클래스에 PunRPC 함수가 있고
      * 상속받은 클래스가 사용한다면
@@ -142,6 +147,19 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             }
         }
     }
+
+    [PunRPC]
+    protected virtual void RPCOnHeal(int heal)
+    {
+        if (photonView.IsMine)
+        {
+            CurHP += heal;
+
+            if (CurHP > maxHP)
+                CurHP = maxHP;
+        }
+    }
+
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
