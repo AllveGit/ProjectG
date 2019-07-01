@@ -27,7 +27,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             // stream.ReceiveNext();
             ShieldPower = (int)stream.ReceiveNext();
             CurHP = (int)stream.ReceiveNext();
-            stream.SendNext(IsBush);
+            IsBush = (bool)stream.ReceiveNext();
         }
     }
 
