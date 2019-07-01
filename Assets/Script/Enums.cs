@@ -43,7 +43,7 @@ public class Enums : MonoBehaviour
         Archer,
     }
 
-    public enum RankType
+    public enum RankType : int
     {
         Bronze,
         Silver,

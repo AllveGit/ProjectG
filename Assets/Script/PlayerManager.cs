@@ -42,6 +42,8 @@ public class PlayerManager : MonoBehaviour
 
     public int PlayerExp { get; private set; } = 0;
 
+    public int PlayerMaxExp { get; private set; } = 0;
+
     public Enums.RankType PlayerRankType { get; private set; } = Enums.RankType.Bronze;
 
     public UnityEvent OnRankUp;
@@ -62,8 +64,13 @@ public class PlayerManager : MonoBehaviour
 
     public void Start()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         PlayerName = PhotonNetwork.NickName;
-        PlayerLevel = 0;
+        PlayerLevel = 7;
         PlayerExp = 0;
         PlayerRankScore = 0;
         PlayerRankType = Enums.RankType.Bronze;
@@ -78,11 +85,11 @@ public class PlayerManager : MonoBehaviour
         // 레벨업 공식 
         // 수정 가능
 
-        int upgradeSuccessExp = (int)(PlayerLevel * 1.5f) + 15;
+        PlayerMaxExp = (int)(PlayerLevel * 1.5f) + 15;
 
-        if (PlayerExp >= upgradeSuccessExp)
+        if (PlayerExp >= PlayerMaxExp)
         {
-            PlayerExp -= upgradeSuccessExp;
+            PlayerExp -= PlayerMaxExp;
 
             PlayerLevel++;
         }
@@ -95,9 +102,13 @@ public class PlayerManager : MonoBehaviour
         Enums.RankType newRank = SiftRank(PlayerRankScore);
 
         if (newRank > PlayerRankType)
+        {
+            PlayerRankType = newRank;
             OnRankUp?.Invoke();
-
-        PlayerRankType = newRank;
+            return;
+        }
+        else
+            PlayerRankType = newRank;
     }
 
     public void MinusRankScore(int minusScore)
@@ -110,9 +121,13 @@ public class PlayerManager : MonoBehaviour
         Enums.RankType newRank = SiftRank(PlayerRankScore);
 
         if (newRank < PlayerRankType)
+        {
+            PlayerRankType = newRank;
             OnRankDown?.Invoke();
-
-        PlayerRankType = newRank;
+            return;
+        }
+        else
+            PlayerRankType = newRank;
     }
 
     public static Enums.RankType SiftRank(int score)

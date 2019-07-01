@@ -6,14 +6,12 @@ public class RankViewer : MonoBehaviour
 {
     public Sprite[] rankImgs;
 
-    public UnityEngine.UI.Image currentImg;
-
     public Enums.RankType rankType;
 
     // Start is called before the first frame update
     void Start()
     {
-        rankType = PlayerManager.Instance.PlayerRankType;
+        OnRankChanged();
     }
 
     // Update is called once per frame
@@ -22,23 +20,13 @@ public class RankViewer : MonoBehaviour
         
     }
 
-    public void OnRankUp()
+    public void OnRankChanged()
     {
         rankType = PlayerManager.Instance.PlayerRankType;
 
         if (rankImgs[(int)rankType] == null)
             return;
 
-        currentImg.sprite = rankImgs[(int)rankType];
-    }
-
-    public void OnRankDown()
-    {
-        rankType = PlayerManager.Instance.PlayerRankType;
-
-        if (rankImgs[(int)rankType] == null)
-            return;
-
-        currentImg.sprite = rankImgs[(int)rankType];
+        GetComponent<UnityEngine.UI.Image>().sprite = rankImgs[(int)rankType];
     }
 }

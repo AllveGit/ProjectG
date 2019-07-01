@@ -10,8 +10,8 @@ public class PlayerInfoHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerManager.Instance.OnNameChanged.AddListener(OnNameChanged);
-        PlayerManager.Instance.OnLevelChanged.AddListener(OnLevelChanged);
+        OnNameChanged();
+        OnLevelChanged();
     }
 
     // Update is called once per frame
