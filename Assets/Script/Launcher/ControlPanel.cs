@@ -6,7 +6,9 @@ public class ControlPanel : MonoBehaviour
 {
     public Launcher photonLauncher;
     public MatchButtonFolding buttonFolder;
-    public UnityEngine.UI.Text matchButtonText;
+    public GameObject matchButton;
+
+    public Sprite[] matchButtonImgs;
 
     private MatchingState panelState = MatchingState.None;
 
@@ -19,7 +21,7 @@ public class ControlPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        matchButtonText.text = "Play";
+        matchButton.GetComponent<UnityEngine.UI.Image>().sprite = matchButtonImgs[0];
     }
 
     // Update is called once per frame
@@ -37,7 +39,7 @@ public class ControlPanel : MonoBehaviour
         else
         {
             photonLauncher.MatchingCancel();
-            matchButtonText.text = "Play";
+            matchButton.GetComponent<UnityEngine.UI.Image>().sprite = matchButtonImgs[0];
             panelState = MatchingState.None;
         }
     }
@@ -50,7 +52,7 @@ public class ControlPanel : MonoBehaviour
         {
             photonLauncher.MatchingStart(matchType);
             buttonFolder.Fold();
-            matchButtonText.text = "Matching";
+            matchButton.GetComponent<UnityEngine.UI.Image>().sprite = matchButtonImgs[1];
             panelState = MatchingState.Matching;
         }
     }

@@ -27,14 +27,13 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
     private float LogoSin = Mathf.PI;
 
     // 
-    public GameObject TouchToScreenText = null;
+    public GameObject TouchToScreenSprite;
+    public GameObject LoadingSprite;
 
     void Start()
     {
         Character2DOriginPos = Character2D.transform.position;
         LogoOriginPos = Logo.transform.position;
-
-        TouchToScreenText.SetActive(true);
     }
 
     public void Connect()
@@ -55,7 +54,8 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
     {
         if (Input.GetMouseButton(0))
         {
-            TouchToScreenText.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Connecting...";
+            TouchToScreenSprite.SetActive(false);
+            LoadingSprite.SetActive(true);
 
             Connect();
         }

@@ -9,7 +9,7 @@ public class MatchButtonFolding : MonoBehaviour
 
     private bool IsUnFold = false;
     private float nowHeight = 0f;
-    private const float maxHeight = 120f;
+    public float maxHeight = 220f;
 
     [SerializeField]
     private float fLerpSpeed = 0.1f;
