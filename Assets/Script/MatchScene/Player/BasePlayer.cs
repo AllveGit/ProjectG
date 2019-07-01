@@ -204,8 +204,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     private void CountingScore()
     {
-       
-
         Enums.TeamOption team = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
         if (team == Enums.TeamOption.BlueTeam)
@@ -215,7 +213,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
 
     [PunRPC]
-    private void WinFailedCheck(Enums.RoomProperties DeathTeam)
+    protected virtual void WinFailedCheck(Enums.RoomProperties DeathTeam)
     {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -232,7 +230,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
 
     [PunRPC]
-    private void OnGameReulst(Enums.TeamOption LoserTeam)
+    protected virtual void OnGameReulst(Enums.TeamOption LoserTeam)
     {
         if (!photonView.IsMine) return;
 
@@ -256,6 +254,10 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         yield return new WaitForSeconds(delay);
         GameManager.Instance.Respawn(this);
         animator.SetBool("Death", false);
+
+        CurHP = MaxHP;
+        ShieldPower = MaxShieldPower;
+
         yield break;
     }
 
