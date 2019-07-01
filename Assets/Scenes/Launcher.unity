@@ -1592,6 +1592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b77740f9e6281a844816c3ae81786c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  photonLauncher: {fileID: 1731675945}
   isCirculate: 1
   characterView: {fileID: 920020482}
   characterSprites:
@@ -2103,8 +2104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b317f3f944b74f4fbe37ad0288c5df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPanel: {fileID: 498682944}
-  characterSeleter: {fileID: 1323016536}
 --- !u!4 &1731675946
 Transform:
   m_ObjectHideFlags: 0

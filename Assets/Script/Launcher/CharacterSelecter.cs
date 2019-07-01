@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class CharacterSelecter : MonoBehaviour
 {
+    public Launcher photonLauncher;
+
     // 선택지가 순회하는가
     public bool isCirculate;
 
@@ -20,7 +22,9 @@ public class CharacterSelecter : MonoBehaviour
 
     void Start() 
     {
-        maxIndex = (Enums.CharacterIndex)characterSprites.Length;
+
+
+        maxIndex = (Enums.CharacterIndex)characterSprites.Length - 1;
     }
 
     void Update()
@@ -51,7 +55,7 @@ public class CharacterSelecter : MonoBehaviour
     {
         currentIndex++;
 
-        if (currentIndex - 1 > maxIndex)
+        if (currentIndex > maxIndex)
         {
             if (isCirculate)
             {
@@ -72,5 +76,6 @@ public class CharacterSelecter : MonoBehaviour
             return;
 
         characterView.GetComponent<UnityEngine.UI.Image>().sprite = characterSprites[(int)currentIndex];
+        photonLauncher.characterType = currentIndex;
     }
 }

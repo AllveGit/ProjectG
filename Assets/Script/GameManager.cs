@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static GameManager Instance;
 
-    [Tooltip("네트워크를 통해 생성할 플레이어 프리팹입니다.")]
-    public GameObject playerPrefab = null;
 
     public Vector3 playerSpawnPos = default;
 
@@ -32,26 +30,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (spawnZone == null)
             Debug.LogError("GameManager에  spawnZone이란 변수가 초기화 되지 않았습니다.");
 
+        string prefabName = (string)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.CHARACTER.ToString()];
+
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
-        if (playerPrefab == null)
-            Debug.LogError("플레이어 프리팹이 null 입니다.", this);
-        else
-        {
-            Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
-            string path = $"Player/{this.playerPrefab.name}/{this.playerPrefab.name}";
+   
+         Debug.LogFormat("게임이 시작되어 플레이어를 생성합니다.", Application.loadedLevelName);
+         string path = $"Player/{prefabName}/{prefabName}";
 
-            int spawnZoneIndex= (int)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.SPAWNPOS.ToString()];
-            Transform spawnZoneElement = spawnZone.transform.GetChild(spawnZoneIndex);
+         int spawnZoneIndex= (int)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.SPAWNPOS.ToString()];
+         Transform spawnZoneElement = spawnZone.transform.GetChild(spawnZoneIndex);
 
-            GameObject player = PhotonNetwork.Instantiate(path, spawnZoneElement.position 
-                , spawnZoneElement.rotation, 0);
+         GameObject player = PhotonNetwork.Instantiate(path, spawnZoneElement.position 
+             , spawnZoneElement.rotation, 0);
 
-            /*
-             * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
-             */
-            player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-            string team = Enums.PlayerProperties.TEAM.ToString();
-        }
+         /*
+          * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
+          */
+         player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+         string team = Enums.PlayerProperties.TEAM.ToString();
+        
     }
 
     public void LeaveRoom()

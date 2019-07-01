@@ -22,6 +22,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public bool IsConnected { get; private set; } = false;
 
+    public Enums.CharacterIndex characterType { get; set; }
+
     private void Awake()
     {
         // 자동 동기화.
@@ -37,8 +39,13 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         currentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(new PhotonHashTable() { { PlayerProperties.TEAM.ToString(), TeamOption.Solo },
-            { PlayerProperties.SPAWNPOS.ToString(), 0 } });
+        PhotonNetwork.LocalPlayer.SetCustomProperties(
+            new PhotonHashTable()
+            {
+                { PlayerProperties.TEAM.ToString(), TeamOption.Solo },
+                { PlayerProperties.SPAWNPOS.ToString(), 0 } ,
+                { PlayerProperties.CHARACTER.ToString(), characterType.ToString()}
+            });
     }
 
     public void MatchingStart(MatchOption matchType)
@@ -93,6 +100,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 3 + TeamManager.Instance.RedTeamCount);
         else
             playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 0);
+
+        playerProperties.Add(PlayerProperties.CHARACTER.ToString(), characterType.ToString());
 
         return playerProperties;
     }
