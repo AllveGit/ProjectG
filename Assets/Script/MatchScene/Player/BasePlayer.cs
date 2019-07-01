@@ -7,7 +7,8 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
- 
+    public bool Visible = true;
+
     #region PhotonCallBack
     public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -119,6 +120,33 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public void OnHeal(int heal)
     {
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
+    }
+
+    public void OnHideBush()
+    {
+        if (!Visible && !photonView.IsMine)
+        {
+            if(PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM] != 
+                this.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM])
+            {
+                for(int i = 0; i < transform.GetChildCount(); i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
+
+        else if(!photonView.IsMine)
+        {
+            if (PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM] !=
+                 this.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM])
+            {
+                for (int i = 0; i < transform.GetChildCount(); i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(true);
+                }
+            }
+        }
     }
 
     /*

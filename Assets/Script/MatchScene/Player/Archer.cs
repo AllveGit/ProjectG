@@ -15,6 +15,7 @@ public class Archer : BasePlayer
 
     void Update()
     {
+        OnHideBush();
         MoveCalculate();
     }
 

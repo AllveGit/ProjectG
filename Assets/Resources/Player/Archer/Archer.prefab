@@ -2419,6 +2419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5c291304de73147b4e272d977c3166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Visible: 1
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
     type: 3}
   basicAttackPrefab: {fileID: 4607441206640468670, guid: 9114339463ecf944b968e5a049709f47,
