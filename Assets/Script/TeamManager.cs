@@ -36,7 +36,7 @@ public class TeamManager : MonoBehaviour
         TeamOption playerTeam = TeamOption.NoneTeam;
 
         if (BlueTeamCount == RedTeamCount)
-            playerTeam = (TeamOption)Random.RandomRange((int)TeamOption.RedTeam, (int)TeamOption.Solo);
+            playerTeam = (TeamOption)Random.Range((int)TeamOption.RedTeam, (int)TeamOption.Solo);
         else
         {
             int redCnt = RedTeamCount;

@@ -45,7 +45,7 @@ namespace Photon.Pun.Demo.PunBasics
 				}
 			}
 
-			PhotonNetwork.NickName =	defaultName;
+			PhotonNetwork.NickName = defaultName;
 		}
 
 		#endregion

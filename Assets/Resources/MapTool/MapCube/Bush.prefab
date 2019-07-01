@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 6303591312103175462}
   - component: {fileID: 3035949901082709776}
   - component: {fileID: 8727225329860555753}
+  - component: {fileID: -7254828430520560801}
+  - component: {fileID: -1655126098143409857}
   m_Layer: 0
   m_Name: Bush
-  m_TagString: Untagged
+  m_TagString: RealBush
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0cc0446808d90a147800705867b1864c, type: 2}
+  - {fileID: 2100000, guid: 1ca7af38328e24a4eb6e8b4bd755762a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77,3 +79,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &-7254828430520560801
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999019599978235701}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4, y: 4.0102997, z: 3.9289591}
+  m_Center: {x: 1, y: 0, z: 0}
+--- !u!114 &-1655126098143409857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999019599978235701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe1f1ee4ce1a3444bb0ecb346976a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Mat: {fileID: 0}
