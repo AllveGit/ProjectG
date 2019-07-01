@@ -63,8 +63,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public void MoveCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
-        if (!photonView.IsMine)
-            return;
+        if (!photonView.IsMine) return;
 
         if (animator.GetBool("Attack") == true) return;
 
@@ -161,11 +160,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         }
     }
 
-    public void ShowDamagePopUp()
-    {
-        Instantiate(damagePopup, transform.position, Quaternion.identity);
-    }
-
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
@@ -176,6 +170,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         animator.SetBool("Death", true);
     }
+
+
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
     {
@@ -216,9 +212,6 @@ public abstract partial class BasePlayer
     protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
     [SerializeField]
     protected GameObject basicAttackPrefab = null; // 평타 프리팹
-
-    [SerializeField]
-    private GameObject damagePopup = null;
 
     [SerializeField]
     private int curHP = 0; // 플레이어의 HP
