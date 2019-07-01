@@ -6,6 +6,7 @@ public class RankWindow : BaseWindow
 {
     public Sprite[] rankWindows;
     public UnityEngine.UI.Image windowImage;
+    public UnityEngine.UI.Text rankScoreTex;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,7 @@ public class RankWindow : BaseWindow
             return;
 
         windowImage.sprite = rankWindows[rankType];
+        rankScoreTex.text = PlayerManager.Instance.PlayerRankScore.ToString();
 
         base.ShowWindow();
     }
