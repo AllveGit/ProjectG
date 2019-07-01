@@ -32,6 +32,10 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject progressLabel = null;
 
+    [Tooltip("플레이어 선택 UI")]
+    [SerializeField]
+    private GameObject characterSeleter = null;
+
     private MatchOption currentMatchType = MatchOption.Match_None;
 
     public bool IsConnected { get; private set; } = false;
@@ -46,6 +50,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         controlPanel.SetActive(false);
         touchToScreen.SetActive(true);
+        characterSeleter.SetActive(false);
     }
 
     public void Connect()
@@ -161,6 +166,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
         touchToScreen.SetActive(false);
         controlPanel.SetActive(true);
+        characterSeleter.SetActive(true);
     }
 
     public override void OnJoinedRoom()

@@ -2620,7 +2620,7 @@ MonoBehaviour:
   controlPanel: {fileID: 498682944}
   touchToScreen: {fileID: 276889375}
   progressLabel: {fileID: 1850604080}
-  characterSelecter: {fileID: 1323016536}
+  characterSeleter: {fileID: 1323016536}
 --- !u!4 &1731675946
 Transform:
   m_ObjectHideFlags: 0
