@@ -152,6 +152,15 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         animator.SetBool("Death", true);
     }
 
+
+
+    public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        attackCallback(direction);
+        yield break;
+    }
+
     //Debug함수입니다.
     void OnGUI()
     {
@@ -166,6 +175,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
  */
 public abstract partial class BasePlayer
 {
+    public delegate void AttackCallback(Vector3 direction);
+
     public Enums.TeamOption playerTeam { get; set; }
 
     protected JoyStick MoveJoyStick = null;

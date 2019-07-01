@@ -45,6 +45,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     void Start()
     {
         controlPanel.SetActive(false);
+        progressLabel.SetActive(false);
         touchToScreen.SetActive(true);
     }
 
@@ -78,8 +79,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public void MatchingDebug()
     {
-        controlPanel.SetActive(true);
-        touchToScreen.SetActive(false);
+        progressLabel.SetActive(true);
+        controlPanel.SetActive(false);
 
         currentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);

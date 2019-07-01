@@ -7,7 +7,6 @@ using Photon.Pun;
 public class Archer : BasePlayer
 {
     private GameObject ExplosionPrefab;
-    delegate void AttackCallback(Vector3 direction);
  
     void Start()
     {
@@ -101,11 +100,4 @@ public class Archer : BasePlayer
 
     }
 
-
-    IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        attackCallback(direction);
-        yield break;
-    }
 }
