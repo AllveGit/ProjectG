@@ -12,6 +12,9 @@ public class MapParser : MonoBehaviour
     private GameObject[] m_GridArr;
 
     [SerializeField]
+    private GameObject m_SpawnPos;
+
+    [SerializeField]
     private int Width;
     [SerializeField]
     private int Height;
@@ -26,6 +29,7 @@ public class MapParser : MonoBehaviour
     void Awake()
     {
         m_mapData = Resources.Load<MapData>(dataPath + MapDataName);
+        m_SpawnPos = Resources.Load<GameObject>("SpawnPosition");
         Parsing();
     }
 
@@ -51,7 +55,7 @@ public class MapParser : MonoBehaviour
         {
             for (int j = 0; j < Width; j++)
             {
-                GameObject Temp/* = new GameObject()*/;
+                GameObject Temp;
 
                 switch (m_mapData.m_MapInfo[(i * Width) + j])
                 {
@@ -77,6 +81,9 @@ public class MapParser : MonoBehaviour
                     case "GRID_SPAWN":
                         Temp = Instantiate(m_mapData.spawnPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
+
+                        Instantiate(m_SpawnPos, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
+                            Quaternion.identity, this.transform.GetChild(0));
                         break;
                     default:
                         Temp = new GameObject();
