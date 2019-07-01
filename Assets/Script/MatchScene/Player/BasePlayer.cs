@@ -204,12 +204,14 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     private void CountingScore()
     {
+       
+
         Enums.TeamOption team = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
         if (team == Enums.TeamOption.BlueTeam)
-            photonView.RPC("WinFailedCheck", RpcTarget.Others, Enums.RoomProperties.BLUDSCORE);
+            photonView.RPC("WinFailedCheck", RpcTarget.All, Enums.RoomProperties.BLUDSCORE);
         else
-            photonView.RPC("WinFailedCheck", RpcTarget.Others, Enums.RoomProperties.REDSCORE);
+            photonView.RPC("WinFailedCheck", RpcTarget.All, Enums.RoomProperties.REDSCORE);
     }
 
     [PunRPC]
@@ -222,9 +224,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             if (TeamScore <= 0)
             {
                 if (DeathTeam == Enums.RoomProperties.BLUDSCORE)
-                    photonView.RPC("OnGameReulst", RpcTarget.Others, Enums.TeamOption.BlueTeam);
+                    photonView.RPC("OnGameReulst", RpcTarget.All, Enums.TeamOption.BlueTeam);
                 else
-                    photonView.RPC("OnGameReulst", RpcTarget.Others, Enums.TeamOption.RedTeam);
+                    photonView.RPC("OnGameReulst", RpcTarget.All, Enums.TeamOption.RedTeam);
             }   
         }
     }
