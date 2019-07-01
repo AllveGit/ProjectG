@@ -16,25 +16,7 @@ using PhotonHashTable = ExitGames.Client.Photon.Hashtable;
 
 public partial class Launcher : MonoBehaviourPunCallbacks
 {
-
-    private string gameVersion = "1";
-    private bool onMatching = false;
-
-    [Tooltip("InputFiled와 플레이 버튼이 들어가있는 Panel 입니다.")]
-    [SerializeField]
-    private GameObject controlPanel = null;
-
-    [Tooltip("TouchToScreen Object 입니다")]
-    [SerializeField]
-    private GameObject touchToScreen = null;
-
-    [Tooltip("Connecting 중임을 알리는 Text UI 입니다.")]
-    [SerializeField]
-    private GameObject progressLabel = null;
-
-    [Tooltip("플레이어 선택 UI")]
-    [SerializeField]
-    private GameObject characterSeleter = null;
+    private string gameVersion = "1.0";
 
     private MatchOption currentMatchType = MatchOption.Match_None;
 
@@ -48,44 +30,10 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        controlPanel.SetActive(false);
-        touchToScreen.SetActive(true);
-        characterSeleter.SetActive(false);
     }
-
-    public void Connect()
-    {
-        if (!PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.GameVersion = gameVersion;
-            PhotonNetwork.ConnectUsingSettings();
-        }
-    }
-
-    public void Matching1vs1()
-    {
-        currentMatchType = MatchOption.Match_1vs1;
-        Matching();
-    }
-
-    public void Matching2vs2()
-    {
-        currentMatchType = MatchOption.Match_2vs2;
-        Matching();
-    }
-
-    public void Matching3vs3()
-    {
-        currentMatchType = MatchOption.Match_3vs3;
-        Matching();
-    }
-
 
     public void MatchingDebug()
     {
-        controlPanel.SetActive(true);
-        touchToScreen.SetActive(false);
-
         currentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
 
@@ -93,21 +41,29 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             { PlayerProperties.SPAWNPOS.ToString(), 0 } });
     }
 
-
-    private void Matching()
+    public void MatchingStart(MatchOption matchType)
     {
+        currentMatchType = matchType;
+
+        if (matchType == MatchOption.Match_Debug)
+        {
+            MatchingDebug();
+            return;
+        }
+
         if (currentMatchType == MatchOption.Match_None)
             return;
-
-        progressLabel.SetActive(true);
-        controlPanel.SetActive(false);
-
+        
         PhotonHashTable roomProperty
             = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), currentMatchType } };
-
+        
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
 
+    public void MatchingCancel()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
 
     private RoomOptions CreateMatchingRoomOption(MatchOption type)
     {
@@ -149,24 +105,9 @@ public partial class Launcher : MonoBehaviourPunCallbacks
  */
 public partial class Launcher : MonoBehaviourPunCallbacks
 {
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("마스터 서버에 연결되었습니다.");
-        PhotonNetwork.JoinLobby();
-    }
-
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarningFormat("서버와의 연결이 종료되었습니다.", cause);
-    }
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("로비에 연결되었습니다.");
-
-        touchToScreen.SetActive(false);
-        controlPanel.SetActive(true);
-        characterSeleter.SetActive(true);
     }
 
     public override void OnJoinedRoom()
@@ -188,7 +129,6 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         }
 
         Debug.Log("매칭 시작!");
-        onMatching = true;
     }
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
@@ -212,10 +152,5 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             }
         }
     }
-    public override void OnLeftRoom()
-    {
-        onMatching = false;
-    }
-
 }
 

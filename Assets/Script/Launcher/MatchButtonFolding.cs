@@ -8,10 +8,9 @@ public class MatchButtonFolding : MonoBehaviour
     private RectTransform playerButtonMaskRT = null;
 
     private bool IsUnFold = false;
-    private bool IsWorking = false;
     private float nowHeight = 0f;
     private const float maxHeight = 120f;
-    
+
     [SerializeField]
     private float fLerpSpeed = 0.1f;
 
@@ -21,21 +20,31 @@ public class MatchButtonFolding : MonoBehaviour
     }
 
     // Update is called once per frame
-    
-    public void OnUnFoldButton()
-    {
-        if (IsWorking)
-            return;
 
+    public void OnFoldButtonDown()
+    {
         if (IsUnFold)
-            StartCoroutine("FoldingTap");
+            Fold();
         else
-            StartCoroutine("UnfoldingTap");
+            UnFold();
+    }
+
+    public void Fold()
+    {
+        StopCoroutine("UnfoldingTap");
+        StartCoroutine("FoldingTap");
+    }
+
+    public void UnFold()
+    {
+        StopCoroutine("FoldingTap");
+        StartCoroutine("UnfoldingTap");
     }
 
     IEnumerator UnfoldingTap()
     {
-        IsWorking = true;
+        IsUnFold = true;
+
         while (true)
         {
             nowHeight = Mathf.Lerp(nowHeight, maxHeight, fLerpSpeed);
@@ -49,14 +58,12 @@ public class MatchButtonFolding : MonoBehaviour
         nowHeight = maxHeight;
         playerButtonMaskRT.sizeDelta = new Vector2(160, nowHeight);
 
-        IsWorking = false;
-        IsUnFold = true;
-        yield return null;
+        yield break;
     }
 
     IEnumerator FoldingTap()
     {
-        IsWorking = true;
+        IsUnFold = false;
 
         while (nowHeight >= 0)
         {
@@ -68,11 +75,10 @@ public class MatchButtonFolding : MonoBehaviour
 
             yield return null;
         }
+
         nowHeight = 0;
         playerButtonMaskRT.sizeDelta = new Vector2(160, nowHeight);
 
-        IsWorking = false;
-        IsUnFold = false;
-        yield return null;
+        yield break;
     }
 }

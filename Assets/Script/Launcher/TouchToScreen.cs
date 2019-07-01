@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class TouchToScreen : MonoBehaviour
+using Photon.Pun;
+
+public class TouchToScreen : MonoBehaviourPunCallbacks
 {
     //
     public GameObject Character2D = null;
@@ -25,9 +28,6 @@ public class TouchToScreen : MonoBehaviour
 
     // 
     public GameObject TouchToScreenText = null;
-    public GameObject ConnectingText = null;
-
-    public UnityEvent OnTouchToScreen;
 
     void Start()
     {
@@ -35,16 +35,29 @@ public class TouchToScreen : MonoBehaviour
         LogoOriginPos = Logo.transform.position;
 
         TouchToScreenText.SetActive(true);
-        ConnectingText.SetActive(false);
     }
+
+    public void Connect()
+    {
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.GameVersion = "1.0";
+            PhotonNetwork.ConnectUsingSettings();
+        }
+    }
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("마스터 서버에 연결되었습니다.");
+        PhotonNetwork.JoinLobby();
+    }
+
     void LateUpdate()
     {
         if (Input.GetMouseButton(0))
         {
-            TouchToScreenText.SetActive(false);
-            ConnectingText.SetActive(true);
+            TouchToScreenText.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Connecting...";
 
-            OnTouchToScreen?.Invoke();
+            Connect();
         }
 
         if (Character2DSin >= (Mathf.PI * 2))
@@ -62,5 +75,10 @@ public class TouchToScreen : MonoBehaviour
         Logo.transform.position = new Vector3(LogoOriginPos.x, y, 0f);
 
         LogoSin += Time.deltaTime * LogoSpeed;
+    }
+
+    public override void OnJoinedLobby()
+    {
+        SceneManager.LoadScene("Launcher", LoadSceneMode.Single);
     }
 }
