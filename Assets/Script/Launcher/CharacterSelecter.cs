@@ -10,11 +10,14 @@ public class CharacterSelecter : MonoBehaviour
     // 선택지가 순회하는가
     public bool isCirculate;
 
-    // 캐릭터 2D 이미지 뷰어
-    public GameObject characterView;
+    // 캐릭터 선택 2D 이미지 뷰어
+    public GameObject characterSelectViewer;
 
     // 배경 뷰어
     public GameObject backgroundView;
+
+    // 캐릭터 일러스트 2D 이미지 뷰어
+    public CharacterViewer characterViewer;
 
     // 이미지 배열
     public Sprite[] characterSprites;
@@ -81,8 +84,13 @@ public class CharacterSelecter : MonoBehaviour
         if (characterSprites[(int)currentIndex] == null)
             return;
 
-        characterView.GetComponent<UnityEngine.UI.Image>().sprite = characterSprites[(int)currentIndex];
-        photonLauncher.characterType = currentIndex;
+        characterSelectViewer.GetComponent<UnityEngine.UI.Image>().sprite = characterSprites[(int)currentIndex];
+        PlayerManager.Instance.CharacterType = currentIndex;
+    }
+
+    public void ApplyToModelViewer()
+    {
+        characterViewer.SetIndex((int)currentIndex);
 
         if (backgroundSprites[(int)currentIndex] == null)
             return;

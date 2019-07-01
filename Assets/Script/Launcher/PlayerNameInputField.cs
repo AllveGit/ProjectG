@@ -31,7 +31,7 @@ public class PlayerNameInputField : MonoBehaviour
         }
 
         // Network 상 플레이어 이름을 설정합니다.
-        PhotonNetwork.NickName = defaultName;
+        PlayerManager.Instance.PlayerName = defaultName;
     }
 
     public void SetPlayerName(string value)

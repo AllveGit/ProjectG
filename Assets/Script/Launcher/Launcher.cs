@@ -17,12 +17,7 @@ using PhotonHashTable = ExitGames.Client.Photon.Hashtable;
 public partial class Launcher : MonoBehaviourPunCallbacks
 {
     private string gameVersion = "1.0";
-
-    private MatchOption currentMatchType = MatchOption.Match_None;
-
     public bool IsConnected { get; private set; } = false;
-
-    public Enums.CharacterIndex characterType { get; set; }
 
     private void Awake()
     {
@@ -36,7 +31,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public void MatchingDebug()
     {
-        currentMatchType = MatchOption.Match_Debug;
+        PlayerManager.Instance.CurrentMatchType = MatchOption.Match_Debug;
         PhotonNetwork.JoinRandomRoom(null, 0);
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(
@@ -44,13 +39,13 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             {
                 { PlayerProperties.TEAM.ToString(), TeamOption.Solo },
                 { PlayerProperties.SPAWNPOS.ToString(), 0 } ,
-                { PlayerProperties.CHARACTER.ToString(), characterType.ToString()}
+                { PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString()}
             });
     }
 
     public void MatchingStart(MatchOption matchType)
     {
-        currentMatchType = matchType;
+        PlayerManager.Instance.CurrentMatchType = matchType;
 
         if (matchType == MatchOption.Match_Debug)
         {
@@ -58,11 +53,11 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (currentMatchType == MatchOption.Match_None)
+        if (PlayerManager.Instance.CurrentMatchType == MatchOption.Match_None)
             return;
         
         PhotonHashTable roomProperty
-            = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), currentMatchType } };
+            = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
         
         PhotonNetwork.JoinRandomRoom(roomProperty, 0);
     }
@@ -77,7 +72,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         PhotonHashTable roomProperty = null;
         RoomOptions roomOption = new RoomOptions();
 
-        roomProperty = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), currentMatchType } };
+        roomProperty = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
 
         if (type.Equals(MatchOption.Match_Debug)) roomOption.MaxPlayers = 0;
         else roomOption.MaxPlayers = (byte)type;
@@ -101,7 +96,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         else
             playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 0);
 
-        playerProperties.Add(PlayerProperties.CHARACTER.ToString(), characterType.ToString());
+        playerProperties.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
 
         return playerProperties;
     }
@@ -121,7 +116,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchOption.Match_Debug))
+        if (PhotonNetwork.IsMasterClient && !PlayerManager.Instance.CurrentMatchType.Equals(MatchOption.Match_Debug))
         {
             TeamManager.Instance.ClearTeamMemberCount();
 
@@ -131,7 +126,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             PhotonHashTable properties = CreatePlayerProperties(teamOption);
             PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
         }
-        else if (PhotonNetwork.IsMasterClient && currentMatchType == MatchOption.Match_Debug)
+        else if (PhotonNetwork.IsMasterClient && PlayerManager.Instance.CurrentMatchType == MatchOption.Match_Debug)
         {
             PhotonNetwork.LoadLevel("Match");
             return;
@@ -139,22 +134,24 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
         Debug.Log("매칭 시작!");
     }
+
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         Debug.Log("매칭 실패!");
 
-        PhotonNetwork.CreateRoom(null, CreateMatchingRoomOption(currentMatchType));
+        PhotonNetwork.CreateRoom(null, CreateMatchingRoomOption(PlayerManager.Instance.CurrentMatchType));
     }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.IsMasterClient && !currentMatchType.Equals(MatchOption.Match_Debug))
+        if (PhotonNetwork.IsMasterClient && !PlayerManager.Instance.CurrentMatchType.Equals(MatchOption.Match_Debug))
         {
             TeamOption playerTeam = TeamManager.Instance.CollocateTeam();
             TeamManager.Instance.AddTeamMember(playerTeam);
 
             newPlayer.SetCustomProperties(CreatePlayerProperties(playerTeam));
 
-            if (PhotonNetwork.CurrentRoom.PlayerCount == (int)currentMatchType)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == (int)PlayerManager.Instance.CurrentMatchType)
             {
                 Debug.Log("매칭이 완료되어 게임을 시작합니다.");
                 PhotonNetwork.LoadLevel("Match");

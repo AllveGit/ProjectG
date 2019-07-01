@@ -44,4 +44,13 @@ public class Enums : MonoBehaviour
         Archer,
     }
 
+    public enum RankType
+    {
+        Bronze,
+        Silver,
+        Gold,
+        Diamond,
+        Master,
+        Unknown
+    }
 }

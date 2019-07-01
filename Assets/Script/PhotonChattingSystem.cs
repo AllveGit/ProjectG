@@ -28,8 +28,6 @@ public class PhotonChattingSystem : MonoBehaviour, IChatClientListener
             PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,
             PhotonNetwork.GameVersion,
             new AuthenticationValues(userName));
-
-        // AddLine(string.Format("연결시도", userName));
     }
 
     public void AddLine(string lineString)
@@ -111,9 +109,12 @@ public class PhotonChattingSystem : MonoBehaviour, IChatClientListener
         chatClient.Service();
     }
 
-    public void Input_OnEndEdit(string text)
+    public void Input_OnEndEdit()
     {
         if (chatClient.State != ChatState.ConnectedToFrontEnd)
+            return;
+
+        if (string.IsNullOrWhiteSpace(inputField.text))
             return;
 
         // 서버에 메시지 전송
