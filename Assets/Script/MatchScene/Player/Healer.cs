@@ -41,7 +41,7 @@ public class Healer : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
 
         }, SkillJoyStick.Amount, 0.6f));
 
