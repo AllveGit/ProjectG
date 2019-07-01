@@ -220,6 +220,7 @@ public abstract partial class BasePlayer
     [Range(0.0f, 1.0f)]
     private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
 
+    
 }
 
 /*

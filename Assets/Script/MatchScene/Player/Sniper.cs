@@ -23,6 +23,10 @@ public class Sniper : BasePlayer
         if (photonView.IsMine == false)
             return;
 
+        if (animator.GetBool("Attack"))
+            return;
+
+
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
