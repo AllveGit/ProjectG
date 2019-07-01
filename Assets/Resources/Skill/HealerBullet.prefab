@@ -344,5 +344,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  attackDamage: 0
+  attackDamage: 2
   destroyTime: 10
+  healValue: 3

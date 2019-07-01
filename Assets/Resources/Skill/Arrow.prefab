@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  attackDamage: 0
+  attackDamage: 10
   destroyTime: 10
   rotationSpeedDegree: 10
 --- !u!1001 &9053678249297753982

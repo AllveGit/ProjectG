@@ -2435,7 +2435,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -2551,7 +2551,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ultimateSkillPrefab: {fileID: 0}
-  basicAttackPrefab: {fileID: 0}
+  basicAttackPrefab: {fileID: 7971499633598472054, guid: 26fc3b939bf0fd7498e931ef53efc48d,
+    type: 3}
   curHP: 100
   maxHP: 100
   moveSpeed: 4
@@ -2560,6 +2561,8 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   rotationLerpSpeed: 0
+  currentSpeakerCount: 0
+  maxSpeakerCount: 5
 --- !u!1 &9198992569489413032
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,14 +9,11 @@ public class Arrow : BaseAttack
     [SerializeField]
     private float rotationSpeedDegree = 10f;
 
-    public override void GiveAttack(BasePlayer player)
-    { 
-         base.GiveAttack(player);
-    }
-
     
-    void Update()
+    new void Update()
     {
+        if (!photonView.IsMine) return;
+
         Quaternion q = new Quaternion();
 
         if (transform.rotation.y >= 360)
@@ -24,11 +21,7 @@ public class Arrow : BaseAttack
 
         transform.Rotate(new Vector3(0f, 0f, rotationSpeedDegree));
 
-        if (!photonView.IsMine) return;
-
-        rigidbody.MovePosition(
-           transform.position
-           + direction * ProjectileSpeed * Time.deltaTime);
+        base.Update();
     }
     
 }
