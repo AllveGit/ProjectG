@@ -31,5 +31,6 @@ public class Enums : MonoBehaviour
         TEAM,
         SPAWNPOS,
         HP,
+        CHARACTER
     }
 }
