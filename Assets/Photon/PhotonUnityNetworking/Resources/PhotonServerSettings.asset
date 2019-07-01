@@ -35,5 +35,6 @@ MonoBehaviour:
   - RPCOnDamage
   - RPCOnHeal
   - WinFailedCheck
+  - OnGameReulst
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -6,12 +6,24 @@ using UnityEngine.UI;
 
 public class NotificationControl : MonoBehaviour
 {
+    public enum ResultWindow
+    {
+        WinWindow,
+        FailedWindow,
+    }
+
+    public class EnumEvent : UnityEvent<ResultWindow> { }
+
     public GameObject Ready;
     public GameObject Go;
     public GameObject End;
 
+    public GameObject winnerWindow;
+    public GameObject loserWindow;
+
     public UnityEvent OnGameStart;
     public UnityEvent OnGameEnd;
+    public EnumEvent ResultEvent;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +52,7 @@ public class NotificationControl : MonoBehaviour
     /// End UI 띄우고
     /// 끝난 시점에 이벤트 호출해줌
     /// </summary>
-    public void EndStart(float endDelay)
+    public void EndStart(float endDelay, ResultWindow result)
     {
         StartCoroutine("EndCoroutine", endDelay);
     }
@@ -72,7 +84,7 @@ public class NotificationControl : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator EndCoroutine(float endDelay)
+    private IEnumerator EndCoroutine(float endDelay, ResultWindow gameResult)
     {
         // END
         Ready.SetActive(false);
@@ -87,6 +99,11 @@ public class NotificationControl : MonoBehaviour
         End.SetActive(false);
 
         OnGameEnd?.Invoke();
+
+        if (gameResult == ResultWindow.WinWindow)
+            winnerWindow.SetActive(true);
+        else
+            loserWindow.SetActive(true);
 
         yield break;
     }

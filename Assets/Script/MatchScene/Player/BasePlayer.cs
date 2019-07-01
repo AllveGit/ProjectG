@@ -30,6 +30,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
 
     #endregion
+    public NotificationControl control;
 
     private void Awake()
     {
@@ -220,9 +221,25 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] = TeamScore;
             if (TeamScore <= 0)
             {
-                //헤당 팀은 패배.
-            }
+                if (DeathTeam == Enums.RoomProperties.BLUDSCORE)
+                    photonView.RPC("OnGameReulst", RpcTarget.Others, Enums.TeamOption.BlueTeam);
+                else
+                    photonView.RPC("OnGameReulst", RpcTarget.Others, Enums.TeamOption.RedTeam);
+            }   
         }
+    }
+
+    [PunRPC]
+    private void OnGameReulst(Enums.TeamOption LoserTeam)
+    {
+        if (!photonView.IsMine) return;
+
+        NotificationControl go = GameObject.Find("Notification UI Panel").GetComponent<NotificationControl>();
+
+        if ( ((Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()]) == LoserTeam)
+            go.EndStart(1f, NotificationControl.ResultWindow.FailedWindow);
+        else
+            go.EndStart(1f, NotificationControl.ResultWindow.WinWindow);
     }
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
