@@ -56,7 +56,7 @@ public class MapParser : MonoBehaviour
                 switch (m_mapData.m_MapInfo[(i * Width) + j])
                 {
                     case "GRID_SPACE":
-                        Temp = Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize)  , 0, y + (i * TileSize)),
+                        Temp = Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
                            Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_WALL":
@@ -67,17 +67,11 @@ public class MapParser : MonoBehaviour
                             Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_BUSH":
-                        Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
-                            Quaternion.Euler(-90, 0, 0), this.transform);
-
-                        Temp = Instantiate(m_mapData.bushPrefab, new Vector3(x + (j * TileSize), TileSize, y + (i * TileSize)),
+                        Temp = Instantiate(m_mapData.bushPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
                             Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_WATER":
-                        Instantiate(m_mapData.spacePrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
-                            Quaternion.Euler(-90, 0, 0), this.transform);
-
-                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + (j * TileSize), TileSize, y + (i * TileSize)),
+                        Temp = Instantiate(m_mapData.waterPrefab, new Vector3(x + (j * TileSize), 0, y + (i * TileSize)),
                             Quaternion.Euler(-90, 0, 0), this.transform) as GameObject;
                         break;
                     case "GRID_SPAWN":

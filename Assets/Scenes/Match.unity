@@ -1695,7 +1695,7 @@ MonoBehaviour:
   Height: 0
   RealWidth: 0
   RealHeight: 0
-  TileSize: 1.27
+  TileSize: 1.2
 --- !u!4 &1659639445
 Transform:
   m_ObjectHideFlags: 0

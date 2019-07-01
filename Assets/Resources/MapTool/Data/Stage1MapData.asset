@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 30
   Height: 30
-  spacePrefab: {fileID: 496706876497498596, guid: 4f4357f626faf424492e9f55a4a4b113,
+  spacePrefab: {fileID: 2171549573299975187, guid: a704b5b1f1aee0a4ab7aac5bc78d7065,
     type: 3}
-  wallPrefab: {fileID: 496706876497498596, guid: 4f4357f626faf424492e9f55a4a4b113,
+  wallPrefab: {fileID: 3761147356466013017, guid: 5ceb91571b8c9534cbcce3b9104731bf,
     type: 3}
-  bushPrefab: {fileID: 4302002759595976365, guid: 52048896dbbf4894e826d5bbf60ae07f,
+  bushPrefab: {fileID: 5481186028237758099, guid: e19386412802f7c40a9ff0891c88eab1,
     type: 3}
-  spawnPrefab: {fileID: 496706876497498596, guid: 4f4357f626faf424492e9f55a4a4b113,
+  spawnPrefab: {fileID: 6350797162750034364, guid: d65ebc39343f67e459ce13a83f5a0f32,
     type: 3}
   waterPrefab: {fileID: 4795012485625148897, guid: 808a128abb9d250459ced270ad68933a,
     type: 3}
