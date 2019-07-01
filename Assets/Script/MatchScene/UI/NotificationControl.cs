@@ -54,7 +54,7 @@ public class NotificationControl : MonoBehaviour
     /// </summary>
     public void EndStart(float endDelay, ResultWindow result)
     {
-        StartCoroutine("EndCoroutine", endDelay);
+        StartCoroutine(EndCoroutine(endDelay, result));
     }
 
 
