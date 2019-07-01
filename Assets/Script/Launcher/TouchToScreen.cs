@@ -36,11 +36,41 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         LogoOriginPos = Logo.transform.position;
     }
 
+    // 임시로 사용할 이름을 만드는 함수입니다.
+    public string GetRandomNickName()
+    {
+        string[] namePool = new string[20] {
+            "Aiden",
+            "Alex",
+            "Antonio",
+            "Brody",
+            "Bruno",
+            "Chistopher",
+            "Charles",
+            "Covy",
+            "Chico",
+            "Danial",
+            "Derek",
+            "Dominick",
+            "Drew",
+            "Evan",
+            "Enzo",
+            "Fabian",
+            "Floyd",
+            "Gabriel",
+            "Garrett",
+            "George"
+        };
+
+        return namePool[Random.Range(0, 19)];
+    }
+
     public void Connect()
     {
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.GameVersion = "1.0";
+            PhotonNetwork.NickName = GetRandomNickName();
             PhotonNetwork.ConnectUsingSettings();
         }
     }

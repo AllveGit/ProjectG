@@ -97,7 +97,7 @@ LightmapSettings:
     m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -629,7 +629,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272353438}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -1257,7 +1257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &385106653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2115,7 +2115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ba3385dae55ae40aa3ff3cdeaa02dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreSpeed: 0.15
+  restoreSpeed: 0.3
   endScale: {x: 0.417, y: 0.417, z: 0}
   rankWindows:
   - {fileID: 21300000, guid: 04f12a78e6413264480cf4751dd056ea, type: 3}
@@ -3504,7 +3504,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: f9d01f8a271aaf34f9cce85d61d1ef1d, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -5423,7 +5423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adf8e25ac8ea7c478386ab3ad8366f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreSpeed: 0.15
+  restoreSpeed: 0.3
   endScale: {x: 0.417, y: 0.417, z: 0}
 --- !u!222 &1651617408
 CanvasRenderer:
@@ -5618,7 +5618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adf8e25ac8ea7c478386ab3ad8366f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreSpeed: 0.22
+  restoreSpeed: 0.3
   endScale: {x: 0.45, y: 0.45, z: 0}
 --- !u!114 &1695973198
 MonoBehaviour:
@@ -6963,7 +6963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adf8e25ac8ea7c478386ab3ad8366f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restoreSpeed: 0.15
+  restoreSpeed: 0.3
   endScale: {x: 0.417, y: 0.417, z: 0}
 --- !u!114 &1971673581
 MonoBehaviour:
@@ -7162,7 +7162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2001250671
 RectTransform:
   m_ObjectHideFlags: 0
