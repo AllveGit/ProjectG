@@ -55,7 +55,10 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
         if (PlayerManager.Instance.CurrentMatchType == MatchOption.Match_None)
             return;
-        
+
+        PhotonHashTable playerProperty = new PhotonHashTable();
+        playerProperty.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
+
         PhotonHashTable roomProperty
             = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
         
@@ -96,8 +99,6 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         else
             playerProperties.Add(PlayerProperties.SPAWNPOS.ToString(), 0);
 
-        playerProperties.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
-
         return playerProperties;
     }
 
@@ -124,6 +125,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             TeamManager.Instance.AddTeamMember(teamOption);
 
             PhotonHashTable properties = CreatePlayerProperties(teamOption);
+            properties.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
             PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
         }
         else if (PhotonNetwork.IsMasterClient && PlayerManager.Instance.CurrentMatchType == MatchOption.Match_Debug)
@@ -149,7 +151,11 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             TeamOption playerTeam = TeamManager.Instance.CollocateTeam();
             TeamManager.Instance.AddTeamMember(playerTeam);
 
-            newPlayer.SetCustomProperties(CreatePlayerProperties(playerTeam));
+            PhotonHashTable hashTable = CreatePlayerProperties(playerTeam);
+            hashTable.Add(Enums.PlayerProperties.CHARACTER.ToString(), 
+                newPlayer.CustomProperties[Enums.PlayerProperties.CHARACTER.ToString()]);
+
+            newPlayer.SetCustomProperties(hashTable);
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == (int)PlayerManager.Instance.CurrentMatchType)
             {
