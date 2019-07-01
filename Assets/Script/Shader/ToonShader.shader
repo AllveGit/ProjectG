@@ -19,7 +19,7 @@
 
 		void vert(inout appdata_full v)
 		{
-			v.vertex.xyz = v.vertex.xyz + v.normal.xyz * 0.1f;
+			v.vertex.xyz = v.vertex.xyz + v.normal.xyz * 0.09f;
 		}
 
         struct Input
