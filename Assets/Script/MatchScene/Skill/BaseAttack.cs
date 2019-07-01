@@ -91,9 +91,13 @@ public abstract partial class BaseAttack : MonoBehaviourPun
 
         if (other.CompareTag("Player"))
         {
+            if (other.gameObject == this.gameObject)
+                return;
+
             BasePlayer player = other.GetComponent<BasePlayer>();
             BaseCollisionProcess(player);
         }
+      
     }
     
     /*
