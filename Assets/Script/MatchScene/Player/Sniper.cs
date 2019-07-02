@@ -8,26 +8,13 @@ public class Sniper : BasePlayer
     {
     }
 
-    void Update()
-    {
-   
-        MoveCalculate();
-    }
-
-    private void LateUpdate()
-    {
-        RotateCalculate();
-    }
-
     public override void Attack()
     {
-        if (photonView.IsMine == false)
+        if (!photonView.IsMine)
             return;
 
         if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
-
-
 
         animator.SetBool("Attack", true);
 
@@ -44,7 +31,7 @@ public class Sniper : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
 
-        }, SkillJoyStick.Amount, 0.6f));
+        }, SkillJoyStick.JoyDir, 0.6f));
     }
 
     public override void UltimateSkill()

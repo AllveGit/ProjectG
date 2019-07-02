@@ -16,9 +16,7 @@ public class ScoreUI : MonoBehaviour
 
     void LateUpdate()
     {
-       if (Team == Enums.RoomProperties.BLUDSCORE)
-            scoreText.text = ((int)Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()]).ToString();
-       else
-            scoreText.text = ((int)Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()]).ToString();
-    }
+        ExitGames.Client.Photon.Hashtable roomProperties = Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties;
+        scoreText.text = ((int)roomProperties[Team.ToString()]).ToString();
+     }
 }

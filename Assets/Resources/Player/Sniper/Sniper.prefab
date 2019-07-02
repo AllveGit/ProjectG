@@ -581,9 +581,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.8
-  m_Height: 4
+  m_Height: 4.5
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 2.3, z: 0}
 --- !u!114 &-6381447696395608959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,6 +682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   control: {fileID: 0}
+  admin: {fileID: 0}
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
     type: 3}
   basicAttackPrefab: {fileID: 2821756039891169347, guid: 13c0936bfaa931145864589b967bceca,

@@ -10,16 +10,6 @@ public class Healer : BasePlayer
     {
     }
 
-    void Update()
-    {
-        MoveCalculate();
-    }
-
-    private void LateUpdate()
-    {
-        RotateCalculate();
-    }
-
     public override void Attack()
     {
         if (photonView.IsMine == false)
@@ -59,7 +49,7 @@ public class Healer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
 
-        }, SkillJoyStick.Amount, 0.6f));
+        }, SkillJoyStick.JoyDir, 0.6f));
     }
     public override void UltimateSkill()
     {
