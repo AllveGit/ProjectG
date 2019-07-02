@@ -17,16 +17,6 @@ public class Maid : BasePlayer
     {
     }
 
-    void Update()
-    {
-        MoveCalculate();
-    }
-
-    private void LateUpdate()
-    {
-        RotateCalculate();
-    }
-
     public override void Attack()
     {
         if (photonView.IsMine == false)
@@ -34,8 +24,6 @@ public class Maid : BasePlayer
 
         if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
-
-
 
         animator.SetBool("Attack", true);
 
@@ -46,7 +34,7 @@ public class Maid : BasePlayer
 
             StartCoroutine(MaidAttack(direction));
 
-        }, SkillJoyStick.Amount, 0.4f));
+        }, SkillJoyStick.JoyDir, 0.4f));
     }
 
     public override void UltimateSkill()

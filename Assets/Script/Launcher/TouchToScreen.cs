@@ -76,7 +76,6 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster()
     {
-        Debug.Log("마스터 서버에 연결되었습니다.");
         PhotonNetwork.JoinLobby();
     }
 

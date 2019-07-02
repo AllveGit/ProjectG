@@ -35,8 +35,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     private void Awake()
     {
-        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
-        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
+        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick02>();
+        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick02>();
 
         rigidbody       = GetComponent<Rigidbody>();
         if (rigidbody == null)
@@ -58,18 +58,24 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             Debug.LogError("BasePlayer.cs / SkillJoyStick을 가져오지 못했습니다.");
 
         // 이벤트 핸들러에 등록
-        SkillJoyStick.OnUpEvent     += OnSkillJoyStickUp;
-        SkillJoyStick.OnDownEvent   += OnSkillJoyStickDown;
-
-        admin = GameObject.FindGameObjectWithTag("ScoreAdmin").GetComponent<ScoreAdmin>();
+        SkillJoyStick.OnStickUp     += OnSkillJoyStickUp;
+        SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
     }
 
+    protected void Update()
+    {
+        MoveCalculate();
+    }
+
+    protected void LateUpdate()
+    {
+        RotateCalculate();
+    }
 
     public void MoveCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
         if (!photonView.IsMine) return;
-
         if (animator.GetBool("Attack") == true) return;
 
         // 키보드
@@ -77,16 +83,15 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         float h = Input.GetAxis("Horizontal"); // 수평
         movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
 
-        movementAmount = MoveJoyStick.Amount * moveSpeed * Time.deltaTime;
+        movementAmount = MoveJoyStick.JoyDir * (moveSpeed * MoveJoyStick.JoyScale)* Time.deltaTime;
 
-        attackDirection = SkillJoyStick.Amount;
+        attackDirection = SkillJoyStick.JoyDir;
     }
 
     public virtual void RotateCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
         if (!photonView.IsMine) return;
-
         if (animator.GetBool("Attack") == true) return;
 
         if (isFocusOnAttack)
@@ -105,13 +110,13 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             rigidbody.rotation = Quaternion.LookRotation(movementAmount);
     }
 
-    public void OnSkillJoyStickUp(Vector3 pedPosition)
+    public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
         Attack();
         isFocusOnAttack = false;
     }
 
-    public void OnSkillJoyStickDown(Vector3 pedPosition)
+    public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
     {
         isFocusOnAttack = true;
     }
@@ -126,38 +131,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
 
-    //public void OnHideBush()
-    //{
-    //    if (!photonView.IsMine && IsBush)
-    //    {
-    //        Enums.TeamOption MasterClientTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-    //        Enums.TeamOption MyTeam = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-
-    //        if (MasterClientTeam == MyTeam)
-    //        {
-    //            for (int i = 0; i < transform.GetChildCount(); i++)
-    //                transform.GetChild(i).gameObject.SetActive(true);
-    //        }
-    //        else
-    //        {
-    //            for (int i = 0; i < transform.GetChildCount(); i++)
-    //                transform.GetChild(i).gameObject.SetActive(false);
-    //        }
-
-    //    }
-    //    else if (!photonView.IsMine)
-    //    {
-    //        for (int i = 0; i < transform.GetChildCount(); i++)
-    //            transform.GetChild(i).gameObject.SetActive(true);
-    //    }
-    //}
-
-    /*
-     * 만약 부모클래스에 PunRPC 함수가 있고
-     * 상속받은 클래스가 사용한다면
-     * 꼭 virtual을 붙여주자 만약 안붙인다면
-     * Photon에서 이 함수를 찾지 못한다.
-     */
     [PunRPC]
     protected virtual void RPCOnDamage(int damage)
     {
@@ -203,48 +176,26 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     {
         if (!photonView.IsMine) return;
 
-        animator.SetBool("Death", true);
+        ExitGames.Client.Photon.Hashtable oldHashTable = PhotonNetwork.CurrentRoom.CustomProperties;
+        ExitGames.Client.Photon.Hashtable newHashTable = new ExitGames.Client.Photon.Hashtable();
 
+        newHashTable.Add(Enums.RoomProperties.MATCHTYPE.ToString(), oldHashTable[Enums.RoomProperties.MATCHTYPE.ToString()]);
 
         Enums.TeamOption local = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-
-
         if (local.Equals(Enums.TeamOption.BlueTeam))
         {
-            int i = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()];
-            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()] = i - 1;
+            int i = (int)oldHashTable[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
+            newHashTable.Add(Enums.RoomProperties.BLUETEAMSCORE.ToString(), i - 1);
         }
-        else
+        else if (local.Equals(Enums.TeamOption.RedTeam))
         {
-            int i = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()];
-            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()] = i - 1;
+            int i = (int)oldHashTable[Enums.RoomProperties.REDTEAMSCORE.ToString()];
+            newHashTable.Add(Enums.RoomProperties.REDTEAMSCORE.ToString(), i - 1);
         }
+        PhotonNetwork.CurrentRoom.SetCustomProperties(newHashTable);
 
+        animator.SetBool("Death", true);
         StartCoroutine(Respawn(5f));
-    }
-
-    private void CountingScore()
-    {
-        Enums.TeamOption team = (Enums.TeamOption)photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-
-        if (team == Enums.TeamOption.BlueTeam)
-            photonView.RPC("WinFailedCheck", RpcTarget.All, Enums.RoomProperties.BLUDSCORE);
-        else
-            photonView.RPC("WinFailedCheck", RpcTarget.All, Enums.RoomProperties.REDSCORE);
-    }
-
-
-    [PunRPC]
-    protected virtual void OnGameReulst(Enums.TeamOption LoserTeam)
-    {
-        if (!photonView.IsMine) return;
-
-        NotificationControl go = GameObject.Find("Notification UI Panel").GetComponent<NotificationControl>();
-
-        if ( ((Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()]) == LoserTeam)
-            go.EndStart(1f, NotificationControl.ResultWindow.FailedWindow);
-        else
-            go.EndStart(1f, NotificationControl.ResultWindow.WinWindow);
     }
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
@@ -253,7 +204,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         attackCallback(direction);
         yield break;
     }
-
     public IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -284,9 +234,9 @@ public abstract partial class BasePlayer
 
     public Enums.TeamOption playerTeam { get; set; }
 
-    protected JoyStick MoveJoyStick = null;
+    protected JoyStick02 MoveJoyStick = null;
 
-    protected JoyStick SkillJoyStick = null;
+    protected JoyStick02 SkillJoyStick = null;
 
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 

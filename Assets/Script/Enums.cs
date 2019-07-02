@@ -24,8 +24,8 @@ public class Enums : MonoBehaviour
     public enum RoomProperties
     {
         MATCHTYPE,
-        REDSCORE,
-        BLUDSCORE,
+        REDTEAMSCORE,
+        BLUETEAMSCORE,
     }
 
     public enum PlayerProperties

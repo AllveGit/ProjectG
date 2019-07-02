@@ -13,16 +13,6 @@ public class Archer : BasePlayer
         ExplosionPrefab = Resources.Load<GameObject>("Effect/Explosion/Explosion");
     }
 
-    void Update()
-    {
-        MoveCalculate();
-    }
-
-    private void LateUpdate()
-    {
-        RotateCalculate();
-    }
-
     public override void Attack()
     {
         if (photonView.IsMine == false)
@@ -46,7 +36,7 @@ public class Archer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
 
-        }, SkillJoyStick.Amount, 0.6f));
+        }, SkillJoyStick.JoyDir, 0.6f));
 
     }
 
@@ -74,7 +64,7 @@ public class Archer : BasePlayer
 
             if (projectile != null)
                 projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
-        }, SkillJoyStick.Amount, 0.6f));
+        }, SkillJoyStick.JoyDir, 0.6f));
     }
 
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
