@@ -27,7 +27,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private int playerLevel = 0;
+    private int playerLevel = 1;
 
     public int PlayerLevel {
         get => playerLevel;
@@ -55,7 +55,9 @@ public class PlayerManager : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+        }
         else
             Destroy(this.gameObject);
 
@@ -64,18 +66,12 @@ public class PlayerManager : MonoBehaviour
 
     public void Start()
     {
-        Initialize();
+
     }
 
     public void Initialize()
     {
-        PlayerName = PhotonNetwork.NickName;
-        PlayerLevel = 7;
-        PlayerExp = 0;
-        PlayerRankScore = 0;
-        PlayerRankType = Enums.RankType.Bronze;
-        CurrentMatchType = MatchOption.Match_None;
-        CharacterType = Enums.CharacterIndex.Healer;
+
     }
 
     public void AddExp(int plusExp)

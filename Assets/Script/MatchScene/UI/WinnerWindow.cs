@@ -50,6 +50,9 @@ public class WinnerWindow : BaseWindow
     {
         yield return new WaitForSeconds(delay);
 
+        PlayerManager.Instance.AddExp(40);
+        PlayerManager.Instance.AddRankScore(30);
+
         PhotonNetwork.LeaveRoom();
 
         yield break;

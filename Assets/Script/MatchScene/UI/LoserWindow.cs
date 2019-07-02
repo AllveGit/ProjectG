@@ -33,6 +33,9 @@ public class LoserWindow : BaseWindow
     {
         yield return new WaitForSeconds(delay);
 
+        PlayerManager.Instance.AddExp(30);
+        PlayerManager.Instance.MinusRankScore(15);
+
         PhotonNetwork.LeaveRoom();
 
         yield break;
