@@ -57,11 +57,13 @@ public class PlayerManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            Initialize();
+            DontDestroyOnLoad(gameObject);
         }
         else
-            Destroy(this.gameObject);
-
-        DontDestroyOnLoad(this.gameObject);
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Start()
@@ -71,7 +73,10 @@ public class PlayerManager : MonoBehaviour
 
     public void Initialize()
     {
-
+        PlayerRankType = Enums.RankType.Bronze;
+        PlayerLevel = 1;
+        PlayerExp = 0;
+        PlayerName = PhotonNetwork.NickName;
     }
 
     public void AddExp(int plusExp)

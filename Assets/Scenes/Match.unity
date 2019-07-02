@@ -449,7 +449,7 @@ RectTransform:
   - {fileID: 999498923}
   - {fileID: 371134091}
   m_Father: {fileID: 883306105}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -995,12 +995,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 1244401440}
   - {fileID: 1653435291}
   - {fileID: 1345159332}
-  - {fileID: 2033955001}
   - {fileID: 1921814390}
+  - {fileID: 2033955001}
   - {fileID: 332656723}
-  - {fileID: 1244401440}
   - {fileID: 1338217332}
   - {fileID: 937903692}
   m_Father: {fileID: 0}
@@ -1685,7 +1685,7 @@ RectTransform:
   - {fileID: 653199551}
   - {fileID: 2030149768}
   m_Father: {fileID: 883306105}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1854,7 +1854,7 @@ RectTransform:
   m_Children:
   - {fileID: 80627690}
   m_Father: {fileID: 883306105}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2083,7 +2083,7 @@ RectTransform:
   m_Children:
   - {fileID: 1871558969}
   m_Father: {fileID: 883306105}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2525,7 +2525,7 @@ RectTransform:
   - {fileID: 1185140182}
   - {fileID: 533369895}
   m_Father: {fileID: 883306105}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2547,8 +2547,8 @@ MonoBehaviour:
   Ready: {fileID: 1094866057}
   Go: {fileID: 1185140181}
   End: {fileID: 533369894}
-  winnerWindow: {fileID: 0}
-  loserWindow: {fileID: 0}
+  winnerWindow: {fileID: 999498922}
+  loserWindow: {fileID: 371134090}
   OnGameStart:
     m_PersistentCalls:
       m_Calls:
