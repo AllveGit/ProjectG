@@ -203,6 +203,12 @@ PrefabInstance:
       propertyPath: spawnZone
       value: 
       objectReference: {fileID: 233653864}
+    - target: {fileID: 7537990071776809045, guid: bce103d7b128f9d4bb2b1e2492f2801a,
+        type: 3}
+      propertyPath: ScoreAdmin
+      value: 
+      objectReference: {fileID: 5405478756591145443, guid: 3cd73cb2087ae8c4a82608af87755b01,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bce103d7b128f9d4bb2b1e2492f2801a, type: 3}
 --- !u!1 &80627689
