@@ -14,12 +14,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject spawnZone = null;
     public GameObject ScoreAdmin = null;
-    public GameObject ScoreAdminInstance = null;
-    public ScoreAdmin ScoreAdminScript = null;
 
     public static GameManager Instance;
-    
-
 
     public Vector3 playerSpawnPos = default;
 
@@ -33,6 +29,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (spawnZone == null)
             Debug.LogError("GameManager에  spawnZone이란 변수가 초기화 되지 않았습니다.");
+
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.Instantiate(ScoreAdmin.name, new Vector3(0f, 0f, 0f), Quaternion.identity);
+
 
         string prefabName = (string)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.CHARACTER.ToString()];
 
@@ -51,13 +51,11 @@ public class GameManager : MonoBehaviourPunCallbacks
          * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
          */
         player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+    }
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            ScoreAdminInstance = PhotonNetwork.Instantiate(ScoreAdmin.name, new Vector3(0f, 0f, 0f),
-                Quaternion.identity);
-            ScoreAdminScript = ScoreAdminInstance.GetComponent<ScoreAdmin>();
-        }
+    public void OnLoadedScoreAdmin()
+    {
+       
     }
 
     public void LeaveRoom()

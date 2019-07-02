@@ -31,6 +31,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     #endregion
     public NotificationControl control;
+    public ScoreAdmin admin;
 
     private void Awake()
     {
@@ -59,6 +60,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // 이벤트 핸들러에 등록
         SkillJoyStick.OnUpEvent     += OnSkillJoyStickUp;
         SkillJoyStick.OnDownEvent   += OnSkillJoyStickDown;
+
+        admin = GameObject.FindGameObjectWithTag("ScoreAdmin").GetComponent<ScoreAdmin>();
     }
 
 
@@ -202,12 +205,20 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         animator.SetBool("Death", true);
 
+
         Enums.TeamOption local = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-       
-        if (local == Enums.TeamOption.BlueTeam)
-            GameManager.Instance.ScoreAdminScript.bludTeamCount--;
+
+
+        if (local.Equals(Enums.TeamOption.BlueTeam))
+        {
+            int i = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()];
+            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()] = i - 1;
+        }
         else
-            GameManager.Instance.ScoreAdminScript.redTeamCount--;
+        {
+            int i = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()];
+            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()] = i - 1;
+        }
 
         StartCoroutine(Respawn(5f));
     }

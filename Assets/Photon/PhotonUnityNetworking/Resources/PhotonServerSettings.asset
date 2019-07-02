@@ -36,5 +36,7 @@ MonoBehaviour:
   - RPCOnHeal
   - WinFailedCheck
   - OnGameReulst
+  - RPCRedTeamCounting
+  - RPCBlueTeamCounting
   DisableAutoOpenWizard: 1
   ShowSettings: 1

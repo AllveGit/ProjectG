@@ -129,6 +129,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 
             PhotonHashTable properties = CreatePlayerProperties(teamOption);
             properties.Add(PlayerProperties.CHARACTER.ToString(), PlayerManager.Instance.CharacterType.ToString());
+
             PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
         }
         else if (PhotonNetwork.IsMasterClient && PlayerManager.Instance.CurrentMatchType == MatchOption.Match_Debug)

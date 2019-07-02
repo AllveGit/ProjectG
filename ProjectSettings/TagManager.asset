@@ -10,6 +10,7 @@ TagManager:
   - Skill
   - Bush
   - RealBush
+  - ScoreAdmin
   layers:
   - Default
   - TransparentFX

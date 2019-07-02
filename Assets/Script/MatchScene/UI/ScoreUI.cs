@@ -7,6 +7,7 @@ public class ScoreUI : MonoBehaviour
     public Enums.RoomProperties Team;
     private UnityEngine.UI.Text scoreText;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,10 +16,9 @@ public class ScoreUI : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Team == Enums.RoomProperties.BLUDSCORE)
-            scoreText.text = GameManager.Instance.ScoreAdminScript.bludTeamCount.ToString();
-        else
-            scoreText.text = GameManager.Instance.ScoreAdminScript.redTeamCount.ToString();
-
+       if (Team == Enums.RoomProperties.BLUDSCORE)
+            scoreText.text = ((int)Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE.ToString()]).ToString();
+       else
+            scoreText.text = ((int)Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE.ToString()]).ToString();
     }
 }
