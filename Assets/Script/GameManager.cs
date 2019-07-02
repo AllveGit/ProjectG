@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviourPunCallbacks
          * Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.
          */
         player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-        string team = Enums.PlayerProperties.TEAM.ToString();
 
         if (PhotonNetwork.IsMasterClient)
         {

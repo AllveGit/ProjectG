@@ -15,6 +15,10 @@ public class ScoreUI : MonoBehaviour
 
     void LateUpdate()
     {
-        scoreText.text = Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties[Team.ToString()].ToString();
+        if (Team == Enums.RoomProperties.BLUDSCORE)
+            scoreText.text = GameManager.Instance.ScoreAdminScript.bludTeamCount.ToString();
+        else
+            scoreText.text = GameManager.Instance.ScoreAdminScript.redTeamCount.ToString();
+
     }
 }
