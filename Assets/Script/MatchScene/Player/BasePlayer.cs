@@ -205,15 +205,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         Enums.TeamOption local = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
        
         if (local == Enums.TeamOption.BlueTeam)
-        {
-            int score = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE];
-            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUDSCORE] = score - 1;
-        }
+            GameManager.Instance.ScoreAdminScript.bludTeamCount--;
         else
-        {
-            int score = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE];
-            PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDSCORE] = score - 1;
-        }
+            GameManager.Instance.ScoreAdminScript.redTeamCount--;
 
         StartCoroutine(Respawn(5f));
     }
@@ -228,23 +222,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             photonView.RPC("WinFailedCheck", RpcTarget.All, Enums.RoomProperties.REDSCORE);
     }
 
-    [PunRPC]
-    protected virtual void WinFailedCheck(Enums.RoomProperties DeathTeam)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            int TeamScore = (int)PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] - 1;
-            PhotonNetwork.CurrentRoom.CustomProperties[DeathTeam.ToString()] = TeamScore;
-
-            if (TeamScore <= 0)
-            {
-                if (DeathTeam == Enums.RoomProperties.BLUDSCORE)
-                    photonView.RPC("OnGameReulst", RpcTarget.All, Enums.TeamOption.BlueTeam);
-                else
-                    photonView.RPC("OnGameReulst", RpcTarget.All, Enums.TeamOption.RedTeam);
-            }   
-        }
-    }
 
     [PunRPC]
     protected virtual void OnGameReulst(Enums.TeamOption LoserTeam)
