@@ -13,9 +13,6 @@ public class Maid : BasePlayer
 
     private float speakerDelay = 0.1f;
 
-    void Start()
-    {
-    }
 
     public override void Attack()
     {
