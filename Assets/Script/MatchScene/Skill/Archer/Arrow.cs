@@ -14,10 +14,8 @@ public class Arrow : BaseAttack
     {
         if (!photonView.IsMine) return;
 
-        Quaternion q = new Quaternion();
-
         if (transform.rotation.y >= 360)
-            transform.rotation.SetEulerAngles(new Vector3(0f, 0f, 0f));
+            transform.rotation = Quaternion.Euler(Vector3.zero);
 
         transform.Rotate(new Vector3(0f, 0f, rotationSpeedDegree));
 

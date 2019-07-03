@@ -16,7 +16,6 @@ using PhotonHashTable = ExitGames.Client.Photon.Hashtable;
 
 public partial class Launcher : MonoBehaviourPunCallbacks
 {
-    private string gameVersion = "1.0";
     public bool IsConnected { get; private set; } = false;
 
     private void Awake()

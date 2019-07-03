@@ -13,11 +13,12 @@ public class TeamManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
-            Destroy(this.gameObject);
-
-        DontDestroyOnLoad(this.gameObject);
+            Destroy(gameObject);
     }
 
     public void ClearTeamMemberCount()
