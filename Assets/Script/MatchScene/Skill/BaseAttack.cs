@@ -6,7 +6,7 @@ using Photon.Pun;
 /*
  * BaseAttack 객체의 변수와 Propertie 입니다.
  */
-public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
+public abstract partial class BaseAttack : MonoBehaviourPun
 { 
     [SerializeField]
     protected float projectileSpeed = 10.0f;
@@ -22,12 +22,14 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
     public int AttackDamage { get => attackDamage; }
     public float DestroyTime { get => destroyTime; }
     public Vector3 Direction { get => direction; }
+    #endregion
 
     public new Rigidbody rigidbody { get; protected set; }
     public BasePlayer ownerPlayer { get; private set; }
-    #endregion
 }
-public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
+
+
+public abstract partial class BaseAttack : MonoBehaviourPun
 {
 
     private void Awake()
@@ -38,17 +40,8 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
 
     public void Update()
     {
-        if (photonView.IsMine)
-            Move();
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, currentPosition, ProjectileSpeed * Time.deltaTime);
-            transform.rotation = currentRotation;
-        }
-    }
+        if (!photonView.IsMine) return;
 
-    protected virtual void Move()
-    {
         rigidbody.MovePosition(
         transform.position
         + direction * ProjectileSpeed * Time.deltaTime);
@@ -65,6 +58,8 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
         if (photonView.IsMine)
             StartCoroutine(Timer());
     }
+
+    // 공격방식마다 추가적으로 해야할 작업이 있다면 이 함수를 오버라이딩 하세요
 
     protected bool IsAttackable(Photon.Realtime.Player me, Photon.Realtime.Player enumy)
     {
@@ -90,24 +85,6 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
         return Attackable;
     }
 
-    public virtual void BaseCollisionProcess(BasePlayer player)
-    {
-        if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
-        {
-            player.OnDamaged(AttackDamage);
-            PhotonNetwork.Destroy(this.gameObject);
-        }
-    }
-
-    IEnumerator Timer()
-    {
-        yield return new WaitForSeconds(destroyTime);
-
-        if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
-
-        yield break;
-    }
-
 
     public void OnTriggerEnter(Collider other)
     {
@@ -130,30 +107,26 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
         else
             PhotonNetwork.Destroy(this.gameObject);
     }
-
-}
-
-public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
-{
-    private Vector3 currentPosition = Vector3.zero;
-    private Quaternion currentRotation = Quaternion.identity;
-
-    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    
+    /*
+     * 만약 구현하는 공격의 프로세스가 기존 프로세스와 다를경우
+     * 이 함수를 상속받아 사용한다.
+     */
+    public virtual void BaseCollisionProcess(BasePlayer player)
     {
-        if (stream.IsWriting)
+        if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
         {
-            stream.SendNext(projectileSpeed);
-
-            stream.SendNext(transform.position);
-            stream.SendNext(transform.rotation);
-        }
-        else
-        {
-            projectileSpeed = (float)stream.ReceiveNext();
-
-            currentPosition = (Vector3)stream.ReceiveNext();
-            currentRotation = (Quaternion)stream.ReceiveNext();
+            player.OnDamaged(AttackDamage);
+            PhotonNetwork.Destroy(this.gameObject);
         }
     }
 
+    IEnumerator Timer()
+    {
+        yield return new WaitForSeconds(destroyTime);
+
+        if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
+
+        yield break;
+    }
 }

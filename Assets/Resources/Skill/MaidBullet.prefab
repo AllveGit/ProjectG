@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 1518480518274403213}
   - component: {fileID: 5161069481478786657}
   - component: {fileID: 7472948675522702623}
+  - component: {fileID: 361704165196151626}
   - component: {fileID: 488196444648105488}
   m_Layer: 0
   m_Name: MaidBullet
@@ -176,10 +177,25 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 488196444648105488}
+  - {fileID: 361704165196151626}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &361704165196151626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7971499633598472054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!114 &488196444648105488
 MonoBehaviour:
   m_ObjectHideFlags: 0

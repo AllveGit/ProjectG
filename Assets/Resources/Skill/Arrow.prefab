@@ -144,9 +144,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7620023917066530927}
+  - component: {fileID: 1618896773850558654}
   - component: {fileID: 8540459191343569981}
   - component: {fileID: 3172943728186255245}
-  - component: {fileID: 1618896773850558654}
+  - component: {fileID: 5668116055787225278}
   - component: {fileID: 5764422303998444618}
   m_Layer: 0
   m_Name: Arrow
@@ -171,6 +172,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1618896773850558654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4607441206640468670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 5668116055787225278}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!54 &8540459191343569981
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -201,7 +224,7 @@ CapsuleCollider:
   m_Height: 0.89
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1618896773850558654
+--- !u!114 &5668116055787225278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -210,19 +233,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4607441206640468670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 2
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 5764422303998444618}
-  viewIdField: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!114 &5764422303998444618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  attackDamage: 0
+  attackDamage: 10
   destroyTime: 10
   rotationSpeedDegree: 10
 --- !u!1001 &9053678249297753982

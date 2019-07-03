@@ -599,9 +599,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 2
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
+  - {fileID: 1162784237188227624}
   - {fileID: 8392639744290108498}
   - {fileID: 1810596043051956346}
   viewIdField: 0

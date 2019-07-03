@@ -7,8 +7,37 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
+
+    #region PhotonCallBack
+    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 전송, 수신은 순서 맞춰서
+        if (stream.IsWriting)
+        {
+            // 메시지 전송
+            // stream.SendNext()
+
+            stream.SendNext(ShieldPower);
+            stream.SendNext(CurHP);
+        }
+        else
+        {
+            // 메시지 수신
+            // stream.ReceiveNext();
+            ShieldPower = (int)stream.ReceiveNext();
+            CurHP = (int)stream.ReceiveNext();
+        }
+    }
+
+    #endregion
+    public NotificationControl control;
+    public ScoreAdmin admin;
+
     private void Awake()
     {
+        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick02>();
+        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick02>();
+
         rigidbody       = GetComponent<Rigidbody>();
         if (rigidbody == null)
             Debug.LogError("BasePlayer.cs / rigidbody을 가져오지 못했습니다.");
@@ -23,12 +52,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             playerCamera.IsTargeting    = true;
         }
 
-
-        MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick02>();
         if (MoveJoyStick == null)
             Debug.LogError("BasePlayer.cs / JoyStick을 가져오지 못했습니다.");
-
-        SkillJoyStick = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick02>();
         if (SkillJoyStick == null)
             Debug.LogError("BasePlayer.cs / SkillJoyStick을 가져오지 못했습니다.");
 
@@ -37,27 +62,20 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
     }
 
-    
     protected void Update()
     {
-        if (photonView.IsMine)
-            MoveCalculate();
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, currentPosition, MoveSpeed * Time.deltaTime);
-            transform.rotation = currentRotation;
-        }
+        MoveCalculate();
     }
 
     protected void LateUpdate()
     {
-        if (photonView.IsMine)
-            RotateCalculate();
+        RotateCalculate();
     }
 
     public void MoveCalculate()
     {
         // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
+        if (!photonView.IsMine) return;
         if (animator.GetBool("Attack") == true) return;
 
         // 키보드
@@ -107,13 +125,53 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     {
         photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
     }
+
     public void OnHeal(int heal)
     {
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
 
+    [PunRPC]
+    protected virtual void RPCOnDamage(int damage)
+    {
+        if (photonView.IsMine)
+        {
+            ShieldPower -= damage;
+
+            if (ShieldPower < 0)
+            {
+                CurHP -= Mathf.Abs(ShieldPower);
+                ShieldPower = 0;
+            }
+
+            if (CurHP < 0)
+            {
+                CurHP = 0;
+
+
+                OnPlayerDeath();
+
+
+            }
+        }
+    }
+
+    [PunRPC]
+    protected virtual void RPCOnHeal(int heal)
+    {
+        if (photonView.IsMine)
+        {
+            CurHP += heal;
+
+            if (CurHP > maxHP)
+                CurHP = maxHP;
+        }
+    }
+
+
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
+
     public virtual void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
     {
         if (!photonView.IsMine) return;
@@ -166,79 +224,11 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
 }
 
-// RPC & 동기화 함수 동기화의 필요한 변수.
-public abstract partial class BasePlayer
-{
-    private Vector3 currentPosition = Vector3.zero;
-    private Quaternion currentRotation = Quaternion.identity;
-    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    { 
-        // 전송, 수신은 순서 맞춰서
-        if (stream.IsWriting)
-        {
-            // 메시지 전송
-            // stream.SendNext()
-
-            stream.SendNext(CurHP);
-            stream.SendNext(ShieldPower);
-            stream.SendNext(MoveSpeed);
-
-            stream.SendNext(transform.position);
-            stream.SendNext(transform.rotation);
-        }
-        else
-        {
-            // 메시지 수신
-            // stream.ReceiveNext();
-            CurHP = (int)stream.ReceiveNext();
-            ShieldPower = (int)stream.ReceiveNext();
-            MoveSpeed = (int)stream.ReceiveNext();
-
-            currentPosition = (Vector3)stream.ReceiveNext();
-            currentRotation = (Quaternion)stream.ReceiveNext();
-        }
-    }
-
-    [PunRPC]
-    protected virtual void RPCOnDamage(int damage)
-    {
-        if (photonView.IsMine)
-        {
-            ShieldPower -= damage;
-
-            if (ShieldPower < 0)
-            {
-                CurHP -= Mathf.Abs(ShieldPower);
-                ShieldPower = 0;
-            }
-
-            if (CurHP < 0)
-            {
-                CurHP = 0;
-                OnPlayerDeath();
-            }
-        }
-    }
-
-    [PunRPC]
-    protected virtual void RPCOnHeal(int heal)
-    {
-        if (photonView.IsMine)
-        {
-            CurHP += heal;
-
-            if (CurHP > maxHP)
-                CurHP = maxHP;
-        }
-    }
-}
-
-
 /*
  * BasePlayer 클래스의
  * 인스펙터 상 표기될 변수 목록입니다.
  */
-public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
+public abstract partial class BasePlayer
 {
     public delegate void AttackCallback(Vector3 direction);
 
@@ -247,9 +237,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     protected JoyStick02 MoveJoyStick = null;
 
     protected JoyStick02 SkillJoyStick = null;
-
-    public NotificationControl control;
-
 
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 
@@ -291,7 +278,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 /*
  * BasePlayer 클래스의 프로퍼티 모음입니다.
  */
-public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
+public abstract partial class BasePlayer
 {
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;

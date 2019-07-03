@@ -70,6 +70,10 @@ public class Archer : BasePlayer
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
     public override void RotateCalculate()
     {
+        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
+
+        if (!photonView.IsMine) return;
+
         if (animator.GetBool("Attack") == true) return;
 
         if (isFocusOnAttack)

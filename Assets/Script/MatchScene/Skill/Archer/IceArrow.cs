@@ -8,4 +8,14 @@ using Photon.Pun;
 public class IceArrow : BaseAttack
 {
 
+    // Update is called once per frame
+    void Update()
+    {
+        if (!photonView.IsMine) return;
+
+        rigidbody.MovePosition(
+        transform.position
+        + direction * ProjectileSpeed * Time.deltaTime);
+    }
+
 }
