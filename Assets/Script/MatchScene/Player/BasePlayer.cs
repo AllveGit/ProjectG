@@ -7,32 +7,6 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
-
-    #region PhotonCallBack
-    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        // 전송, 수신은 순서 맞춰서
-        if (stream.IsWriting)
-        {
-            // 메시지 전송
-            // stream.SendNext()
-
-            stream.SendNext(ShieldPower);
-            stream.SendNext(CurHP);
-        }
-        else
-        {
-            // 메시지 수신
-            // stream.ReceiveNext();
-            ShieldPower = (int)stream.ReceiveNext();
-            CurHP = (int)stream.ReceiveNext();
-        }
-    }
-
-    #endregion
-    public NotificationControl control;
-    public ScoreAdmin admin;
-
     private void Awake()
     {
         MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick02>();
@@ -62,36 +36,36 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
-        MoveCalculate();
-    }
-
-    protected void LateUpdate()
-    {
-        RotateCalculate();
+        if (photonView.IsMine)
+        {
+            MoveCalculate();
+            RotateCalculate();
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
+            transform.rotation = currentRotation;
+        }
     }
 
     public void MoveCalculate()
     {
-        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌워줄것
-        if (!photonView.IsMine) return;
         if (animator.GetBool("Attack") == true) return;
 
         // 키보드
-        float v = Input.GetAxis("Vertical"); // 수직
-        float h = Input.GetAxis("Horizontal"); // 수평
-        movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed * Time.deltaTime;
+        // float v = Input.GetAxis("Vertical"); // 수직
+        // float h = Input.GetAxis("Horizontal"); // 수평
+        // movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed;
 
-        movementAmount = MoveJoyStick.JoyDir * (moveSpeed * MoveJoyStick.JoyScale)* Time.deltaTime;
+        movementAmount = MoveJoyStick.JoyDir * (moveSpeed * MoveJoyStick.JoyScale) * Time.deltaTime;
 
         attackDirection = SkillJoyStick.JoyDir;
     }
 
     public virtual void RotateCalculate()
     {
-        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
-        if (!photonView.IsMine) return;
         if (animator.GetBool("Attack") == true) return;
 
         if (isFocusOnAttack)
@@ -129,43 +103,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public void OnHeal(int heal)
     {
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
-    }
-
-    [PunRPC]
-    protected virtual void RPCOnDamage(int damage)
-    {
-        if (photonView.IsMine)
-        {
-            ShieldPower -= damage;
-
-            if (ShieldPower < 0)
-            {
-                CurHP -= Mathf.Abs(ShieldPower);
-                ShieldPower = 0;
-            }
-
-            if (CurHP < 0)
-            {
-                CurHP = 0;
-
-
-                OnPlayerDeath();
-
-
-            }
-        }
-    }
-
-    [PunRPC]
-    protected virtual void RPCOnHeal(int heal)
-    {
-        if (photonView.IsMine)
-        {
-            CurHP += heal;
-
-            if (CurHP > maxHP)
-                CurHP = maxHP;
-        }
     }
 
 
@@ -223,6 +160,67 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString() + " Shield : " + ShieldPower.ToString());
     }
 }
+
+public abstract partial class BasePlayer
+{
+    private Vector3 currentPosition = Vector3.zero;
+    private Quaternion currentRotation = Quaternion.identity;
+    public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 전송, 수신은 순서 맞춰서
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+
+            stream.SendNext(ShieldPower);
+            stream.SendNext(CurHP);
+        }
+        else
+        {
+            currentPosition = (Vector3)stream.ReceiveNext();
+            currentRotation = (Quaternion)stream.ReceiveNext();
+
+            ShieldPower = (int)stream.ReceiveNext();
+            CurHP = (int)stream.ReceiveNext();
+        }
+    }
+
+    [PunRPC]
+    protected virtual void RPCOnDamage(int damage)
+    {
+        if (photonView.IsMine)
+        {
+            ShieldPower -= damage;
+
+            if (ShieldPower < 0)
+            {
+                CurHP -= Mathf.Abs(ShieldPower);
+                ShieldPower = 0;
+            }
+
+            if (CurHP < 0)
+            {
+                CurHP = 0;
+
+                OnPlayerDeath();
+            }
+        }
+    }
+    [PunRPC]
+    protected virtual void RPCOnHeal(int heal)
+    {
+        if (photonView.IsMine)
+        {
+            CurHP += heal;
+
+            if (CurHP > maxHP)
+                CurHP = maxHP;
+        }
+    }
+
+}
+
 
 /*
  * BasePlayer 클래스의

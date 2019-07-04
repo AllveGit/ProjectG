@@ -1366,7 +1366,6 @@ GameObject:
   - component: {fileID: 6190633738206237915}
   - component: {fileID: 6940911258228121046}
   - component: {fileID: 267101677795688527}
-  - component: {fileID: 2467644869530984733}
   - component: {fileID: -6430799880155838017}
   - component: {fileID: 9067239046602061004}
   - component: {fileID: 260000524110146064}
@@ -1463,27 +1462,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 2467644869530984733}
   - {fileID: -6430799880155838017}
   - {fileID: 260000524110146064}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2467644869530984733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5719154031182743754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
 --- !u!114 &-6430799880155838017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1542,8 +1525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7e5dad773a6414181dd1f133751885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: {fileID: 0}
-  admin: {fileID: 0}
   ultimateSkillPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,
     type: 3}
   basicAttackPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,

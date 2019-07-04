@@ -65,6 +65,10 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         return namePool[Random.Range(0, 19)];
     }
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
     public void Connect()
     {
         if (!PhotonNetwork.IsConnected)
