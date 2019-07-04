@@ -74,7 +74,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public virtual void RotateCalculate()
     {
         if (animator.GetBool("Attack") == true) return;
-
         rigidbody.rotation = Quaternion.LookRotation(movementAmount);
     }
 
