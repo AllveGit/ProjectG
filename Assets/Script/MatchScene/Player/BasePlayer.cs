@@ -9,8 +9,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
     private void Awake()
     {
-        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick02>();
-        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick02>();
+        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
 
         rigidbody       = GetComponent<Rigidbody>();
         if (rigidbody == null)
@@ -248,9 +248,9 @@ public abstract partial class BasePlayer
 
     public Enums.TeamOption playerTeam { get; set; }
 
-    protected JoyStick02 MoveJoyStick = null;
+    protected JoyStick MoveJoyStick = null;
 
-    protected JoyStick02 SkillJoyStick = null;
+    protected JoyStick SkillJoyStick = null;
 
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 
