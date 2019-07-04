@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Chat;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Text;
 using ExitGames.Client.Photon;
 using UnityEngine.Events;
@@ -73,7 +74,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Connect(
             PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,
             PhotonNetwork.GameVersion,
-            new AuthenticationValues(PlayerManager.Instance.PlayerName));
+            new Photon.Chat.AuthenticationValues(PlayerManager.Instance.PlayerName));
     }
 
     public void ChangeChannel(string channelName)
@@ -109,9 +110,19 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.AddFriends(new string[] { userName });
     }
 
+    public void AddFriends(string[] userNames)
+    {
+        chatClient.AddFriends(userNames);
+    }
+
     public void RemoveFriend(string userName)
     {
         chatClient.RemoveFriends(new string[] { userName });
+    }
+
+    public void RemoveFriends(string[] userNames)
+    {
+        chatClient.RemoveFriends(userNames);
     }
 
     private void AddLine(string lineString)

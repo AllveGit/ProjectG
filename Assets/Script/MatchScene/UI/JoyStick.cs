@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class JoyStick02 : MonoBehaviour
+public class JoyStick : MonoBehaviour
 {
     public Transform stickTransform;
 
