@@ -10,16 +10,14 @@ public class Arrow : BaseAttack
     private float rotationSpeedDegree = 10f;
 
     
-    new void Update()
+    public override void Move()
     {
-        if (!photonView.IsMine) return;
+        base.Move();
 
         if (transform.rotation.y >= 360)
             transform.rotation = Quaternion.Euler(Vector3.zero);
 
         transform.Rotate(new Vector3(0f, 0f, rotationSpeedDegree));
-
-        base.Update();
     }
     
 }

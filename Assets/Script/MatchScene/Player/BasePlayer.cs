@@ -52,7 +52,13 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     public void MoveCalculate()
     {
-        if (animator.GetBool("Attack") == true) return;
+        if (animator.GetBool("Attack") == true)
+        {
+            movementAmount = Vector3.zero;
+            animator.SetFloat("Speed", 0f);
+    
+            return;
+        }
 
         // 키보드
         // float v = Input.GetAxis("Vertical"); // 수직
@@ -60,33 +66,45 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // movementAmount = new Vector3(h, 0f, v).normalized * moveSpeed;
 
         movementAmount = MoveJoyStick.JoyDir * (moveSpeed * MoveJoyStick.JoyScale) * Time.deltaTime;
+        animator.SetFloat("Speed", movementAmount.magnitude * 10);
 
-        attackDirection = SkillJoyStick.JoyDir;
+        rigidbody.MovePosition(transform.position + movementAmount);
     }
 
     public virtual void RotateCalculate()
     {
         if (animator.GetBool("Attack") == true) return;
 
-        if (isFocusOnAttack)
-            rigidbody.rotation = Quaternion.LookRotation(attackDirection);
+        rigidbody.rotation = Quaternion.LookRotation(movementAmount);
+    }
 
-        if (movementAmount.magnitude < 0.01f)
-        {
-            animator.SetFloat("Speed", 0);
+    private void AttackBehavior()
+    {
+        if (photonView.IsMine == false)
             return;
-        }
 
-        animator.SetFloat("Speed", movementAmount.magnitude * 10);
-        rigidbody.MovePosition(transform.position + movementAmount);
+        if (animator.GetBool("Attack") || animator.GetBool("Death"))
+            return;
 
-        if (isFocusOnAttack == false)
-            rigidbody.rotation = Quaternion.LookRotation(movementAmount);
+        attackDirection = SkillJoyStick.JoyDir;
+        rigidbody.rotation = Quaternion.LookRotation(attackDirection);
+        Attack();
+    }
+
+    private void UltimateBehavior()
+    {
+        if (photonView.IsMine == false)
+            return;
+
+        if (animator.GetBool("Attack") || animator.GetBool("Death"))
+            return;
+
+        UltimateSkill();
     }
 
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
-        Attack();
+        AttackBehavior();
         isFocusOnAttack = false;
     }
 
@@ -105,10 +123,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
 
-
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
-
     public virtual void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
     {
         if (!photonView.IsMine) return;

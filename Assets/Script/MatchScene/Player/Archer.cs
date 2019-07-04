@@ -15,12 +15,6 @@ public class Archer : BasePlayer
 
     public override void Attack()
     {
-        if (photonView.IsMine == false)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -66,30 +60,11 @@ public class Archer : BasePlayer
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
     public override void RotateCalculate()
     {
-
         if (animator.GetBool("Attack") == true) return;
-
-        if (isFocusOnAttack)
-        {
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation,
-                Quaternion.LookRotation(attackDirection), RotationLerpSpeed);
-        }
-
-        if (movementAmount.magnitude < 0.01f)
-        {
-            animator.SetFloat("Speed", 0);
-            return;
-        }
-
-        animator.SetFloat("Speed", movementAmount.magnitude * 10);
-        rigidbody.MovePosition(transform.position + movementAmount);
 
         Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
         rot += new Vector3(0, -90, 0);
-
-        if (isFocusOnAttack == false)
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rot), RotationLerpSpeed);
-
+        rigidbody.rotation = Quaternion.Euler(rot.x,rot.y,rot.z);
     }
 
 }

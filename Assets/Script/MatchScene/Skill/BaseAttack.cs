@@ -6,7 +6,7 @@ using Photon.Pun;
 /*
  * BaseAttack 객체의 변수와 Propertie 입니다.
  */
-public abstract partial class BaseAttack : MonoBehaviourPun
+public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
 { 
     [SerializeField]
     protected float projectileSpeed = 10.0f;
@@ -22,14 +22,33 @@ public abstract partial class BaseAttack : MonoBehaviourPun
     public int AttackDamage { get => attackDamage; }
     public float DestroyTime { get => destroyTime; }
     public Vector3 Direction { get => direction; }
-    #endregion
 
     public new Rigidbody rigidbody { get; protected set; }
     public BasePlayer ownerPlayer { get; private set; }
+
+    #endregion
+}
+public abstract partial class BaseAttack
+{
+    private Vector3 currentPosition = Vector3.zero;
+    private Quaternion currentRotation = Quaternion.identity;
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+        }
+        else
+        {
+            currentPosition = (Vector3)stream.ReceiveNext();
+            currentRotation = (Quaternion)stream.ReceiveNext();
+        }
+    }
 }
 
-
-public abstract partial class BaseAttack : MonoBehaviourPun
+public abstract partial class BaseAttack
 {
 
     private void Awake()
@@ -38,10 +57,21 @@ public abstract partial class BaseAttack : MonoBehaviourPun
         
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
-        if (!photonView.IsMine) return;
+        if (photonView.IsMine)
+        {
+            Move();
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, currentPosition, ProjectileSpeed * Time.fixedDeltaTime);
+            transform.rotation = currentRotation;
+        }
+    }
 
+    public virtual void Move()
+    {
         rigidbody.MovePosition(
         transform.position
         + direction * ProjectileSpeed * Time.deltaTime);

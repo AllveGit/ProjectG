@@ -6,21 +6,9 @@ using Photon.Pun;
 
 public class Healer : BasePlayer
 {
-    void Start()
-    {
-    }
-
     public override void Attack()
     {
-        if (photonView.IsMine == false)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
-
         animator.SetBool("Attack", true);
-
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
         {

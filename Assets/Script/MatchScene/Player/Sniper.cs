@@ -3,19 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 public class Sniper : BasePlayer
-{ 
-    void Start()
-    {
-    }
-
+{
     public override void Attack()
     {
-        if (!photonView.IsMine)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
