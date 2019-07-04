@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: 18e0ae9f-1221-4e6f-af49-28960bb73351
-    AppIdChat: cc7993d1-7c27-44d4-af16-e14065d0e6d9
+    AppIdChat: 96fa0995-46b6-415e-bf34-ad7c7dde369e
     AppIdVoice: 
-    AppVersion: 1.0
+    AppVersion: 
     UseNameServer: 1
     FixedRegion: 
     Server: 
     Port: 0
     Protocol: 0
     EnableLobbyStatistics: 0
-    NetworkLogging: 0
+    NetworkLogging: 1
   StartInOfflineMode: 0
   PunLogging: 0
   EnableSupportLogger: 0
@@ -32,11 +32,9 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - RPCBlueTeamCounting
   - RPCOnDamage
   - RPCOnHeal
-  - WinFailedCheck
-  - OnGameReulst
   - RPCRedTeamCounting
-  - RPCBlueTeamCounting
   DisableAutoOpenWizard: 1
   ShowSettings: 1
