@@ -148,7 +148,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         PhotonNetwork.CurrentRoom.SetCustomProperties(newHashTable);
 
         animator.SetBool("Death", true);
-        StartCoroutine(Respawn(5f));
+        //StartCoroutine(Respawn(5f));
     }
 
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
@@ -160,7 +160,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
-        GameManager.Instance.Respawn(this);
+        //GameManager.Instance.Respawn(this);
         animator.SetBool("Death", false);
 
         CurHP = MaxHP;

@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
         GameObject player = PhotonNetwork.Instantiate(path, Vector3.zero
             ,spawnZoneTransform.rotation, 0);
-        player.GetComponent<BasePlayer>().PlayerInit((Enums.TeamOption)localHash[Enums.PlayerProperties.TEAM.ToString()], spawnZoneTransform.position);
+       //player.GetComponent<BasePlayer>().PlayerInit((Enums.TeamOption)localHash[Enums.PlayerProperties.TEAM.ToString()], spawnZoneTransform.position);
     }
 
     public void LeaveRoom()
