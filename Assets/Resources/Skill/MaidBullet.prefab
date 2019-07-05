@@ -173,7 +173,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 2
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 488196444648105488}
@@ -193,8 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  attackDamage: 0
-  destroyTime: 10
+  projectileDistance: 10
 --- !u!1 &8148909749430600576
 GameObject:
   m_ObjectHideFlags: 0
