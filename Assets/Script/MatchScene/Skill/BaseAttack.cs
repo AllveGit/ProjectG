@@ -10,10 +10,9 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
 { 
     [SerializeField]
     protected float projectileSpeed = 10.0f;
-    [SerializeField]
-    protected float projectileDistance = 10f;
-    protected float AccumulateDistance = 0f;
 
+    protected float attackDistance = 0f;
+    protected float AccumulateDistance = 0f;
     protected int attackDamage = 0;
 
     protected Vector3 direction = default;
@@ -87,14 +86,15 @@ public abstract partial class BaseAttack
         + direction * moveDistance);
     }
 
-    public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 vStartPosition, Vector3 inDirection)
+    public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, float attackDistance, Vector3 vStartPosition, Vector3 inDirection)
     {
-        ownerPlayer = inOwnerPlayer;
-        attackDamage = inAttackDamage;
-        direction = inDirection;
+        ownerPlayer         = inOwnerPlayer;
+        attackDamage        = inAttackDamage;
+        direction           = inDirection;
+        this.attackDistance  = attackDistance;
 
-        transform.position = vStartPosition;
-        transform.rotation = Quaternion.LookRotation(inDirection);
+        transform.position  = vStartPosition;
+        transform.rotation  = Quaternion.LookRotation(inDirection);
 
         photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
 
@@ -144,7 +144,16 @@ public abstract partial class BaseAttack
 
             BaseCollisionProcess(player);
         }
-        else
+        else if (other.CompareTag("Attack"))
+        {
+            BaseAttack attack = other.GetComponent<BaseAttack>();
+
+            if (attack.ownerPlayer == this.ownerPlayer)
+                return;
+            else
+                PhotonNetwork.Destroy(this.gameObject);
+        }
+        else 
             PhotonNetwork.Destroy(this.gameObject);
     }
     
@@ -165,7 +174,7 @@ public abstract partial class BaseAttack
     {
         while (true)
         {
-            if (AccumulateDistance >= projectileDistance)
+            if (AccumulateDistance >= attackDistance)
                 break;
 
             yield return null;

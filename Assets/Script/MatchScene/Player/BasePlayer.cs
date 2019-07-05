@@ -38,6 +38,15 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         // 이벤트 핸들러에 등록
         SkillJoyStick.OnStickUp     += OnSkillJoyStickUp;
         SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
+
+
+        if (photonView.IsMine)
+        {
+            GameObject line = Instantiate(attackLinePrefab);
+            line.transform.parent = transform ;
+            attackLine = line.GetComponent<AttakLine>();
+            attackLine.gameObject.SetActive(false);
+        }
     }
     public void PlayerInit(Enums.TeamOption team, Vector3 pos)
     {
@@ -51,6 +60,15 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     {
         if (photonView.IsMine)
         {
+            if (isFocusOnAttack)
+            { 
+                attackLine.transform.rotation = Quaternion.LookRotation(SkillJoyStick.JoyDir);
+
+                Vector3 vlocalPosition = SkillJoyStick.JoyDir * (AttackDistance / 2f);
+                vlocalPosition.y = 0.1f;
+                attackLine.transform.position = transform.position + vlocalPosition;
+            }
+
             MoveCalculate();
             RotateCalculate();
         }
@@ -127,11 +145,24 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     }
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
+        if (!photonView.IsMine) return;
+
         AttackBehavior();
+
+        attackLine.gameObject.SetActive(false);
+        attackLine.transform.localPosition = Vector3.zero;
+
         isFocusOnAttack = false;
     }
     public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
     {
+        if (!photonView.IsMine) return;
+
+        attackLine.gameObject.SetActive(true);
+
+        float scale = AttackDistance * 0.3f;
+        attackLine.transform.localScale = new Vector3(0.1f, 0.1f, scale);
+
         isFocusOnAttack = true;
     }
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
@@ -277,11 +308,16 @@ public abstract partial class BasePlayer
 
     protected JoyStick SkillJoyStick = null;
 
+    private AttakLine attackLine = null;
+
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 
     protected Vector3 attackDirection = Vector3.zero;
 
     protected bool isFocusOnAttack = false;
+
+    [SerializeField]
+    private GameObject attackLinePrefab = null;
 
     [SerializeField]
     protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
@@ -301,10 +337,14 @@ public abstract partial class BasePlayer
     private int attackDamage = 0; // 플레이어의 공격력
 
     [SerializeField]
+    private float attackDistance = 10f;
+
+    [SerializeField]
     private int shieldPower = 0; // 플레이어의 쉴드(추가 체력)
 
     [SerializeField]
     private int maxShieldPower = 0; // 플레이어의 쉴드(추가 체력) 최대치
+
 
 }
 
@@ -325,6 +365,7 @@ public abstract partial class BasePlayer
     public int MaxHP { get => maxHP; set => maxHP = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public int AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public float AttackDistance { get => attackDistance; set => attackDistance = value; }
     public int ShieldPower { get => shieldPower; set => shieldPower = value; }
     public int MaxShieldPower { get => maxShieldPower; set => maxShieldPower = value; }
 }

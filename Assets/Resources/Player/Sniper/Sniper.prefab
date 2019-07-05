@@ -664,6 +664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3614a9a33122cde4d85003027ec85916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
+    type: 3}
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
     type: 3}
   basicAttackPrefab: {fileID: 2821756039891169347, guid: 13c0936bfaa931145864589b967bceca,
@@ -672,6 +674,7 @@ MonoBehaviour:
   maxHP: 100
   moveSpeed: 4
   attackDamage: 10
+  attackDistance: 10
   shieldPower: 101
   maxShieldPower: 10
 --- !u!1 &1800039338239335130

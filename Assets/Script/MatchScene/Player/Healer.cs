@@ -26,8 +26,8 @@ public class Healer : BasePlayer
    
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, 
-                    transform.position + matRot.MultiplyPoint(new Vector3(0.3f, 1f, 1.5f)),  direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + matRot.MultiplyPoint(new Vector3(0.2f, 1f, 1.5f)),  direction);
 
      
             projectile = PhotonNetwork.Instantiate(
@@ -36,8 +36,8 @@ public class Healer : BasePlayer
               Quaternion.identity);
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, 
-                    transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)), direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + matRot.MultiplyPoint(new Vector3(-0.2f, 1f, 1.5f)), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
     }

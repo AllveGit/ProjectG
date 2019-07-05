@@ -28,7 +28,7 @@ public class Archer : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1, direction);
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, AttackDistance, transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1, direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
 
@@ -53,7 +53,7 @@ public class Archer : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, 
+                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));

@@ -2610,6 +2610,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c12c762e33319b4d8cd4a110930a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
+    type: 3}
   ultimateSkillPrefab: {fileID: 0}
   basicAttackPrefab: {fileID: 7971499633598472054, guid: 26fc3b939bf0fd7498e931ef53efc48d,
     type: 3}
@@ -2617,6 +2619,7 @@ MonoBehaviour:
   maxHP: 100
   moveSpeed: 3
   attackDamage: 5
+  attackDistance: 10
   shieldPower: 10
   maxShieldPower: 10
   currentSpeakerCount: 0

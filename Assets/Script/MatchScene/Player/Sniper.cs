@@ -19,7 +19,7 @@ public class Sniper : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, 
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));

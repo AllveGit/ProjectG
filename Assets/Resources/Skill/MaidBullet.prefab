@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 488196444648105488}
   m_Layer: 0
   m_Name: MaidBullet
-  m_TagString: Untagged
+  m_TagString: Attack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -193,7 +193,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 10
-  projectileDistance: 10
 --- !u!1 &8148909749430600576
 GameObject:
   m_ObjectHideFlags: 0

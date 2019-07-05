@@ -45,7 +45,7 @@ public class Maid : BasePlayer
             transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<MaidBullet>().Cast(this, AttackDamage, 
+                projectile.GetComponent<MaidBullet>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1.5f, direction);
             ++currentSpeakerCount;
 
