@@ -16,7 +16,10 @@ public class ScoreUI : MonoBehaviour
 
     void LateUpdate()
     {
-        ExitGames.Client.Photon.Hashtable roomProperties = Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties;
-        scoreText.text = ((int)roomProperties[Team.ToString()]).ToString();
+        if (Photon.Pun.PhotonNetwork.CurrentRoom != null)
+        {
+            ExitGames.Client.Photon.Hashtable roomProperties = Photon.Pun.PhotonNetwork.CurrentRoom.CustomProperties;
+            scoreText.text = ((int)roomProperties[Team.ToString()]).ToString();
+        }
      }
 }

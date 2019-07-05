@@ -598,7 +598,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 2
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 8392639744290108498}
@@ -671,11 +671,9 @@ MonoBehaviour:
   curHP: 100
   maxHP: 100
   moveSpeed: 4
-  attackSpeed: 10
   attackDamage: 10
   shieldPower: 101
   maxShieldPower: 10
-  rotationLerpSpeed: 0.15
 --- !u!1 &1800039338239335130
 GameObject:
   m_ObjectHideFlags: 0
