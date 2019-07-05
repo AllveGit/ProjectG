@@ -38,11 +38,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         Transform spawnZoneTransform = spawnZone.transform.GetChild(spawnZoneIndex);
 
         // 플레이어를 생성합니다. PhotonNetwork.Instantiate로 생성해야만 네트워크 통신을 할 수 있습니다.
-        GameObject player = PhotonNetwork.Instantiate(path, spawnZoneTransform.position
+        GameObject player = PhotonNetwork.Instantiate(path, Vector3.zero
             ,spawnZoneTransform.rotation, 0);
-
-        /* Team을 지정합니다. Team 런쳐씬에서 CustomProperties HashTable로 설정했습니다.*/
-        player.GetComponent<BasePlayer>().playerTeam = (Enums.TeamOption)localHash[Enums.PlayerProperties.TEAM.ToString()];
+        player.GetComponent<BasePlayer>().PlayerInit((Enums.TeamOption)localHash[Enums.PlayerProperties.TEAM.ToString()], spawnZoneTransform.position);
     }
 
     public void LeaveRoom()
@@ -50,11 +48,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
-    public void Respawn(BasePlayer respawnObject)
+    public Vector3 GetRespawnPos()
     {
         int spawnIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.SPAWNPOS.ToString()];
         Transform spawnZoneElement = spawnZone.transform.GetChild(spawnIndex);
-        respawnObject.transform.position = spawnZoneElement.position;
+        return spawnZoneElement.position;
+        
     }
 
     #region Photon

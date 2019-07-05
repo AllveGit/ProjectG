@@ -11,16 +11,16 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
     [SerializeField]
     protected float projectileSpeed = 10.0f;
     [SerializeField]
+    protected float projectileDistance = 10f;
+    protected float AccumulateDistance = 0f;
+
     protected int attackDamage = 0;
-    [SerializeField]
-    protected float destroyTime = 10;                 // 삭제까지의 대기시간
 
     protected Vector3 direction = default;
 
     #region Propertie
     public float ProjectileSpeed { get => projectileSpeed; }
     public int AttackDamage { get => attackDamage; }
-    public float DestroyTime { get => destroyTime; }
     public Vector3 Direction { get => direction; }
 
     public new Rigidbody rigidbody { get; protected set; }
@@ -46,11 +46,18 @@ public abstract partial class BaseAttack
             currentRotation = (Quaternion)stream.ReceiveNext();
         }
     }
+
+    [PunRPC]
+    protected virtual void RPCTranslatePosition(Vector3 translationPos)
+    {
+        currentPosition = translationPos;
+        transform.position = translationPos;
+    }
+
 }
 
 public abstract partial class BaseAttack
 {
-
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -72,21 +79,27 @@ public abstract partial class BaseAttack
 
     public virtual void Move()
     {
+        float moveDistance = ProjectileSpeed * Time.deltaTime;
+        AccumulateDistance += moveDistance;
+
         rigidbody.MovePosition(
         transform.position
-        + direction * ProjectileSpeed * Time.deltaTime);
+        + direction * moveDistance);
     }
 
-    public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 inDirection)
+    public virtual void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, Vector3 vStartPosition, Vector3 inDirection)
     {
         ownerPlayer = inOwnerPlayer;
         attackDamage = inAttackDamage;
         direction = inDirection;
 
+        transform.position = vStartPosition;
         transform.rotation = Quaternion.LookRotation(inDirection);
 
+        photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
+
         if (photonView.IsMine)
-            StartCoroutine(Timer());
+            StartCoroutine(DistanceCheck());
     }
 
     // 공격방식마다 추가적으로 해야할 작업이 있다면 이 함수를 오버라이딩 하세요
@@ -120,15 +133,12 @@ public abstract partial class BaseAttack
     {
         if (photonView.IsMine == false)
             return;
+        if (other.gameObject == this.gameObject)
+            return;
 
         if (other.CompareTag("Player"))
         {
-
-            if (other.gameObject == this.gameObject)
-                return;
-
             BasePlayer player = other.GetComponent<BasePlayer>();
-
             if (player.animator.GetBool("Death"))
                 return;
 
@@ -151,12 +161,17 @@ public abstract partial class BaseAttack
         }
     }
 
-    IEnumerator Timer()
+    IEnumerator DistanceCheck()
     {
-        yield return new WaitForSeconds(destroyTime);
+        while (true)
+        {
+            if (AccumulateDistance >= projectileDistance)
+                break;
+
+            yield return null;
+        }
 
         if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
-
         yield break;
     }
 }

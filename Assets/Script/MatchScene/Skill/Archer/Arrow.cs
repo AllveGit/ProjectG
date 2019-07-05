@@ -9,7 +9,6 @@ public class Arrow : BaseAttack
     [SerializeField]
     private float rotationSpeedDegree = 10f;
 
-    
     public override void Move()
     {
         base.Move();

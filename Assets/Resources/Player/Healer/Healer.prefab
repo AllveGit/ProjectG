@@ -1532,11 +1532,9 @@ MonoBehaviour:
   curHP: 100
   maxHP: 100
   moveSpeed: 4
-  attackSpeed: 10
-  attackDamage: 10
+  attackDamage: 3
   shieldPower: 10
   maxShieldPower: 10
-  rotationLerpSpeed: 0.15
 --- !u!1 &5756763204229238726
 GameObject:
   m_ObjectHideFlags: 0

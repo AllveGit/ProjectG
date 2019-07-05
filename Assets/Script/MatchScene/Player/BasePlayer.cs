@@ -18,6 +18,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         animator        = GetComponent<Animator>();
         if (animator == null)
             Debug.LogError("BasePlayer.cs / animator를 가져오지 못했습니다.");
+        collider        = GetComponent<CapsuleCollider>();
+        if (collider == null)
+            Debug.LogError("BasePlayer.cs / collider를 가져오지 못했습니다.");
 
         if (photonView.IsMine)
         {
@@ -35,8 +38,14 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         SkillJoyStick.OnStickUp     += OnSkillJoyStickUp;
         SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
     }
+    public void PlayerInit(Enums.TeamOption teamOption, Vector3 position)
+    {
+        transform.position = position;
+        playerTeam = teamOption;
 
-    protected void FixedUpdate()
+        photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
+    }
+    public void FixedUpdate()
     {
         if (photonView.IsMine)
         {
@@ -45,14 +54,19 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, currentPosition) > 10f)
+                transform.position = currentPosition;
+            else
+                transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
+
             transform.rotation = currentRotation;
         }
     }
 
     public void MoveCalculate()
     {
-        if (animator.GetBool("Attack") == true)
+        if (animator.GetBool("Attack") == true
+            || animator.GetBool("Death") == true)
         {
             movementAmount = Vector3.zero;
             animator.SetFloat("Speed", 0f);
@@ -73,14 +87,18 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
     public virtual void RotateCalculate()
     {
-        if (animator.GetBool("Attack") == true) return;
-        rigidbody.rotation = Quaternion.LookRotation(movementAmount);
+        if (animator.GetBool("Attack") == true)
+            return;
+
+        if (movementAmount != Vector3.zero)
+            rigidbody.rotation = Quaternion.LookRotation(movementAmount);
     }
 
     private void AttackBehavior()
     {
         if (photonView.IsMine == false)
             return;
+        
 
         if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
@@ -100,33 +118,31 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         UltimateSkill();
     }
-
+    public void OnDamaged(int damage)
+    {
+        photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
+    }
+    public void OnHeal(int heal)
+    {
+        photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
+    }
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
         AttackBehavior();
         isFocusOnAttack = false;
     }
-
     public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
     {
         isFocusOnAttack = true;
     }
 
-    public void OnDamaged(int damage)
-    {
-        photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
-    }
-
-    public void OnHeal(int heal)
-    {
-        photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
-    }
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
     public virtual void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
     {
-        if (!photonView.IsMine) return;
+        if (animator.GetBool("Death") == true)
+            return;
 
         ExitGames.Client.Photon.Hashtable oldHashTable = PhotonNetwork.CurrentRoom.CustomProperties;
         ExitGames.Client.Photon.Hashtable newHashTable = new ExitGames.Client.Photon.Hashtable();
@@ -146,6 +162,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         }
         PhotonNetwork.CurrentRoom.SetCustomProperties(newHashTable);
 
+        collider.enabled = false;
+        rigidbody.useGravity = false;
+       
         animator.SetBool("Death", true);
         StartCoroutine(Respawn(5f));
     }
@@ -159,8 +178,13 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     public IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
-        GameManager.Instance.Respawn(this);
         animator.SetBool("Death", false);
+
+        transform.position = GameManager.Instance.GetRespawnPos();
+        photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
+
+        rigidbody.useGravity = true;
+        collider.enabled = true;
 
         CurHP = MaxHP;
         ShieldPower = MaxShieldPower;
@@ -207,6 +231,7 @@ public abstract partial class BasePlayer
         if (photonView.IsMine)
         {
             ShieldPower -= damage;
+            animator.SetBool("Hurt", true);
 
             if (ShieldPower < 0)
             {
@@ -214,10 +239,9 @@ public abstract partial class BasePlayer
                 ShieldPower = 0;
             }
 
-            if (CurHP < 0)
+            if (CurHP <= 0)
             {
                 CurHP = 0;
-
                 OnPlayerDeath();
             }
         }
@@ -233,6 +257,13 @@ public abstract partial class BasePlayer
                 CurHP = maxHP;
         }
     }
+    [PunRPC]
+    protected virtual void RPCTranslatePosition(Vector3 translationPos)
+    {
+        currentPosition = translationPos;
+        transform.position = translationPos;
+    }
+   
 
 }
 
@@ -272,9 +303,6 @@ public abstract partial class BasePlayer
     private float moveSpeed = 0; // 플레이어의 이동 속도
 
     [SerializeField]
-    private float attackSpeed = 0; // 플레이어의 공격 속도
-
-    [SerializeField]
     private int attackDamage = 0; // 플레이어의 공격력
 
     [SerializeField]
@@ -282,10 +310,6 @@ public abstract partial class BasePlayer
 
     [SerializeField]
     private int maxShieldPower = 0; // 플레이어의 쉴드(추가 체력) 최대치
-
-    [SerializeField]
-    [Range(0.0f, 1.0f)]
-    private float rotationLerpSpeed = 0f; // 플레이어의 회전 보간 속도
 }
 
 /*
@@ -295,7 +319,11 @@ public abstract partial class BasePlayer
 {
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
+    public CapsuleCollider collider { get; private set; } = null;
+
     public PlayerCamera playerCamera { get; private set; } = null;
+
+
 
     public bool IsBush { get; set; } = false;
 
@@ -303,9 +331,7 @@ public abstract partial class BasePlayer
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
-    public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
     public int AttackDamage { get => attackDamage; set => attackDamage = value; }
     public int ShieldPower { get => shieldPower; set => shieldPower = value; }
     public int MaxShieldPower { get => maxShieldPower; set => maxShieldPower = value; }
-    public float RotationLerpSpeed { get => rotationLerpSpeed; set => rotationLerpSpeed = value; }
 }

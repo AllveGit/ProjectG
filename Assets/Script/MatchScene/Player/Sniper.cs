@@ -15,11 +15,12 @@ public class Sniper : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+                Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, 
+                    transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
     }

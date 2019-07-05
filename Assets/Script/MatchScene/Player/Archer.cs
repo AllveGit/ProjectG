@@ -24,11 +24,11 @@ public class Archer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-               transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1,
+              Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1, direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
 
@@ -49,11 +49,13 @@ public class Archer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + ultimateSkillPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+               Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, 
+                    transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
+
         }, SkillJoyStick.JoyDir, 0.6f));
     }
 
@@ -62,9 +64,12 @@ public class Archer : BasePlayer
     {
         if (animator.GetBool("Attack") == true) return;
 
-        Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
-        rot += new Vector3(0, -90, 0);
-        rigidbody.rotation = Quaternion.Euler(rot.x,rot.y,rot.z);
+        if (movementAmount != Vector3.zero)
+        {
+            Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
+            rot += new Vector3(0, -90, 0);
+            rigidbody.rotation = Quaternion.Euler(rot.x,rot.y,rot.z);
+        }
     }
 
 }

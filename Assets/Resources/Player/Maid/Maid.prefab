@@ -2615,12 +2615,10 @@ MonoBehaviour:
     type: 3}
   curHP: 100
   maxHP: 100
-  moveSpeed: 4
-  attackSpeed: 10
-  attackDamage: 10
+  moveSpeed: 3
+  attackDamage: 5
   shieldPower: 10
   maxShieldPower: 10
-  rotationLerpSpeed: 0
   currentSpeakerCount: 0
   maxSpeakerCount: 5
 --- !u!1 &9198992569489413032

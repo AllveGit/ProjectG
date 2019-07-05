@@ -21,21 +21,23 @@ public class Healer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-              transform.position + matRot.MultiplyPoint(new Vector3(0.3f, 1f, 1.5f)),
+              Vector3.zero,
               Quaternion.identity);
    
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, 
+                    transform.position + matRot.MultiplyPoint(new Vector3(0.3f, 1f, 1.5f)),  direction);
 
      
             projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-              transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)),
+              Vector3.zero,
               Quaternion.identity);
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, 
+                    transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
     }
