@@ -30,4 +30,12 @@ public class ChattingPanel : MonoBehaviour
         ChatManager.Instance.Send(chattingInput.text);
         chattingInput.text = string.Empty;
     }
+
+    public void OnEndReturn()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Submit();
+        }
+    }
 }

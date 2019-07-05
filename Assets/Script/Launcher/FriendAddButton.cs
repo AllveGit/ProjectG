@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class FriendAddButton : MonoBehaviour
 {
-    public InputField friendNameField;
+    public FriendTabBase friendTabBase;
+    public InputField inputField;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,10 @@ public class FriendAddButton : MonoBehaviour
 
     public void OnClick()
     {
-        ChatManager.Instance.AddFriend(friendNameField.text);
-        friendNameField.text = string.Empty;
+        if (string.IsNullOrWhiteSpace(inputField.text))
+            return;
+
+        friendTabBase.AddFriend(inputField.text);
+        inputField.text = string.Empty;
     }
 }
