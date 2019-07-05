@@ -34,6 +34,8 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     private string currentChannel = ChattingChannel.All;
 
+    public List<string> FriendList { get; set; } = new List<string>();
+
     public StringEvent OnGetMessage;
 
     void Awake()
@@ -105,24 +107,28 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.SendPrivateMessage(userName, context);
     }
 
-    public void AddFriend(string userName)
+    public bool AddFriend(string userName)
     {
-        chatClient.AddFriends(new string[] { userName });
+        bool result = chatClient.AddFriends(new string[] { userName });
+
+        if (result == true)
+        {
+            FriendList.Add(userName);
+            return true;
+        }
+        return false;
     }
 
-    public void AddFriends(string[] userNames)
+    public bool RemoveFriend(string userName)
     {
-        chatClient.AddFriends(userNames);
-    }
+        bool result = chatClient.RemoveFriends(new string[] { userName });
 
-    public void RemoveFriend(string userName)
-    {
-        chatClient.RemoveFriends(new string[] { userName });
-    }
-
-    public void RemoveFriends(string[] userNames)
-    {
-        chatClient.RemoveFriends(userNames);
+        if (result == true)
+        {
+            FriendList.Remove(userName);
+            return true;
+        }
+        return false;
     }
 
     private void AddLine(string lineString)
