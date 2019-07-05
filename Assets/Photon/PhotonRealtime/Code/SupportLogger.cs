@@ -145,7 +145,7 @@ namespace Photon.Realtime
                     ? this.client.AppId
                     : string.Concat(this.client.AppId.Substring(0, 8), "***"), this.client.AppVersion, this.client.LoadBalancingPeer.PeerID);
             //NOTE: this.client.LoadBalancingPeer.ServerIpAddress requires Photon3Unity3d.dll v4.1.2.5 and up
-            sb.AppendFormat("NameServer: {0} Server: {1} IP: {2} Region: {3}", this.client.NameServerHost, this.client.CurrentServerAddress, this.client.LoadBalancingPeer.ServerIpAddress, this.client.CloudRegion);
+            sb.AppendFormat("NameServer: {0} Server: {1} IP: {2} Region: {3}", this.client.NameServerHost, this.client.CurrentServerAddress, this.client.LoadBalancingPeer.ServerAddress, this.client.CloudRegion);
 
             Debug.Log(sb.ToString());
         }

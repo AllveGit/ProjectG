@@ -620,7 +620,7 @@ namespace Photon.Realtime
         public LoadBalancingClient(ConnectionProtocol protocol = ConnectionProtocol.Udp)
         {
             this.LoadBalancingPeer = new LoadBalancingPeer(this, protocol);
-            this.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV18;
+            this.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV16;
             this.LocalPlayer = this.CreatePlayer(string.Empty, -1, true, null); //TODO: Check if we can do this later
 
             #if UNITY_WEBGL
@@ -2540,15 +2540,7 @@ namespace Photon.Realtime
                     this.State = ClientState.Disconnected;
                     this.ConnectionCallbackTargets.OnDisconnected(this.DisconnectedCause);
                     break;
-                case StatusCode.DisconnectByServerTimeout:
-                    if (this.AuthValues != null)
-                    {
-                        this.AuthValues.Token = null; // when leaving the server, invalidate the secret (but not the auth values)
-                    }
-                    this.DisconnectedCause = DisconnectCause.ServerTimeout;
-                    this.State = ClientState.Disconnected;
-                    this.ConnectionCallbackTargets.OnDisconnected(this.DisconnectedCause);
-                    break;
+                
                 case StatusCode.DisconnectByServerLogic:
                     if (this.AuthValues != null)
                     {
@@ -2558,15 +2550,7 @@ namespace Photon.Realtime
                     this.State = ClientState.Disconnected;
                     this.ConnectionCallbackTargets.OnDisconnected(this.DisconnectedCause);
                     break;
-                case StatusCode.DisconnectByServerReasonUnknown:
-                    if (this.AuthValues != null)
-                    {
-                        this.AuthValues.Token = null; // when leaving the server, invalidate the secret (but not the auth values)
-                    }
-                    this.DisconnectedCause = DisconnectCause.DisconnectByServerReasonUnknown;
-                    this.State = ClientState.Disconnected;
-                    this.ConnectionCallbackTargets.OnDisconnected(this.DisconnectedCause);
-                    break;
+                
                 case StatusCode.TimeoutDisconnect:
                     if (this.AuthValues != null)
                     {
@@ -2596,7 +2580,7 @@ namespace Photon.Realtime
         /// <remarks>This method is essential to update the internal state of a LoadBalancingClient. Overriding methods must call base.OnEvent.</remarks>
         public virtual void OnEvent(EventData photonEvent)
         {
-            int actorNr = photonEvent.Sender;
+            int actorNr = photonEvent.Sender();
             Player originatingPlayer = (this.CurrentRoom != null) ? this.CurrentRoom.GetPlayer(actorNr) : null;
 
             switch (photonEvent.Code)
@@ -2770,7 +2754,7 @@ namespace Photon.Realtime
                     {
                         byte[] secret1 = (byte[])encryptionData[EncryptionDataParameters.Secret1];
                         byte[] secret2 = (byte[])encryptionData[EncryptionDataParameters.Secret2];
-                        this.LoadBalancingPeer.InitDatagramEncryption(secret1, secret2, mode == EncryptionMode.DatagramEncryptionRandomSequence);
+                        this.LoadBalancingPeer.InitDatagramEncryption(secret1, secret2);
                     }
                     break;
                 default:
@@ -3809,12 +3793,12 @@ namespace Photon.Realtime
         [Obsolete("This extension is replaced by EventData.Sender, which can be configured via SenderKey.")]
         public static int Sender(this EventData ev)
         {
-            return ev.Sender;
+            return 0;
         }
         [Obsolete("This extension is replaced by EventData.CustomData, which can be configured via CustomDataKey.")]
         public static object CustomData(this EventData ev)
         {
-            return ev.CustomData;
+            return null;
         }
     }
 }

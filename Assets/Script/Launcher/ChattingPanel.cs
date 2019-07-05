@@ -25,6 +25,14 @@ public class ChattingPanel : MonoBehaviour
         chattingView.text += context;
     }
 
+    public void OnEndReturn()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Submit();
+        }
+    }
+
     public void Submit()
     {
         ChatManager.Instance.Send(chattingInput.text);

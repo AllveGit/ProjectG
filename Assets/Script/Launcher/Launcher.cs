@@ -71,7 +71,7 @@ public partial class Launcher : MonoBehaviourPunCallbacks
 {
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarningFormat("서버와의 연결이 종료되었습니다.", cause);
+        Debug.LogFormat("서버와의 연결이 종료되었습니다.", cause);
     }
 
     public override void OnJoinedRoom()

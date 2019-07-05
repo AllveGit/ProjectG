@@ -1981,7 +1981,7 @@ namespace Photon.Pun
 
         private static void OnEvent(EventData photonEvent)
         {
-            int actorNr = photonEvent.Sender;
+            int actorNr = photonEvent.Sender();
             Player originatingPlayer = null;
             if (actorNr > 0 && NetworkingClient.CurrentRoom != null)
             {
@@ -1994,7 +1994,7 @@ namespace Photon.Pun
                     ResetPhotonViewsOnSerialize();
                     break;
                 case PunEvent.RPC:
-                    ExecuteRpc(photonEvent.CustomData as Hashtable, originatingPlayer);
+                    ExecuteRpc(photonEvent.CustomData() as Hashtable, originatingPlayer);
                     break;
 
                 case PunEvent.SendSerialize:
@@ -2031,7 +2031,7 @@ namespace Photon.Pun
                     break;
 
                 case PunEvent.Instantiation:
-                    NetworkInstantiate((Hashtable) photonEvent.CustomData, originatingPlayer);
+                    NetworkInstantiate((Hashtable) photonEvent.CustomData(), originatingPlayer);
                     break;
 
                 case PunEvent.CloseConnection:
@@ -2049,7 +2049,7 @@ namespace Photon.Pun
                     break;
 
                 case PunEvent.DestroyPlayer:
-                    Hashtable evData = (Hashtable) photonEvent.CustomData;
+                    Hashtable evData = (Hashtable) photonEvent.CustomData();
                     int targetPlayerId = (int) evData[(byte) 0];
                     if (targetPlayerId >= 0)
                     {
@@ -2071,7 +2071,7 @@ namespace Photon.Pun
                     break;
 
                 case PunEvent.Destroy:
-                    evData = (Hashtable) photonEvent.CustomData;
+                    evData = (Hashtable) photonEvent.CustomData();
                     int instantiationId = (int) evData[(byte) 0];
                     // Debug.Log("Ev Destroy for viewId: " + instantiationId + " sent by owner: " + (instantiationId / PhotonNetwork.MAX_VIEW_IDS == actorNr) + " this client is owner: " + (instantiationId / PhotonNetwork.MAX_VIEW_IDS == this.LocalPlayer.ID));
 
@@ -2090,7 +2090,7 @@ namespace Photon.Pun
 
                 case PunEvent.OwnershipRequest:
                 {
-                    int[] requestValues = (int[])photonEvent.CustomData;
+                    int[] requestValues = (int[])photonEvent.CustomData();
                     int requestedViewId = requestValues[0];
                     int requestedFromOwnerId = requestValues[1];
 
@@ -2154,7 +2154,7 @@ namespace Photon.Pun
 
                 case PunEvent.OwnershipTransfer:
                 {
-                    int[] transferViewToUserID = (int[])photonEvent.CustomData;
+                    int[] transferViewToUserID = (int[])photonEvent.CustomData();
                     int requestedViewId = transferViewToUserID[0];
                     int newOwnerId = transferViewToUserID[1];
 

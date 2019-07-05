@@ -8,6 +8,7 @@ using Photon.Realtime;
 using System.Text;
 using ExitGames.Client.Photon;
 using UnityEngine.Events;
+using ExitGames.Client.Photon.Chat;
 
 public class ChattingChannel
 {
@@ -35,6 +36,12 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
     private string currentChannel = ChattingChannel.All;
 
     public StringEvent OnGetMessage;
+
+    public List<string> friendList = new List<string>();
+    public Dictionary<string, FriendItem> friendButtonContainer = new Dictionary<string, FriendItem>();
+
+    public Transform FriendButtonParentTransform;
+    public GameObject FriendButtonPrefab;
 
     void Awake()
     {
@@ -74,7 +81,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Connect(
             PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,
             PhotonNetwork.GameVersion,
-            new Photon.Chat.AuthenticationValues(PlayerManager.Instance.PlayerName));
+            new ExitGames.Client.Photon.Chat.AuthenticationValues(PlayerManager.Instance.PlayerName));
     }
 
     public void ChangeChannel(string channelName)
@@ -107,22 +114,27 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     public void AddFriend(string userName)
     {
-        chatClient.AddFriends(new string[] { userName });
-    }
+        bool result = chatClient.AddFriends(new string[] { userName });
 
-    public void AddFriends(string[] userNames)
-    {
-        chatClient.AddFriends(userNames);
+        if (result == true)
+        {
+            friendList.Add(userName);
+            InstantiateFriendButton(userName);
+        }
     }
 
     public void RemoveFriend(string userName)
     {
-        chatClient.RemoveFriends(new string[] { userName });
-    }
+        bool result = chatClient.RemoveFriends(new string[] { userName });
 
-    public void RemoveFriends(string[] userNames)
-    {
-        chatClient.RemoveFriends(userNames);
+        if (result == true)
+        {
+            friendList.Remove(userName);
+            friendButtonContainer.TryGetValue(userName, out var Item);
+            friendButtonContainer.Remove(userName);
+
+            Destroy(Item.gameObject);
+        }
     }
 
     private void AddLine(string lineString)
@@ -130,7 +142,21 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         OnGetMessage?.Invoke($"{lineString}\n");
     }
 
+    public void InstantiateFriendButton(string friendName)
+    {
+        Debug.Log($"InstantiateFriendButton S-{friendName}");
+        GameObject newButton = Instantiate(FriendButtonPrefab);
+
+        newButton.transform.SetParent(FriendButtonParentTransform, false);
+
+        FriendItem item = newButton.GetComponent<FriendItem>();
+        item.FriendName = friendName;
+
+        friendButtonContainer.Add(friendName, item);
+        Debug.Log($"InstantiateFriendButton E-{friendName}");
+    }
 }
+
 public partial class ChatManager : MonoBehaviour, IChatClientListener
 {
     void IChatClientListener.DebugReturn(DebugLevel level, string message)
@@ -164,6 +190,21 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
     {
         AddLine("채팅 서버에 연결되었습니다.");
         chatClient.Subscribe(ChattingChannel.AllChannels, historyMessageGetCount);
+
+        if (friendList != null && friendList.Count != 0)
+        {
+            chatClient.AddFriends(friendList.ToArray());
+
+            foreach (string friend in friendList)
+            {
+                if (friend == PlayerManager.Instance.PlayerName)
+                    continue;
+
+                InstantiateFriendButton(friend);
+            }
+        }
+
+        chatClient.SetOnlineStatus(ChatUserStatus.Online);
     }
 
     void IChatClientListener.OnChatStateChange(ChatState state)
@@ -193,13 +234,12 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     void IChatClientListener.OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
-    }
+        if (friendButtonContainer.TryGetValue(user, out FriendItem friendItem) == false)
+            return;
 
-    void IChatClientListener.OnUserSubscribed(string channel, string user)
-    {
-    }
+        if (friendItem == null)
+            return;
 
-    void IChatClientListener.OnUserUnsubscribed(string channel, string user)
-    {
+        friendItem.OnFriendStatusUpdate(status, gotMessage, message);
     }
 }
