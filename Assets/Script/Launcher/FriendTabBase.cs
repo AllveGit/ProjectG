@@ -12,7 +12,7 @@ public class FriendTabBase : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ChatManager.Instance.OnStatusUpdate.AddListener(OnStatusUpdate);
     }
 
     // Update is called once per frame
@@ -32,9 +32,8 @@ public class FriendTabBase : MonoBehaviour
 
         FriendTab item = newTab.GetComponent<FriendTab>();
 
-        item.FriendName     = userName;
-        item.FriendStatus   = "OFFLINE";
-        item.FriendComment  = "등록된 코멘트가 없습니다.";
+        item.FriendName = userName;
+        item.OnStatusUpdate(7, true, "코멘트 없음.");
 
         friendContainter.Add(userName, item);
     }
@@ -58,5 +57,13 @@ public class FriendTabBase : MonoBehaviour
         GameObject newTab = Instantiate(friendViewButtonPrefab, buttonBaseTransform);
 
         return newTab;
+    }
+
+    public void OnStatusUpdate(string userName, int status, bool getMessage, object comment)
+    {
+        if (friendContainter.TryGetValue(userName, out FriendTab friendTab) == false)
+            return;
+
+        friendTab.OnStatusUpdate(status, getMessage, comment);
     }
 }

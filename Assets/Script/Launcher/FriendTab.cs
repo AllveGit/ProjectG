@@ -43,4 +43,40 @@ public class FriendTab : MonoBehaviour
     {
 
     }
+
+    public void OnStatusUpdate(int status, bool getMessage, object comment)
+    {
+        switch (status)
+        {
+            case 1:
+                FriendStatus = "보이지 않음";
+                break;
+            case 2:
+                FriendStatus = "온라인";
+                break;
+            case 3:
+                FriendStatus = "AWAY";
+                break;
+            case 4:
+                FriendStatus = "방해금지";
+                break;
+            case 5:
+                FriendStatus = "게임/그룹";
+                break;
+            case 6:
+                FriendStatus = "게임 플레이 중";
+                break;
+            default:
+                FriendStatus = "오프라인";
+                break;
+        }
+
+        if (getMessage)
+        {
+            if (comment is string messages)
+            {
+                FriendComment = messages;
+            }
+        }
+    }
 }

@@ -24,6 +24,10 @@ public class ChattingChannel
 [System.Serializable]
 public class StringEvent : UnityEvent<string> { }
 
+
+[System.Serializable]
+public class StatusEvent : UnityEvent<string, int, bool, object> { }
+
 public partial class ChatManager : MonoBehaviour, IChatClientListener
 {
     public static ChatManager Instance = null;
@@ -37,6 +41,9 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
     public List<string> FriendList { get; set; } = new List<string>();
 
     public StringEvent OnGetMessage;
+    public StatusEvent OnStatusUpdate;
+
+    public 
 
     void Awake()
     {
@@ -199,6 +206,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     void IChatClientListener.OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
+        OnStatusUpdate?.Invoke(user, status, gotMessage, message);
     }
 
     void IChatClientListener.OnUserSubscribed(string channel, string user)
