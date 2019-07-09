@@ -60,17 +60,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     {
         if (photonView.IsMine)
         {
-            if (isFocusOnAttack)
-            { 
-                attackLine.transform.rotation = Quaternion.LookRotation(SkillJoyStick.JoyDir);
-
-                Vector3 vlocalPosition = SkillJoyStick.JoyDir * (AttackDistance / 2f);
-                vlocalPosition.y = 0.1f;
-                attackLine.transform.position = transform.position + vlocalPosition;
-            }
-
             MoveCalculate();
             RotateCalculate();
+            AttackRangeCalculate();
         }
         else
         {
@@ -111,6 +103,21 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             rigidbody.rotation = Quaternion.LookRotation(movementAmount);
     }
 
+    /*
+     * 공격 시 공격 범위 뜨는 계산.
+     */
+    public virtual void AttackRangeCalculate()
+    {
+        if (isFocusOnAttack)
+        {
+            attackLine.transform.rotation = Quaternion.LookRotation(SkillJoyStick.JoyDir);
+
+            Vector3 vlocalPosition = SkillJoyStick.JoyDir * ((AttackDistance / 2f) + 1f);
+            vlocalPosition.y = 0.1f;
+            attackLine.transform.position = transform.position + vlocalPosition;
+        }
+    }
+
     private void AttackBehavior()
     {
         if (photonView.IsMine == false)
@@ -143,24 +150,24 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
     {
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
+
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
         if (!photonView.IsMine) return;
 
+        attackLine.gameObject.SetActive(false);
+        isFocusOnAttack = false;
+
         AttackBehavior();
 
-        attackLine.gameObject.SetActive(false);
-        attackLine.transform.localPosition = Vector3.zero;
-
-        isFocusOnAttack = false;
     }
+
     public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
     {
         if (!photonView.IsMine) return;
 
+        float scale = AttackDistance * 0.35f;
         attackLine.gameObject.SetActive(true);
-
-        float scale = AttackDistance * 0.3f;
         attackLine.transform.localScale = new Vector3(0.1f, 0.1f, scale);
 
         isFocusOnAttack = true;
@@ -172,24 +179,9 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         if (animator.GetBool("Death") == true)
             return;
 
-        ExitGames.Client.Photon.Hashtable oldHashTable = PhotonNetwork.CurrentRoom.CustomProperties;
-        ExitGames.Client.Photon.Hashtable newHashTable = new ExitGames.Client.Photon.Hashtable();
-
-        newHashTable.Add(Enums.RoomProperties.MATCHTYPE.ToString(), oldHashTable[Enums.RoomProperties.MATCHTYPE.ToString()]);
-
-        Enums.TeamOption local = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-        if (local.Equals(Enums.TeamOption.BlueTeam))
-        {
-            int i = (int)oldHashTable[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
-            newHashTable.Add(Enums.RoomProperties.BLUETEAMSCORE.ToString(), i - 1);
-        }
-        else if (local.Equals(Enums.TeamOption.RedTeam))
-        {
-            int i = (int)oldHashTable[Enums.RoomProperties.REDTEAMSCORE.ToString()];
-            newHashTable.Add(Enums.RoomProperties.REDTEAMSCORE.ToString(), i - 1);
-        }
-        PhotonNetwork.CurrentRoom.SetCustomProperties(newHashTable);
-
+        
+        GameManager.Instance.DeathPlayer();
+   
         collider.enabled = false;
         rigidbody.useGravity = false;
 
@@ -308,8 +300,6 @@ public abstract partial class BasePlayer
 
     protected JoyStick SkillJoyStick = null;
 
-    private AttakLine attackLine = null;
-
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 
     protected Vector3 attackDirection = Vector3.zero;
@@ -318,6 +308,7 @@ public abstract partial class BasePlayer
 
     [SerializeField]
     private GameObject attackLinePrefab = null;
+    private AttakLine attackLine = null;
 
     [SerializeField]
     protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
