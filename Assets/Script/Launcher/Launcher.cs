@@ -23,6 +23,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         // 자동 동기화.
         PhotonNetwork.AutomaticallySyncScene = true;
     }
+
+    // [System.Diagnostics.Conditional("UNITY_DEBUG")]
     public void MatchingDebug()
     {
         PhotonNetwork.LocalPlayer.SetCustomProperties(
@@ -46,10 +48,12 @@ public partial class Launcher : MonoBehaviourPunCallbacks
             MatchingDebug();
         else
         {
-            PhotonHashTable playerProperties = new PhotonHashTable();
-            playerProperties.Add(PlayerProperties.CHARACTER.ToString().ToString(), PlayerManager.Instance.CharacterType.ToString());
-            playerProperties.Add(PlayerProperties.SPAWNPOS.ToString().ToString(), 0);
-            playerProperties.Add(PlayerProperties.TEAM.ToString(), TeamOption.NoneTeam);
+            PhotonHashTable playerProperties = new PhotonHashTable
+            {
+                { PlayerProperties.CHARACTER.ToString().ToString(), PlayerManager.Instance.CharacterType.ToString() },
+                { PlayerProperties.SPAWNPOS.ToString().ToString(), 0 },
+                { PlayerProperties.TEAM.ToString(), TeamOption.NoneTeam }
+            };
             PhotonNetwork.SetPlayerCustomProperties(playerProperties);
 
             PhotonHashTable roomProperties
