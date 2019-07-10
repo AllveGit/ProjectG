@@ -1384,7 +1384,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5719154031182743754}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.023207, y: -1.7655983, z: 9.837058}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
   - {fileID: 1433837509368306868}
@@ -1424,7 +1424,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.8
+  m_Radius: 1.04
   m_Height: 4.5
   m_Direction: 1
   m_Center: {x: 0, y: 2.3, z: 0}
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 0}
   followSpeed: 8
-  vLocalCameraPos: {x: 0, y: 8, z: -2.2}
+  vLocalCameraPos: {x: 0, y: 9, z: -1.5}
   vAddLookAt: {x: 0, y: 1, z: 0}
 --- !u!114 &260000524110146064
 MonoBehaviour:
@@ -1535,7 +1535,7 @@ MonoBehaviour:
   maxHP: 100
   moveSpeed: 4
   attackDamage: 3
-  attackDistance: 10
+  attackDistance: 4
   shieldPower: 10
   maxShieldPower: 10
 --- !u!1 &5756763204229238726

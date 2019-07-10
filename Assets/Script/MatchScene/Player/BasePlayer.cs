@@ -151,27 +151,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
     }
 
-    public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
-    {
-        if (!photonView.IsMine) return;
-
-        attackLine.gameObject.SetActive(false);
-        isFocusOnAttack = false;
-
-        AttackBehavior();
-
-    }
-
-    public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
-    {
-        if (!photonView.IsMine) return;
-
-        float scale = AttackDistance * 0.35f;
-        attackLine.gameObject.SetActive(true);
-        attackLine.transform.localScale = new Vector3(0.1f, 0.1f, scale);
-
-        isFocusOnAttack = true;
-    }
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
     public abstract void UltimateSkill();   // 궁극기 스킬을 사용하기 위한 함수
     public virtual void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
@@ -285,6 +264,36 @@ public abstract partial class BasePlayer
 
 }
 
+public abstract partial class BasePlayer
+{
+    protected JoyStick MoveJoyStick = null;
+
+    protected JoyStick SkillJoyStick = null;
+
+
+    public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
+    {
+        if (!photonView.IsMine) return;
+
+        attackLine.gameObject.SetActive(false);
+        isFocusOnAttack = false;
+
+        AttackBehavior();
+
+    }
+
+    public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
+    {
+        if (!photonView.IsMine) return;
+
+        float scale = AttackDistance * 0.35f;
+        attackLine.gameObject.SetActive(true);
+        attackLine.transform.localScale = new Vector3(0.1f, 0.1f, scale);
+
+        isFocusOnAttack = true;
+    }
+}
+
 
 /*
  * BasePlayer 클래스의
@@ -296,9 +305,7 @@ public abstract partial class BasePlayer
 
     public Enums.TeamOption playerTeam { get; set; }
 
-    protected JoyStick MoveJoyStick = null;
 
-    protected JoyStick SkillJoyStick = null;
 
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
 
