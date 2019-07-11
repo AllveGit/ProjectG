@@ -26,6 +26,6 @@ public class CharacterViewer : MonoBehaviour
             return;
 
         targetImg.sprite = characterModels[index];
-        targetImg.SetNativeSize();
+        //targetImg.SetNativeSize();
     }
 }

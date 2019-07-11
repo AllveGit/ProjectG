@@ -30,10 +30,23 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
     public GameObject TouchToScreenSprite;
     public GameObject LoadingSprite;
 
+
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        Screen.SetResolution(1920, 720, true);
+        
+    }
+
     void Start()
     {
         Character2DOriginPos = Character2D.transform.position;
         LogoOriginPos = Logo.transform.position;
+
+        
     }
 
     // 임시로 사용할 이름을 만드는 함수입니다.
@@ -63,11 +76,6 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         };
 
         return namePool[Random.Range(0, 19)];
-    }
-
-    private void Awake()
-    {
-        Application.targetFrameRate = 60;
     }
     public void Connect()
     {
