@@ -100,6 +100,26 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (photonView.IsMine) return;
+
+        if (other.CompareTag("Bush") && OnBush)
+        {
+            BasePlayer otherBasePlayer = other.transform.parent.GetComponent<BasePlayer>();
+            
+            if (otherBasePlayer.photonView.IsMine)
+            {
+                if (otherBasePlayer.OnBush)
+                {
+                    otherBasePlayer.bushActiveRendererEvent?.Invoke();
+                }
+            }
+
+
+        }
+    }
+
 
     public void MoveCalculate()
     {
@@ -284,6 +304,8 @@ public abstract partial class BasePlayer
     [PunRPC]
     protected virtual void RPCOnBushEnter()
     {
+        OnBush = true;
+
         Enums.TeamOption localTeamOption 
             = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
@@ -294,6 +316,7 @@ public abstract partial class BasePlayer
     [PunRPC]
     protected virtual void RPCOnBushExit()
     {
+        OnBush = false;
         bushActiveRendererEvent?.Invoke();
     }
 
