@@ -9,7 +9,8 @@ public class MatchButtonFolding : MonoBehaviour
 
     private bool IsUnFold = false;
     private float nowHeight = 0f;
-    public float maxHeight = 220f;
+    public float maxHeight;
+    public float maxWidth;
 
     [SerializeField]
     private float fLerpSpeed = 0.1f;
@@ -48,7 +49,7 @@ public class MatchButtonFolding : MonoBehaviour
         while (true)
         {
             nowHeight = Mathf.Lerp(nowHeight, maxHeight, fLerpSpeed);
-            playerButtonMaskRT.sizeDelta = new Vector2(496f, nowHeight);
+            playerButtonMaskRT.sizeDelta = new Vector2(maxWidth, nowHeight);
 
             if ((maxHeight - nowHeight) < 0.2f)
                 break;
@@ -56,7 +57,7 @@ public class MatchButtonFolding : MonoBehaviour
             yield return null;
         }
         nowHeight = maxHeight;
-        playerButtonMaskRT.sizeDelta = new Vector2(496f, nowHeight);
+        playerButtonMaskRT.sizeDelta = new Vector2(maxWidth, nowHeight);
 
         yield break;
     }
@@ -68,7 +69,7 @@ public class MatchButtonFolding : MonoBehaviour
         while (nowHeight >= 0)
         {
             nowHeight = Mathf.Lerp(nowHeight, 0, fLerpSpeed);
-            playerButtonMaskRT.sizeDelta = new Vector2(496f, nowHeight);
+            playerButtonMaskRT.sizeDelta = new Vector2(maxWidth, nowHeight);
 
             if (nowHeight < 0.2f)
                 break;
@@ -77,7 +78,7 @@ public class MatchButtonFolding : MonoBehaviour
         }
 
         nowHeight = 0;
-        playerButtonMaskRT.sizeDelta = new Vector2(496f, nowHeight);
+        playerButtonMaskRT.sizeDelta = new Vector2(maxWidth, nowHeight);
 
         yield break;
     }
