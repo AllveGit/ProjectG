@@ -30,6 +30,9 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
     public GameObject TouchToScreenSprite;
     public GameObject LoadingSprite;
 
+    public int SetWidth = 16;
+    public int SetHeight = 9;
+
 
 
     private void Awake()
@@ -37,7 +40,8 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         Application.targetFrameRate = 60;
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        Screen.SetResolution(1920, 720, true);
+        Screen.SetResolution(Screen.width, Screen.height * (SetWidth / SetHeight), true);
+        
         
     }
 

@@ -21,7 +21,7 @@ public class JoyStick : MonoBehaviour
 
     private void Start()
     {
-        backGroundRadius = GetComponent<RectTransform>().sizeDelta.y * 0.5f;
+        backGroundRadius = (GetComponent<RectTransform>().sizeDelta.x * 0.5f);
         stickFirstPos = stickTransform.transform.position;
     }
 
