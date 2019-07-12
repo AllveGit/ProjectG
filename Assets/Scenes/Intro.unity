@@ -726,6 +726,8 @@ MonoBehaviour:
   LogoSpeed: 2
   TouchToScreenSprite: {fileID: 1445884311}
   LoadingSprite: {fileID: 1917962834}
+  SetWidth: 16
+  SetHeight: 9
 --- !u!1 &1655106179
 GameObject:
   m_ObjectHideFlags: 0

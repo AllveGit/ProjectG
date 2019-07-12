@@ -2560,7 +2560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e67d09f9cbc8e4db76db424f9ab23d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapDataName: Stage1MapData
+  MapDataName: MapType01
   m_SpawnPos: {fileID: 0}
   Width: 0
   Height: 0
