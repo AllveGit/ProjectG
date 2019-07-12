@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
@@ -9,24 +11,28 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
     private void Awake()
     {
-        MoveJoyStick    = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
-        SkillJoyStick   = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
+        MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+        SkillJoyStick = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
 
-        rigidbody       = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
         if (rigidbody == null)
             Debug.LogError("BasePlayer.cs / rigidbody을 가져오지 못했습니다.");
-        animator        = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         if (animator == null)
             Debug.LogError("BasePlayer.cs / animator를 가져오지 못했습니다.");
         collider = GetComponent<CapsuleCollider>();
         if (collider == null)
             Debug.LogError("BasePlayer.cs / collider를 가져오지 못했습니다.");
+        bushCollider = transform.FindChild("BushCollCheck").GetComponent<BushCollider>();
+        if (bushCollider == null)
+            Debug.LogError("BushPlayer.cs / BushCollCheck 자식 오브젝트를 가져오지 못했습니다.");
+
 
         if (photonView.IsMine)
         {
             playerCamera = GetComponent<PlayerCamera>();
-            playerCamera.TargetObject   = gameObject;
-            playerCamera.IsTargeting    = true;
+            playerCamera.TargetObject = gameObject;
+            playerCamera.IsTargeting = true;
         }
 
         if (MoveJoyStick == null)
@@ -36,8 +42,25 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
 
         // 이벤트 핸들러에 등록
-        SkillJoyStick.OnStickUp     += OnSkillJoyStickUp;
-        SkillJoyStick.OnStickDown   += OnSkillJoyStickDown;
+        SkillJoyStick.OnStickUp += OnSkillJoyStickUp;
+        SkillJoyStick.OnStickDown += OnSkillJoyStickDown;
+
+        bushCollider.onBushEnter += () => 
+        {
+            if (photonView.IsMine)
+            {
+                OnBush = true;
+                photonView.RPC("RPCOnBushEnter", RpcTarget.Others);
+            }
+        };
+        bushCollider.onBushExit += () => 
+        {
+            if (photonView.IsMine)
+            {
+                OnBush = false;
+                photonView.RPC("RPCOnBushExit", RpcTarget.Others);
+            }
+        };
 
 
         if (photonView.IsMine)
@@ -130,6 +153,12 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         rigidbody.rotation = Quaternion.LookRotation(attackDirection);
         Attack();
     }
+    public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        attackCallback(direction);
+        yield break;
+    }
 
     private void UltimateBehavior()
     {
@@ -158,21 +187,14 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         if (animator.GetBool("Death") == true)
             return;
 
-        
         GameManager.Instance.DeathPlayer();
    
         collider.enabled = false;
         rigidbody.useGravity = false;
+        bushCollider.DieProccess();
 
         animator.SetBool("Death", true);
         StartCoroutine(Respawn(5f));
-    }
-
-    public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        attackCallback(direction);
-        yield break;
     }
     public IEnumerator Respawn(float delay)
     {
@@ -187,6 +209,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         collider.enabled = true;
         rigidbody.useGravity = true;
+        bushCollider.RespawnProccess();
 
         yield break;
     }
@@ -213,6 +236,8 @@ public abstract partial class BasePlayer
 
             stream.SendNext(ShieldPower);
             stream.SendNext(CurHP);
+            stream.SendNext(OnBush);
+           
         }
         else
         {
@@ -221,6 +246,7 @@ public abstract partial class BasePlayer
 
             ShieldPower = (int)stream.ReceiveNext();
             CurHP = (int)stream.ReceiveNext();
+            OnBush = (bool)stream.ReceiveNext();
         }
     }
 
@@ -256,6 +282,22 @@ public abstract partial class BasePlayer
         }
     }
     [PunRPC]
+    protected virtual void RPCOnBushEnter()
+    {
+        Enums.TeamOption localTeamOption 
+            = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+
+        if (!localTeamOption.Equals(playerTeam))
+            bushUnActiveRendererEvent?.Invoke();
+        
+    }
+    [PunRPC]
+    protected virtual void RPCOnBushExit()
+    {
+        bushActiveRendererEvent?.Invoke();
+    }
+
+    [PunRPC]
     protected virtual void RPCTranslatePosition(Vector3 translationPos)
     {
         currentPosition = translationPos; 
@@ -266,11 +308,6 @@ public abstract partial class BasePlayer
 
 public abstract partial class BasePlayer
 {
-    protected JoyStick MoveJoyStick = null;
-
-    protected JoyStick SkillJoyStick = null;
-
-
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
         if (!photonView.IsMine) return;
@@ -305,13 +342,16 @@ public abstract partial class BasePlayer
 
     public Enums.TeamOption playerTeam { get; set; }
 
-
-
     protected Vector3 movementAmount = Vector3.zero; // 플레이어의 이동량
-
     protected Vector3 attackDirection = Vector3.zero;
 
     protected bool isFocusOnAttack = false;
+
+    protected JoyStick MoveJoyStick = null;
+    protected JoyStick SkillJoyStick = null;
+
+    public UnityEvent bushUnActiveRendererEvent = new UnityEvent(); // 부쉬에 들어갈 경우 렌더러를 끄는 이벤트입니다
+    public UnityEvent bushActiveRendererEvent = new UnityEvent();// 위와 반대
 
     [SerializeField]
     private GameObject attackLinePrefab = null;
@@ -353,10 +393,11 @@ public abstract partial class BasePlayer
 {
     public new Rigidbody rigidbody { get; private set; } = null;
     public Animator animator { get; private set; } = null;
-    public CapsuleCollider collider { get; private set; } = null;
+    public new CapsuleCollider collider { get; private set; } = null;
     public PlayerCamera playerCamera { get; private set; } = null;
-
-    public bool IsBush { get; set; } = false;
+    public BushCollider bushCollider { get; private set; } = null;
+    public new Renderer renderer { get; private set; } = null;
+    public bool OnBush { get; set; } = false; // BushCollider에서도 조작합니다.
 
 
     public int CurHP { get => curHP; set => curHP = value; }

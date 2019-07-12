@@ -39,5 +39,10 @@ MonoBehaviour:
   - RPCRedTeamCounting
   - RPCTranslatePosition
   - WinLoseCheck
+  - OnBushEnter
+  - OnLBushExit
+  - RPCOnBushEnter
+  - RPCOnLBushExit
+  - RPCOnBushExit
   DisableAutoOpenWizard: 1
   ShowSettings: 1

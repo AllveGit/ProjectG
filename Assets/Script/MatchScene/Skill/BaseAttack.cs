@@ -144,17 +144,8 @@ public abstract partial class BaseAttack
 
             BaseCollisionProcess(player);
         }
-        else if (other.CompareTag("Attack"))
-        {
-            BaseAttack attack = other.GetComponent<BaseAttack>();
-
-            if (attack.ownerPlayer == this.ownerPlayer)
-                return;
-            else
+        else if (!other.CompareTag("Attack") && !other.CompareTag("Bush") && !other.CompareTag("RealBush"))
                 PhotonNetwork.Destroy(this.gameObject);
-        }
-        else 
-            PhotonNetwork.Destroy(this.gameObject);
     }
     
     /*

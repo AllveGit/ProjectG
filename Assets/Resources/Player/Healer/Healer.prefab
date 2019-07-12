@@ -1525,6 +1525,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7e5dad773a6414181dd1f133751885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bushUnActiveRendererEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6913381686864061273}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7343761397784492690}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  bushActiveRendererEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6913381686864061273}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 7343761397784492690}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
     type: 3}
   ultimateSkillPrefab: {fileID: 5889644410855099137, guid: 14aff38a8a22b874a89f94996da4d99d,
@@ -2254,7 +2308,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5963463848678037670
 Transform:
   m_ObjectHideFlags: 0
@@ -2310,7 +2364,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a4fc5780020d744ba6eb805dcd5f425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_bDie: 0
 --- !u!1 &8038673107898570047
 GameObject:
   m_ObjectHideFlags: 0

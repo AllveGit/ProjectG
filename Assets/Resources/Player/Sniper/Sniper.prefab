@@ -270,7 +270,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955026044671836101}
   m_LocalRotation: {x: 0.00000008146034, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000000048446655, y: 2.778851, z: 0.13638167}
+  m_LocalPosition: {x: 0, y: 2.778851, z: 0.13638167}
   m_LocalScale: {x: 1.0966213, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3322242610467270597}
@@ -664,6 +664,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3614a9a33122cde4d85003027ec85916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bushUnActiveRendererEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1126035432462007417}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8194697750320549680}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  bushActiveRendererEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1126035432462007417}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 8194697750320549680}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
     type: 3}
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
@@ -1271,7 +1325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4280572216183719507
 Transform:
   m_ObjectHideFlags: 0
@@ -1327,7 +1381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a4fc5780020d744ba6eb805dcd5f425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_bDie: 0
 --- !u!1 &4475408321347082654
 GameObject:
   m_ObjectHideFlags: 0
