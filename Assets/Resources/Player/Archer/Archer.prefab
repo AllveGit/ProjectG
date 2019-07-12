@@ -2241,7 +2241,6 @@ GameObject:
   - component: {fileID: 4920869136865713942}
   - component: {fileID: 5421456194956277942}
   - component: {fileID: 9109459164122858732}
-  - component: {fileID: 3019096708644700663}
   - component: {fileID: 5294013288854618094}
   - component: {fileID: 603548337565551297}
   - component: {fileID: 6973422385254112847}
@@ -2316,7 +2315,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.8
+  m_Radius: 1.04
   m_Height: 4.5
   m_Direction: 1
   m_Center: {x: 0, y: 2.3, z: 0}
@@ -2338,27 +2337,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 3019096708644700663}
   - {fileID: 5294013288854618094}
   - {fileID: 6973422385254112847}
   viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0
---- !u!114 &3019096708644700663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8153430416613352638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
 --- !u!114 &5294013288854618094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2405,7 +2388,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 0}
   followSpeed: 8
-  vLocalCameraPos: {x: 0, y: 8, z: -2.2}
+  vLocalCameraPos: {x: 0, y: 9, z: -1.5}
   vAddLookAt: {x: 0, y: 1, z: 0}
 --- !u!114 &6973422385254112847
 MonoBehaviour:
@@ -2419,8 +2402,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5c291304de73147b4e272d977c3166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: {fileID: 0}
-  admin: {fileID: 0}
+  attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
+    type: 3}
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
     type: 3}
   basicAttackPrefab: {fileID: 4607441206640468670, guid: 9114339463ecf944b968e5a049709f47,
@@ -2428,11 +2411,10 @@ MonoBehaviour:
   curHP: 100
   maxHP: 100
   moveSpeed: 4
-  attackSpeed: 10
-  attackDamage: 5
+  attackDamage: 10
+  attackDistance: 10
   shieldPower: 10
   maxShieldPower: 10
-  rotationLerpSpeed: 0.15
 --- !u!1 &8186532760494613426
 GameObject:
   m_ObjectHideFlags: 0

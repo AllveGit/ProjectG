@@ -15,12 +15,6 @@ public class Archer : BasePlayer
 
     public override void Attack()
     {
-        if (photonView.IsMine == false)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -30,11 +24,11 @@ public class Archer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-               transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1,
+              Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, AttackDistance, transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1, direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
 
@@ -43,12 +37,8 @@ public class Archer : BasePlayer
 
     public override void UltimateSkill()
     {
-        if (photonView.IsMine == false)
-            return;
-
         if (animator.GetBool("Attack"))
             return;
-
 
         animator.SetBool("Attack", true);
 
@@ -59,44 +49,27 @@ public class Archer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + ultimateSkillPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+               Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
+
         }, SkillJoyStick.JoyDir, 0.6f));
     }
 
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.
     public override void RotateCalculate()
     {
-        // 플레이어 조작에 해당되는 구문은 이 조건문을 꼭 씌어줄것
-
-        if (!photonView.IsMine) return;
-
         if (animator.GetBool("Attack") == true) return;
 
-        if (isFocusOnAttack)
+        if (movementAmount != Vector3.zero)
         {
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation,
-                Quaternion.LookRotation(attackDirection), RotationLerpSpeed);
+            Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
+            rot += new Vector3(0, -90, 0);
+            rigidbody.rotation = Quaternion.Euler(rot.x,rot.y,rot.z);
         }
-
-        if (movementAmount.magnitude < 0.01f)
-        {
-            animator.SetFloat("Speed", 0);
-            return;
-        }
-
-        animator.SetFloat("Speed", movementAmount.magnitude * 10);
-        rigidbody.MovePosition(transform.position + movementAmount);
-
-        Vector3 rot = Quaternion.LookRotation(movementAmount.normalized).eulerAngles;
-        rot += new Vector3(0, -90, 0);
-
-        if (isFocusOnAttack == false)
-            rigidbody.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(rot), RotationLerpSpeed);
-
     }
 
 }

@@ -6,21 +6,9 @@ using Photon.Pun;
 
 public class Healer : BasePlayer
 {
-    void Start()
-    {
-    }
-
     public override void Attack()
     {
-        if (photonView.IsMine == false)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
-
         animator.SetBool("Attack", true);
-
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
         {
@@ -33,21 +21,23 @@ public class Healer : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-              transform.position + matRot.MultiplyPoint(new Vector3(0.3f, 1f, 1.5f)),
+              Vector3.zero,
               Quaternion.identity);
    
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + matRot.MultiplyPoint(new Vector3(0.2f, 1f, 1.5f)),  direction);
 
      
             projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-              transform.position + matRot.MultiplyPoint(new Vector3(-0.3f, 1f, 1.5f)),
+              Vector3.zero,
               Quaternion.identity);
 
             if (projectile != null)
-                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + matRot.MultiplyPoint(new Vector3(-0.2f, 1f, 1.5f)), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
     }

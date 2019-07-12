@@ -11,7 +11,7 @@ public class CharacterViewer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SetIndex((int)PlayerManager.Instance.CharacterType);
     }
 
     // Update is called once per frame
@@ -26,6 +26,6 @@ public class CharacterViewer : MonoBehaviour
             return;
 
         targetImg.sprite = characterModels[index];
-        targetImg.SetNativeSize();
+        //targetImg.SetNativeSize();
     }
 }

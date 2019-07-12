@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class JoyStick02 : MonoBehaviour
+public class JoyStick : MonoBehaviour
 {
     public Transform stickTransform;
 
@@ -21,7 +21,7 @@ public class JoyStick02 : MonoBehaviour
 
     private void Start()
     {
-        backGroundRadius = GetComponent<RectTransform>().sizeDelta.y * 0.5f + 50f;
+        backGroundRadius = (GetComponent<RectTransform>().sizeDelta.x * 0.5f);
         stickFirstPos = stickTransform.transform.position;
     }
 

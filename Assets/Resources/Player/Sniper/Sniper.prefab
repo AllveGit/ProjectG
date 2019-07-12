@@ -503,7 +503,6 @@ GameObject:
   - component: {fileID: 2128347875174062800}
   - component: {fileID: 2100459952980504196}
   - component: {fileID: -6381447696395608959}
-  - component: {fileID: 1162784237188227624}
   - component: {fileID: 8392639744290108498}
   - component: {fileID: 4834908932740377289}
   - component: {fileID: 1810596043051956346}
@@ -522,7 +521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747858268589891030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.019830287, y: 0.5, z: 1.1537356}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
   - {fileID: 4970043253696285096}
@@ -580,7 +579,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.8
+  m_Radius: 1.04
   m_Height: 4.5
   m_Direction: 1
   m_Center: {x: 0, y: 2.3, z: 0}
@@ -602,27 +601,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1162784237188227624}
   - {fileID: 8392639744290108498}
   - {fileID: 1810596043051956346}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1162784237188227624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747858268589891030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
 --- !u!114 &8392639744290108498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetObject: {fileID: 0}
   followSpeed: 8
-  vLocalCameraPos: {x: 0, y: 8, z: -2.2}
+  vLocalCameraPos: {x: 0, y: 9, z: -1.5}
   vAddLookAt: {x: 0, y: 1, z: 0}
 --- !u!114 &1810596043051956346
 MonoBehaviour:
@@ -681,8 +664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3614a9a33122cde4d85003027ec85916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control: {fileID: 0}
-  admin: {fileID: 0}
+  attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
+    type: 3}
   ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
     type: 3}
   basicAttackPrefab: {fileID: 2821756039891169347, guid: 13c0936bfaa931145864589b967bceca,
@@ -690,11 +673,10 @@ MonoBehaviour:
   curHP: 100
   maxHP: 100
   moveSpeed: 4
-  attackSpeed: 10
   attackDamage: 10
+  attackDistance: 7
   shieldPower: 101
   maxShieldPower: 10
-  rotationLerpSpeed: 0.15
 --- !u!1 &1800039338239335130
 GameObject:
   m_ObjectHideFlags: 0

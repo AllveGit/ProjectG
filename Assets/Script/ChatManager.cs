@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Chat;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Text;
 using ExitGames.Client.Photon;
 using UnityEngine.Events;
@@ -23,6 +24,10 @@ public class ChattingChannel
 [System.Serializable]
 public class StringEvent : UnityEvent<string> { }
 
+
+[System.Serializable]
+public class StatusEvent : UnityEvent<string, int, bool, object> { }
+
 public partial class ChatManager : MonoBehaviour, IChatClientListener
 {
     public static ChatManager Instance = null;
@@ -33,7 +38,12 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     private string currentChannel = ChattingChannel.All;
 
+    public List<string> FriendList { get; set; } = new List<string>();
+
     public StringEvent OnGetMessage;
+    public StatusEvent OnStatusUpdate;
+
+    public 
 
     void Awake()
     {
@@ -73,7 +83,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.Connect(
             PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,
             PhotonNetwork.GameVersion,
-            new AuthenticationValues(PlayerManager.Instance.PlayerName));
+            new Photon.Chat.AuthenticationValues(PlayerManager.Instance.PlayerName));
     }
 
     public void ChangeChannel(string channelName)
@@ -104,14 +114,28 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.SendPrivateMessage(userName, context);
     }
 
-    public void AddFriend(string userName)
+    public bool AddFriend(string userName)
     {
-        chatClient.AddFriends(new string[] { userName });
+        bool result = chatClient.AddFriends(new string[] { userName });
+
+        if (result == true)
+        {
+            FriendList.Add(userName);
+            return true;
+        }
+        return false;
     }
 
-    public void RemoveFriend(string userName)
+    public bool RemoveFriend(string userName)
     {
-        chatClient.RemoveFriends(new string[] { userName });
+        bool result = chatClient.RemoveFriends(new string[] { userName });
+
+        if (result == true)
+        {
+            FriendList.Remove(userName);
+            return true;
+        }
+        return false;
     }
 
     private void AddLine(string lineString)
@@ -182,6 +206,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
 
     void IChatClientListener.OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
+        OnStatusUpdate?.Invoke(user, status, gotMessage, message);
     }
 
     void IChatClientListener.OnUserSubscribed(string channel, string user)

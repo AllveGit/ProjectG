@@ -3,19 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 public class Sniper : BasePlayer
-{ 
-    void Start()
-    {
-    }
-
+{
     public override void Attack()
     {
-        if (!photonView.IsMine)
-            return;
-
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
-            return;
-
         animator.SetBool("Attack", true);
 
         StartCoroutine(DelayAttack(delegate (Vector3 direction)
@@ -25,11 +15,12 @@ public class Sniper : BasePlayer
 
             GameObject projectile = PhotonNetwork.Instantiate(
                 "Skill/" + basicAttackPrefab.name,
-                transform.position + transform.forward + new Vector3(0, 0.5f, 0),
+                Vector3.zero,
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, direction);
+                projectile.GetComponent<Arrow>().Cast(this, AttackDamage, AttackDistance,
+                    transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
 
         }, SkillJoyStick.JoyDir, 0.6f));
     }
