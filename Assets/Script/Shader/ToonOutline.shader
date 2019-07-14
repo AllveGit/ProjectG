@@ -1,4 +1,4 @@
-Shader "Toon/Basic Outline" 
+Shader "LSJShader/Basic Outline" 
 {
 	Properties 
 	{

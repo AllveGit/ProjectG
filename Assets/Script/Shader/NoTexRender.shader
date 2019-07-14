@@ -1,4 +1,4 @@
-﻿Shader "LSJShader/DefaultRender"
+﻿Shader "LSJShader/NoTexRender"
 {
 	Properties 
 	{
