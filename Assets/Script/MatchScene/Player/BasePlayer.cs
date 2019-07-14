@@ -11,9 +11,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
     private void Awake()
     {
-        MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
-        SkillJoyStick = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
-
         rigidbody = GetComponent<Rigidbody>();
         if (rigidbody == null)
             Debug.LogError("BasePlayer.cs / rigidbody을 가져오지 못했습니다.");
@@ -33,17 +30,30 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             playerCamera = GetComponent<PlayerCamera>();
             playerCamera.TargetObject = gameObject;
             playerCamera.IsTargeting = true;
+
+
+            MoveJoyStick = GameObject.FindGameObjectWithTag("JoyStick").GetComponent<JoyStick>();
+            if (MoveJoyStick == null)
+                Debug.LogError("BasePlayer.cs / JoyStick을 가져오지 못했습니다.");
+            SkillJoyStick = GameObject.FindGameObjectWithTag("SkillJoyStick").GetComponent<JoyStick>();
+            if (SkillJoyStick == null)
+                Debug.LogError("BasePlayer.cs / SkillJoyStick을 가져오지 못했습니다.");
+            UltimateStick = GameObject.FindGameObjectWithTag("UltimateAttackStick").GetComponent<JoyStick>();
+            if (UltimateStick == null)
+                Debug.LogError("BasePlayer.cs / UltimateStick 가져오지 못했습니다.");
+
+            // 이벤트 핸들러에 등록
+            SkillJoyStick.OnStickUp += OnSkillJoyStickUp;
+            SkillJoyStick.OnStickDown += OnSkillJoyStickDown;
+
+            UltimateStick.OnStickUp += OnUltimateStickUp;
+            UltimateStick.OnStickDown += OnUltimateStickDown;
+
+            GameObject line = Instantiate(attackLinePrefab);
+            line.transform.parent = transform;
+            attackLine = line.GetComponent<AttakLine>();
+            attackLine.gameObject.SetActive(false);
         }
-
-        if (MoveJoyStick == null)
-            Debug.LogError("BasePlayer.cs / JoyStick을 가져오지 못했습니다.");
-        if (SkillJoyStick == null)
-            Debug.LogError("BasePlayer.cs / SkillJoyStick을 가져오지 못했습니다.");
-
-
-        // 이벤트 핸들러에 등록
-        SkillJoyStick.OnStickUp += OnSkillJoyStickUp;
-        SkillJoyStick.OnStickDown += OnSkillJoyStickDown;
 
         bushCollider.onBushEnter += () => 
         {
@@ -61,15 +71,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
                 photonView.RPC("RPCOnBushExit", RpcTarget.Others);
             }
         };
-
-
-        if (photonView.IsMine)
-        {
-            GameObject line = Instantiate(attackLinePrefab);
-            line.transform.parent = transform ;
-            attackLine = line.GetComponent<AttakLine>();
-            attackLine.gameObject.SetActive(false);
-        }
     }
     public void PlayerInit(Enums.TeamOption team, Vector3 pos)
     {
@@ -330,7 +331,7 @@ public abstract partial class BasePlayer
 }
 
 public abstract partial class BasePlayer
-{
+{ 
     public void OnSkillJoyStickUp(Vector3 pos, Vector3 dir)
     {
         if (!photonView.IsMine) return;
@@ -352,6 +353,17 @@ public abstract partial class BasePlayer
 
         isFocusOnAttack = true;
     }
+
+    public void OnUltimateStickUp(Vector3 pos, Vector3 dir)
+    {
+        if (!photonView.IsMine) return;
+
+    }
+    public void OnUltimateStickDown(Vector3 pos, Vector3 dir)
+    {
+        if (!photonView.IsMine) return;
+
+    }
 }
 
 
@@ -372,6 +384,7 @@ public abstract partial class BasePlayer
 
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
+    protected JoyStick UltimateStick = null;
 
     public UnityEvent bushUnActiveRendererEvent = new UnityEvent(); // 부쉬에 들어갈 경우 렌더러를 끄는 이벤트입니다
     public UnityEvent bushActiveRendererEvent = new UnityEvent();// 위와 반대

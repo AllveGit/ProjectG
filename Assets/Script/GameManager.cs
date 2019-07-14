@@ -110,7 +110,7 @@ public partial class GameManager
     public void WinLoseCheck()
     {
         int BlueTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
-        int RedTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
+        int RedTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDTEAMSCORE.ToString()];
 
         Enums.TeamOption winnerTeam = Enums.TeamOption.NoneTeam;
 
