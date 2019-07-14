@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Photon.Pun;
 
-public partial class BushCollider : MonoBehaviour
+public partial class BushCollider : MonoBehaviourPun
 {
     private new SphereCollider collider = null;
     private BasePlayer parentPlayer = null;
@@ -22,6 +23,9 @@ public partial class BushCollider : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
+        if (!parentPlayer.photonView.IsMine)
+            return;
+
         if (other.gameObject.tag == "RealBush")
         {
             other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f,0.5f,0.5f,0.15f));
@@ -30,6 +34,9 @@ public partial class BushCollider : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
+        if (!parentPlayer.photonView.IsMine)
+            return;
+
         if (other.gameObject.tag == "RealBush")
         {
             other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 1f));
