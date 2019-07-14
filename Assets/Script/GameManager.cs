@@ -34,12 +34,11 @@ public partial class GameManager
 
     [SerializeField]
     private GameObject spawnZone = null;
-
     [SerializeField]
     private LoserWindow loseWindow = null;
     [SerializeField]
     private WinnerWindow winnerWindow = null;
-
+   
     public bool GameEnd { get; private set; } = false;
 
     private void Awake()
@@ -110,7 +109,7 @@ public partial class GameManager
     public void WinLoseCheck()
     {
         int BlueTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
-        int RedTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.BLUETEAMSCORE.ToString()];
+        int RedTeamScord = (int)PhotonNetwork.CurrentRoom.CustomProperties[Enums.RoomProperties.REDTEAMSCORE.ToString()];
 
         Enums.TeamOption winnerTeam = Enums.TeamOption.NoneTeam;
 
