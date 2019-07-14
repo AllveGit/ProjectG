@@ -44,5 +44,8 @@ MonoBehaviour:
   - RPCOnBushEnter
   - RPCOnLBushExit
   - RPCOnBushExit
+  - SetHp
+  - SetShieldPower
+  - SetHpAndShield
   DisableAutoOpenWizard: 1
   ShowSettings: 1

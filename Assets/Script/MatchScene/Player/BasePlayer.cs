@@ -77,6 +77,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         transform.position = pos;
         playerTeam = team;
 
+
+
         photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
     }
 
@@ -255,8 +257,6 @@ public abstract partial class BasePlayer
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
 
-            stream.SendNext(ShieldPower);
-            stream.SendNext(CurHP);
             stream.SendNext(OnBush);
            
         }
@@ -265,8 +265,6 @@ public abstract partial class BasePlayer
             currentPosition = (Vector3)stream.ReceiveNext();
             currentRotation = (Quaternion)stream.ReceiveNext();
 
-            ShieldPower = (int)stream.ReceiveNext();
-            CurHP = (int)stream.ReceiveNext();
             OnBush = (bool)stream.ReceiveNext();
         }
     }
@@ -289,6 +287,8 @@ public abstract partial class BasePlayer
                 CurHP = 0;
                 OnPlayerDeath();
             }
+
+            photonView.RPC("UpdateShieldBar", RpcTarget.All, CurHP, ShieldPower);
         }
     }
     [PunRPC]
@@ -328,6 +328,15 @@ public abstract partial class BasePlayer
         transform.position = translationPos;
     }
 
+    [PunRPC]
+    protected virtual void SetHpAndShield(int inHpBar, int inShield)
+    {
+        CurHP = inHpBar;
+        ShieldPower = inShield;
+
+        playerBar.UpdateHpBar(inHpBar);
+        playerBar.UpdateShieldBar(inShield);
+    }
 }
 
 public abstract partial class BasePlayer
@@ -385,6 +394,7 @@ public abstract partial class BasePlayer
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;
     protected JoyStick UltimateStick = null;
+    
 
     public UnityEvent bushUnActiveRendererEvent = new UnityEvent(); // 부쉬에 들어갈 경우 렌더러를 끄는 이벤트입니다
     public UnityEvent bushActiveRendererEvent = new UnityEvent();// 위와 반대
@@ -393,10 +403,14 @@ public abstract partial class BasePlayer
     private GameObject attackLinePrefab = null;
     private AttakLine attackLine = null;
 
+    private GameObject playerUIParent; // Bar를 생성하여 모아놓는 게임오브젝트입니다.
+    private PlayerBar playerBar;
+
     [SerializeField]
     protected GameObject ultimateSkillPrefab = null; // 궁극기 프리펩
     [SerializeField]
     protected GameObject basicAttackPrefab = null; // 평타 프리팹
+   
 
     [SerializeField]
     private int curHP = 0; // 플레이어의 HP

@@ -34,12 +34,11 @@ public partial class GameManager
 
     [SerializeField]
     private GameObject spawnZone = null;
-
     [SerializeField]
     private LoserWindow loseWindow = null;
     [SerializeField]
     private WinnerWindow winnerWindow = null;
-
+   
     public bool GameEnd { get; private set; } = false;
 
     private void Awake()
