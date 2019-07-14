@@ -24,7 +24,7 @@ public partial class BushCollider : MonoBehaviour
     {
         if (other.gameObject.tag == "RealBush")
         {
-            other.gameObject.GetComponent<Bush>().m_Mat.material.SetFloat("Vector1_3BE6800", 0.3f);
+            other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f,0.5f,0.5f,0.15f));
             onBushEnter?.Invoke();
         }
     }
@@ -32,7 +32,7 @@ public partial class BushCollider : MonoBehaviour
     {
         if (other.gameObject.tag == "RealBush")
         {
-            other.gameObject.GetComponent<Bush>().m_Mat.material.SetFloat("Vector1_3BE6800", 1f);
+            other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 1f));
             onBushExit?.Invoke();
         }
     }
