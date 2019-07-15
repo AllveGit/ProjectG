@@ -53,7 +53,7 @@ public class Archer : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, AttackDistance,
+                projectile.GetComponent<IceArrow>().Cast(this, AttackDamage * 5, AttackDistance,
                     transform.position + transform.forward + new Vector3(0, 1.0f, 0), direction);
 
         }, UltimateStick.JoyDir, 0.6f));

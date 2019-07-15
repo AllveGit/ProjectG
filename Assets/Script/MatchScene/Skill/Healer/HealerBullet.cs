@@ -6,9 +6,6 @@ using Photon.Pun;
 
 public class HealerBullet : BaseAttack
 {
-    [SerializeField]
-    private int healValue = 3;
-
     public override bool BaseCollisionProcess(BasePlayer player)
     {
         if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
@@ -19,7 +16,7 @@ public class HealerBullet : BaseAttack
             Enums.TeamOption myTeam = (Enums.TeamOption)ownerPlayer.photonView.Owner.CustomProperties[Enums.PlayerProperties.TEAM];
 
             if (team == myTeam)
-                player.OnHeal(healValue);
+                player.OnHeal((int)(AttackDamage * 1.5));
         }
 
         PhotonNetwork.Destroy(this.gameObject);

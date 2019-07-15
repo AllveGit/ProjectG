@@ -23,7 +23,6 @@ public class Healer : BasePlayer
                 "Skill/" + basicAttackPrefab.name,
               Vector3.zero,
               Quaternion.identity);
-   
 
             if (projectile != null)
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
