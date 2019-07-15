@@ -28,7 +28,26 @@ public class Maid : BasePlayer
 
     public override void UltimateSkill()
     {
-        if (!photonView.IsMine) return;
+        if (animator.GetBool("Attack"))
+            return;
+
+        animator.SetBool("Attack", true);
+
+        StartCoroutine(DelayAttack(delegate (Vector3 direction)
+        {
+            if (direction == Vector3.zero)
+                return;
+
+            GameObject projectile = PhotonNetwork.Instantiate(
+                "Skill/" + ultimateSkillPrefab.name,
+               Vector3.zero,
+                transform.rotation);
+
+            if (projectile != null)
+                projectile.GetComponent<Bam>().Cast(this, AttackDamage, AttackDistance * 10,
+                    transform.position + transform.forward + new Vector3(0, 1.0f, 0), direction);
+
+        }, UltimateStick.JoyDir, 0.6f));
     }
 
 

@@ -2666,7 +2666,8 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
     type: 3}
-  ultimateSkillPrefab: {fileID: 0}
+  ultimateSkillPrefab: {fileID: 7943522441129378386, guid: 47bf9a995cfd8af4d8f7015a7c1ed8d8,
+    type: 3}
   basicAttackPrefab: {fileID: 7971499633598472054, guid: 26fc3b939bf0fd7498e931ef53efc48d,
     type: 3}
   curHP: 100

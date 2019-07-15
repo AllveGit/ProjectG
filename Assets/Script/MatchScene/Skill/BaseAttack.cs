@@ -104,27 +104,18 @@ public abstract partial class BaseAttack
 
     protected bool IsAttackable(Photon.Realtime.Player me, Photon.Realtime.Player enumy)
     {
-        bool Attackable = false; ;
-
         Enums.TeamOption myTeamOption = (Enums.TeamOption)me.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
         Enums.TeamOption enumyTeamOption = (Enums.TeamOption)enumy.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
-        switch (myTeamOption)
-        {
-            case Enums.TeamOption.RedTeam:
-                if (enumyTeamOption == Enums.TeamOption.BlueTeam)
-                    Attackable = true;
-                break;
-            case Enums.TeamOption.BlueTeam:
-                if (enumyTeamOption == Enums.TeamOption.RedTeam)
-                    Attackable = true;
-                break;
-            case Enums.TeamOption.Solo:
-                Attackable = true;
-                break;
-        }
+        // 솔로 모드에선 공격가능
+        if (myTeamOption == Enums.TeamOption.Solo)
+            return true;
+        // 팀이 다르다면 공격 가능
+        else if (myTeamOption != enumyTeamOption)
+            return true;
 
-        return Attackable;
+        // 이외에는 공격 불가능
+        return false;
     }
 
 
@@ -132,6 +123,7 @@ public abstract partial class BaseAttack
     {
         if (photonView.IsMine == false)
             return;
+
         if (other.gameObject == this.gameObject)
             return;
 

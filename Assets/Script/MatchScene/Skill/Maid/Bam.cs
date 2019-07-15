@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Photon;
-using Photon.Pun;
-
-public class IceArrow : BaseAttack
+public class Bam : BaseAttack
 {
     [SerializeField]
     private float rotationSpeedDegree = 10f;
@@ -26,7 +23,7 @@ public class IceArrow : BaseAttack
 
         if (result)
         {
-            GameObject explosion = Instantiate(Resources.Load("Effect/ice_hit") as GameObject);
+            GameObject explosion = Instantiate(Resources.Load("Effect/Explosion/Explosion") as GameObject);
 
             explosion.transform.position = transform.position;
 
