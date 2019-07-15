@@ -10,8 +10,8 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
-    private GameObject DieEffect;
-    private GameObject TempDieEffect = null;
+    protected GameObject DieEffect;
+    protected GameObject TempDieEffect = null;
     public GameObject DmgPopup;
     
     private void Awake()
@@ -125,7 +125,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             {
                 if (Vector3.Distance(transform.position, currentPosition) > 0.1f)
                     transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
-                if (Vector3.Distance(transform.rotation.eulerAngles, transform.rotation.eulerAngles) > 0.1f)
+
                     transform.rotation = currentRotation;
             }
         }
@@ -172,7 +172,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
 
     public void MoveCalculate()
     {
-        if (animator.GetBool("Attack") || animator.GetBool("Death"))
+        if (animator.GetBool("Attack") || animator.GetBool("Death") || OnDeath)
         {
             movementAmount = Vector3.zero;
             animator.SetFloat("Speed", 0f);
@@ -265,12 +265,12 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     }
     public void OnDamaged(int damage)
     {
-        photonView.RPC("RPCOnDamage", RpcTarget.Others, damage);
+        photonView.RPC("RPCOnDamage", RpcTarget.All, damage) ;
     }
 
     public void OnHeal(int heal)
     {
-        photonView.RPC("RPCOnHeal", RpcTarget.Others, heal);
+        photonView.RPC("RPCOnHeal", RpcTarget.All, heal);
     }
 
     public abstract void Attack();          // 기본공격을 사용하기 위한 함수
@@ -298,7 +298,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         StartCoroutine(Respawn(5f));
         StartCoroutine(TempDieEffect.GetComponent<DeathEffect>().ActiveFalse(4.9f));
     }
-    public IEnumerator Respawn(float delay)
+    public virtual IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
 
@@ -309,6 +309,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         transform.position = GameManager.Instance.GetRespawnPos();
         photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
 
+        OnDeath = false;
         collider.enabled = true;
         rigidbody.useGravity = true;
         bushCollider.RespawnProccess();
@@ -318,11 +319,11 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     }
 
     //Debug함수입니다.
-    void OnGUI()
-    {
-        if (photonView.IsMine)
-            GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString() + " Shield : " + ShieldPower.ToString());
-    }
+    //void OnGUI()
+    //{
+    //    if (photonView.IsMine)
+    //        GUILayout.TextField(playerTeam.ToString() + " HP : " + CurHP.ToString() + " Shield : " + ShieldPower.ToString());
+    //}
 }
 
 public abstract partial class BasePlayer
@@ -373,9 +374,14 @@ public abstract partial class BasePlayer
                 CurHP = 0;
                 OnPlayerDeath();
             }
+            //StartCoroutine(FindObjectOfType<PlayerCameraShake>().Shake(0.1f, 0.01f));
             photonView.RPC("RPCSetHpAndShield", RpcTarget.All, CurHP, ShieldPower);
+            //photonView.RPC("RPCCreateDamageHit", RpcTarget.All, CurHP, damage);
         }
-
+    }
+    [PunRPC]
+    protected virtual void RPCCreateDamageHit(int damage)
+    {
         GameObject m_Canvas = GameObject.FindGameObjectWithTag("Canvas");
         GameObject Temp = Instantiate(DmgPopup, Vector3.zero, Quaternion.identity, m_Canvas.transform) as GameObject;
         Temp.transform.localPosition = Vector3.zero;
@@ -607,6 +613,7 @@ public abstract partial class BasePlayer
     public BushCollider bushCollider { get; private set; } = null;
     public new Renderer renderer { get; private set; } = null;
     public bool OnBush { get; set; } = false; // BushCollider에서도 조작합니다.
+    public bool OnDeath { get; set; } = false;
 
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }

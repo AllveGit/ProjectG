@@ -41,7 +41,6 @@ public class Enums : MonoBehaviour
     {
         Healer,
         Maid,
-        Sniper,
         Archer,
     }
 

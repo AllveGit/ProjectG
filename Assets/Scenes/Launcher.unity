@@ -97,7 +97,7 @@ LightmapSettings:
     m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1340,7 +1340,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 272353440}
   m_HandleRect: {fileID: 272353439}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4034,7 +4034,6 @@ MonoBehaviour:
   characterModels:
   - {fileID: 21300000, guid: f9d01f8a271aaf34f9cce85d61d1ef1d, type: 3}
   - {fileID: 21300000, guid: 91e3b0893fe524744bbefe9d75fcb9b1, type: 3}
-  - {fileID: 21300000, guid: cf7b377474387eb4a933f0c83b27e5eb, type: 3}
   - {fileID: 21300000, guid: 59560e5a57dac314ab006081f80d5c1b, type: 3}
   targetImg: {fileID: 1092462959}
 --- !u!114 &1092462959
@@ -5250,12 +5249,10 @@ MonoBehaviour:
   characterSprites:
   - {fileID: 21300000, guid: e35ae7ec9054a464990f02b2ea01515c, type: 3}
   - {fileID: 21300000, guid: 1bfc5b0064a4d294cb7ab46e586db7ca, type: 3}
-  - {fileID: 21300000, guid: a00b7bf1fc40ff445923b84e6390fcb1, type: 3}
   - {fileID: 21300000, guid: 15d68855bb383b14a9ad41805ed954e1, type: 3}
   backgroundSprites:
   - {fileID: 21300000, guid: ac11d07250cfa2b48999e4e095dec160, type: 3}
   - {fileID: 21300000, guid: 672fd09a6ab3e7241be866e403bcac19, type: 3}
-  - {fileID: 21300000, guid: 6b7872c056d19174c852f7d7e3fec601, type: 3}
   - {fileID: 21300000, guid: 44c9d190968082749825894c42ba933b, type: 3}
   currentIndex: 0
   maxIndex: 0
@@ -6438,7 +6435,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -54.463593, y: -2855.1533}
+  m_AnchoredPosition: {x: -54.463593, y: -18489.18}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1576880049
@@ -8862,8 +8859,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -646, y: 139}
-  m_SizeDelta: {x: 461.7, y: 86.6}
+  m_AnchoredPosition: {x: 882.1, y: 521.6}
+  m_SizeDelta: {x: 142.2, y: 26.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2001250672
 MonoBehaviour:

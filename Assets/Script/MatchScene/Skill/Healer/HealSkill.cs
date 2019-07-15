@@ -21,6 +21,8 @@ public class HealSkill : BaseAttack
             isCanHeal = false;
             useHealTick = false;
         }
+
+        transform.position = ownerPlayer.transform.position;
     }
 
     public override void Cast(BasePlayer inOwnerPlayer, int inAttackDamage, float attackDistance, Vector3 vStartPosition, Vector3 direction)

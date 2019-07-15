@@ -135,6 +135,8 @@ public abstract partial class BaseAttack
             if (player.animator.GetBool("Death"))
                 return;
 
+
+
             BaseCollisionProcess(player);
         }
         else if (!other.CompareTag("Attack") && !other.CompareTag("Bush") && !other.CompareTag("RealBush"))

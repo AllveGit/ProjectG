@@ -45,6 +45,7 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         Screen.SetResolution(Screen.width, Screen.height * (SetWidth / SetHeight), true);
 #else
         Screen.SetResolution(Screen.width, Screen.height * (SetWidth / SetHeight), false);
+#endif
 
 
     }

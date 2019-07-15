@@ -48,5 +48,6 @@ MonoBehaviour:
   - WinLoseCheck
   - RPCOnBushColliderEnter
   - RPCOnBushColliderExit
+  - RPCCreateDamageHit
   DisableAutoOpenWizard: 1
   ShowSettings: 1

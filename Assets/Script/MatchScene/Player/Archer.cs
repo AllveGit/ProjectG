@@ -76,4 +76,48 @@ public class Archer : BasePlayer
         }
     }
 
+    public override void OnPlayerDeath()   // 플레이어가 죽을 때 호출됨
+    {
+        if (animator.GetBool("Death") == true || OnDeath)
+            return;
+
+        bushUnActiveRendererEvent?.Invoke();
+
+        GameManager.Instance.DeathPlayer();
+
+        OnDeath = true;
+        collider.enabled = false;
+        rigidbody.useGravity = false;
+        bushCollider.DieProccess();
+
+        if (TempDieEffect == null)
+        {
+            TempDieEffect = Instantiate(DieEffect, transform.position, Quaternion.identity, Camera.main.transform) as GameObject;
+            TempDieEffect.transform.localPosition = Vector3.zero;
+            TempDieEffect.transform.localEulerAngles = Vector3.zero;
+            TempDieEffect.transform.localPosition += Vector3.forward * 3;
+        }
+        StartCoroutine(Respawn(5f));
+        StartCoroutine(TempDieEffect.GetComponent<DeathEffect>().ActiveFalse(4.9f));
+    }
+
+    public override IEnumerator Respawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        bushActiveRendererEvent?.Invoke();
+
+        CurHP = MaxHP;
+        ShieldPower = MaxShieldPower;
+        photonView.RPC("RPCSetHpAndShield", RpcTarget.All, CurHP, ShieldPower);
+
+        transform.position = GameManager.Instance.GetRespawnPos();
+        photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
+
+        OnDeath = false;
+        collider.enabled = true;
+        rigidbody.useGravity = true;
+        bushCollider.RespawnProccess();
+
+        yield break;
+    }
 }
