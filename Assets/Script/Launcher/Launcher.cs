@@ -22,6 +22,8 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         // 자동 동기화.
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        SoundManager.instance.PlayMusic(Resources.Load<AudioClip>("Sounds/happy"));
     }
 
     // [System.Diagnostics.Conditional("UNITY_DEBUG")]

@@ -30,6 +30,7 @@ public class MapParser : MonoBehaviour
     {
         m_mapData = Resources.Load<MapData>(dataPath + MapDataName);
         m_SpawnPos = Resources.Load<GameObject>("SpawnPosition");
+        SoundManager.instance.PlayMusic(Resources.Load<AudioClip>("Sounds/xeon6"));
         Parsing();
     }
 
