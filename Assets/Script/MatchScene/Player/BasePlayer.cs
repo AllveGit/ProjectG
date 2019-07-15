@@ -349,7 +349,6 @@ public abstract partial class BasePlayer
         isFocusOnAttack = false;
 
         AttackBehavior();
-
     }
 
     public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)

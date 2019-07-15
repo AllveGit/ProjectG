@@ -39,7 +39,7 @@ public class Healer : BasePlayer
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + matRot.MultiplyPoint(new Vector3(-0.2f, 1f, 1.0f)), direction);
 
-        }, SkillJoyStick.JoyDir, 0.6f));
+        }, SkillJoyStick.JoyDir, AttackSpeed));
     }
     public override void UltimateSkill()
     {
