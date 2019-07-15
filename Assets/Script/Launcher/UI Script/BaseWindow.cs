@@ -14,6 +14,7 @@ public class BaseWindow : MonoBehaviour
 
     public virtual void CloseWindow()
     {
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
         gameObject.SetActive(false);
     }
 
@@ -22,6 +23,7 @@ public class BaseWindow : MonoBehaviour
         if (gameObject.activeSelf == true)
             return;
 
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
         transform.localScale = new Vector3(0.0f, 0.0f, 0.0f);
         gameObject.SetActive(true);
     }
