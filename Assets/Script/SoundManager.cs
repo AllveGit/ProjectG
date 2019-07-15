@@ -31,4 +31,22 @@ public class SoundManager : MonoBehaviour
         EffectSource.clip = clip;
         EffectSource.Play();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="percent">0.0 ~ 1.0</param>
+    public void SetEffectVolume(float percent)
+    {
+        EffectSource.volume = percent;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="percent">0.0 ~ 1.0</param>
+    public void SetBGVolume(float percent)
+    {
+        MusicSource.volume = percent;
+    }
 }
