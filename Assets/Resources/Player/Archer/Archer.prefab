@@ -2471,6 +2471,8 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   attackSpeed: 0.3
+  ultimateCooldown: 15
+  currentUltimateCooldown: 0
   AttackSound: {fileID: 8300000, guid: 1b2ad86dee5168f4e83d95c113559a48, type: 3}
 --- !u!114 &5359864697469101340
 MonoBehaviour:

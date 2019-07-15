@@ -13,6 +13,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     private GameObject DieEffect;
     private GameObject TempDieEffect = null;
     public GameObject DmgPopup;
+    
     private void Awake()
     {
         DmgPopup = Resources.Load<GameObject>("Effect/DmgPopup/PopupText");
@@ -49,12 +50,16 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             if (UltimateStick == null)
                 Debug.LogError("BasePlayer.cs / UltimateStick 가져오지 못했습니다.");
 
+            UltimateStick.transform.GetChild(0).transform.GetChild(0).GetComponent<CooldownRender>().targetPlayer = this;
+
             // 이벤트 핸들러에 등록
             SkillJoyStick.OnStickUp += OnSkillJoyStickUp;
             SkillJoyStick.OnStickDown += OnSkillJoyStickDown;
 
             UltimateStick.OnStickUp += OnUltimateStickUp;
             UltimateStick.OnStickDown += OnUltimateStickDown;
+
+            currentUltimateCooldown = ultimateCooldown;
 
             GameObject line = Instantiate(attackLinePrefab);
             line.transform.parent = transform;
@@ -188,6 +193,11 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             vlocalPosition.y = 0.1f;
             attackLine.transform.position = transform.position + vlocalPosition;
         }
+
+        if (currentUltimateCooldown > 0)
+        {
+            currentUltimateCooldown -= Time.fixedDeltaTime;
+        }
     }
 
     private void AttackBehavior()
@@ -202,6 +212,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         rigidbody.rotation = Quaternion.LookRotation(attackDirection);
         Attack();
     }
+
     public IEnumerator DelayAttack(AttackCallback attackCallback, Vector3 direction, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -217,9 +228,14 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
 
+        if (currentUltimateCooldown > 0)
+            return;
+
         attackDirection = UltimateStick.JoyDir;
         rigidbody.rotation = Quaternion.LookRotation(attackDirection);
         UltimateSkill();
+
+        currentUltimateCooldown = ultimateCooldown;
     }
     public void OnDamaged(int damage)
     {
@@ -508,6 +524,12 @@ public abstract partial class BasePlayer
 
     [SerializeField]
     private float attackSpeed = 0.0f; // 공속
+
+    [SerializeField]
+    private float ultimateCooldown = 0.0f; // 궁극기 쿨타임
+
+    [SerializeField]
+    private float currentUltimateCooldown = 0.0f; // 현재 궁극기 쿨타임
 }
 
 /*
@@ -531,4 +553,5 @@ public abstract partial class BasePlayer
     public int ShieldPower { get => shieldPower; set => shieldPower = value; }
     public int MaxShieldPower { get => maxShieldPower; set => maxShieldPower = value; }
     public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
+    public float UltimateCooldown { get => currentUltimateCooldown; }
 }

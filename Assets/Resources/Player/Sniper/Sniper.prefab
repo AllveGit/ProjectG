@@ -664,6 +664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3614a9a33122cde4d85003027ec85916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DmgPopup: {fileID: 0}
   bushUnActiveRendererEvent:
     m_PersistentCalls:
       m_Calls:
@@ -732,6 +733,8 @@ MonoBehaviour:
   shieldPower: 101
   maxShieldPower: 10
   attackSpeed: 0.35
+  ultimateCooldown: 15
+  currentUltimateCooldown: 0
 --- !u!1 &1800039338239335130
 GameObject:
   m_ObjectHideFlags: 0
