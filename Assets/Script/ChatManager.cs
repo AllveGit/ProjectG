@@ -24,11 +24,13 @@ public class ChattingChannel
 [System.Serializable]
 public class StringEvent : UnityEvent<string> { }
 
+[System.Serializable]
+public class String2Event : UnityEvent<string, string> { }
 
 [System.Serializable]
 public class StatusEvent : UnityEvent<string, int, bool, object> { }
 
-public partial class ChatManager : MonoBehaviour, IChatClientListener
+public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListener
 {
     public static ChatManager Instance = null;
 
@@ -41,9 +43,11 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
     public List<string> FriendList { get; set; } = new List<string>();
 
     public StringEvent OnGetMessage;
+    public StringEvent OnFriendRequest;
+    public String2Event OnMessage;
     public StatusEvent OnStatusUpdate;
 
-    public 
+    public
 
     void Awake()
     {
@@ -121,6 +125,7 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
         if (result == true)
         {
             FriendList.Add(userName);
+            photonView.RPC("RPCOnFriendRequest", RpcTarget.Others, new object[] { PlayerManager.Instance.PlayerName, userName });
             return true;
         }
         return false;
@@ -142,9 +147,9 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
     {
         OnGetMessage?.Invoke($"{lineString}\n");
     }
-
 }
-public partial class ChatManager : MonoBehaviour, IChatClientListener
+
+public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListener
 {
     void IChatClientListener.DebugReturn(DebugLevel level, string message)
     {
@@ -165,6 +170,25 @@ public partial class ChatManager : MonoBehaviour, IChatClientListener
             case DebugLevel.ALL:
                 Debug.Log(message);
                 break;
+        }
+    }
+
+    [PunRPC]
+    public void RPCOnFriendRequest(string sender, string targetName)
+    {
+        if (PlayerManager.Instance.PlayerName == targetName)
+        {
+            OnFriendRequest?.Invoke(sender);
+        }
+    }
+
+    [PunRPC]
+    public void RPCOnGetMessage(string sender, string targetName, string message)
+    {
+        if (targetName == "$ALL" ||
+            targetName == PlayerManager.Instance.PlayerName)
+        {
+            OnMessage?.Invoke(sender, message);
         }
     }
 

@@ -1636,6 +1636,7 @@ MonoBehaviour:
   attackDistance: 4
   shieldPower: 10
   maxShieldPower: 10
+  attackSpeed: 0.3
 --- !u!1 &5756763204229238726
 GameObject:
   m_ObjectHideFlags: 0

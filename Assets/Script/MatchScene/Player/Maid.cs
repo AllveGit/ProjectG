@@ -23,7 +23,7 @@ public class Maid : BasePlayer
 
             StartCoroutine(MaidAttack(direction));
 
-        }, SkillJoyStick.JoyDir, 0.4f));
+        }, SkillJoyStick.JoyDir, AttackSpeed));
     }
 
     public override void UltimateSkill()

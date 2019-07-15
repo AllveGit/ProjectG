@@ -362,7 +362,6 @@ public abstract partial class BasePlayer
         isFocusOnAttack = false;
 
         AttackBehavior();
-
     }
 
     public void OnSkillJoyStickDown(Vector3 pos, Vector3 dir)
@@ -446,7 +445,8 @@ public abstract partial class BasePlayer
     [SerializeField]
     private int maxShieldPower = 0; // 플레이어의 쉴드(추가 체력) 최대치
 
-
+    [SerializeField]
+    private float attackSpeed = 0.0f; // 공속
 }
 
 /*
@@ -462,7 +462,6 @@ public abstract partial class BasePlayer
     public new Renderer renderer { get; private set; } = null;
     public bool OnBush { get; set; } = false; // BushCollider에서도 조작합니다.
 
-
     public int CurHP { get => curHP; set => curHP = value; }
     public int MaxHP { get => maxHP; set => maxHP = value; }
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
@@ -470,4 +469,5 @@ public abstract partial class BasePlayer
     public float AttackDistance { get => attackDistance; set => attackDistance = value; }
     public int ShieldPower { get => shieldPower; set => shieldPower = value; }
     public int MaxShieldPower { get => maxShieldPower; set => maxShieldPower = value; }
+    public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
 }

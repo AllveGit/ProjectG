@@ -42,26 +42,29 @@ public partial class Launcher : MonoBehaviourPunCallbacks
     {
         PlayerManager.Instance.CurrentMatchType = matchType;
 
-        if (PlayerManager.Instance.CurrentMatchType == MatchOption.Match_None)
+        if (matchType == MatchOption.Match_None)
             return;
-        else if (matchType == MatchOption.Match_Debug)
-            MatchingDebug();
-        else
+
+        if (matchType == MatchOption.Match_Debug)
         {
-            PhotonHashTable playerProperties = new PhotonHashTable
+            MatchingDebug();
+            return;
+        }
+
+        PhotonHashTable playerProperties = new PhotonHashTable
             {
                 { PlayerProperties.CHARACTER.ToString().ToString(), PlayerManager.Instance.CharacterType.ToString() },
                 { PlayerProperties.SPAWNPOS.ToString().ToString(), 0 },
                 { PlayerProperties.TEAM.ToString(), TeamOption.NoneTeam }
             };
-            PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+        PhotonNetwork.SetPlayerCustomProperties(playerProperties);
 
-            PhotonHashTable roomProperties
-                = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
+        PhotonHashTable roomProperties
+            = new PhotonHashTable() { { RoomPropoerties.MATCHTYPE.ToString(), PlayerManager.Instance.CurrentMatchType } };
 
-            PhotonNetwork.JoinRandomRoom(roomProperties, 0);
-        }
+        PhotonNetwork.JoinRandomRoom(roomProperties, 0);
     }
+
     public void MatchingCancel()
     {
         PhotonNetwork.LeaveRoom();
@@ -111,9 +114,11 @@ public partial class Launcher : MonoBehaviourPunCallbacks
         roomProperties.Add(Enums.RoomProperties.BLUETEAMSCORE.ToString(), 5);
         roomProperties.Add(Enums.RoomProperties.REDTEAMSCORE.ToString(), 5);
 
-        RoomOptions options = new RoomOptions();
-        options.CustomRoomProperties = roomProperties;
-        options.CustomRoomPropertiesForLobby = new string[] { RoomPropoerties.MATCHTYPE.ToString() };
+        RoomOptions options = new RoomOptions
+        {
+            CustomRoomProperties = roomProperties,
+            CustomRoomPropertiesForLobby = new string[] { RoomPropoerties.MATCHTYPE.ToString() }
+        };
 
         if (PlayerManager.Instance.CurrentMatchType == MatchOption.Match_None)
             return;
