@@ -44,6 +44,6 @@ public class PlayerBar : MonoBehaviour
     }
     public void UpdateShieldBar(int shield)
     {
-        hpGauge.rectTransform.sizeDelta = new Vector3(oneShieldLength * shield, manaGauge.rectTransform.sizeDelta.y);
+        manaGauge.rectTransform.sizeDelta = new Vector3(oneShieldLength * shield, manaGauge.rectTransform.sizeDelta.y);
     }
 }

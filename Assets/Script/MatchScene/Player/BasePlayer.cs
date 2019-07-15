@@ -60,7 +60,10 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             line.transform.parent = transform;
             attackLine = line.GetComponent<AttakLine>();
             attackLine.gameObject.SetActive(false);
+
+            photonView.RPC("CreateBar", RpcTarget.All, (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()]);
         }
+
 
         bushCollider.onBushEnter += () => 
         {
@@ -79,12 +82,6 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
             }
         };
 
-        playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
-
-        playerUIParent = GameObject.FindGameObjectWithTag("PlayerUI");
-        GameObject barPrefab = Instantiate(Resources.Load("Player/PlayerBar"), playerUIParent.transform) as GameObject;
-        playerBar = barPrefab.GetComponent<PlayerBar>();
-        playerBar.BarInit(gameObject, playerTeam, maxHP, maxShieldPower);
     }
     public void PlayerInit(Enums.TeamOption team, Vector3 pos)
     {
@@ -327,7 +324,7 @@ public abstract partial class BasePlayer
                 CurHP = 0;
                 OnPlayerDeath();
             }
-            photonView.RPC("UpdateShieldBar", RpcTarget.All, CurHP, ShieldPower);
+            photonView.RPC("RPCSetHpAndShield", RpcTarget.All, CurHP, ShieldPower);
         }
 
         GameObject m_Canvas = GameObject.FindGameObjectWithTag("Canvas");
@@ -372,9 +369,18 @@ public abstract partial class BasePlayer
         currentPosition = translationPos; 
         transform.position = translationPos;
     }
-
     [PunRPC]
-    protected virtual void SetHpAndShield(int inHpBar, int inShield)
+    protected virtual void CreateBar(Enums.TeamOption teamOption)
+    {
+        playerTeam = teamOption;
+
+        playerUIParent = GameObject.FindGameObjectWithTag("PlayerUI");
+        GameObject barPrefab = Instantiate(Resources.Load("Player/PlayerBar"), playerUIParent.transform) as GameObject;
+        playerBar = barPrefab.GetComponent<PlayerBar>();
+        playerBar.BarInit(gameObject, playerTeam, maxHP, maxShieldPower);
+    }
+    [PunRPC]
+    protected virtual void RPCSetHpAndShield(int inHpBar, int inShield)
     {
         CurHP = inHpBar;
         ShieldPower = inShield;
