@@ -78,13 +78,17 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
                 photonView.RPC("RPCOnBushExit", RpcTarget.Others);
             }
         };
+
+        playerTeam = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+
+        playerUIParent = GameObject.FindGameObjectWithTag("PlayerUI");
+        GameObject barPrefab = Instantiate(Resources.Load("Player/PlayerBar"), playerUIParent.transform) as GameObject;
+        playerBar = barPrefab.GetComponent<PlayerBar>();
+        playerBar.BarInit(gameObject, playerTeam, maxHP, maxShieldPower);
     }
     public void PlayerInit(Enums.TeamOption team, Vector3 pos)
     {
         transform.position = pos;
-        playerTeam = team;
-
-
 
         photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
     }

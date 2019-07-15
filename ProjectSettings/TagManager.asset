@@ -13,6 +13,7 @@ TagManager:
   - ScoreAdmin
   - UltimateAttackStick
   - Canvas
+  - PlayerUI
   layers:
   - Default
   - TransparentFX

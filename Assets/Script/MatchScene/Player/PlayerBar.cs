@@ -18,11 +18,24 @@ public class PlayerBar : MonoBehaviour
     float oneHpLength = 0f;
     float oneShieldLength = 0f;
 
-    public void BarInit(Enums.TeamOption teamOption, int maxHp, int maxShield)
+    GameObject ownerObject = null;
+
+    private void Update()
+    {
+        if (ownerObject)
+        {
+            transform.position = Camera.main.WorldToScreenPoint(ownerObject.transform.position);
+            transform.Translate(new Vector3(0f, 80f, 0f));
+        }
+
+    }
+
+    public void BarInit(GameObject inOwnerObject, Enums.TeamOption teamOption, int maxHp, int maxShield)
     {
         hpGauge.sprite = (teamOption == Enums.TeamOption.BlueTeam) ? blueTeamHpGaugeSprite : redTeamHpGaugeSprite;
         oneHpLength = hpGauge.sprite.rect.width / maxHp;
         oneShieldLength = manaGauge.sprite.rect.width / maxShield;
+        ownerObject = inOwnerObject;
     }
 
     public void UpdateHpBar(int hp)
