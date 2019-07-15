@@ -25,12 +25,17 @@ public class NotificationControl : MonoBehaviour
     public UnityEvent OnGameEnd;
     public EnumEvent ResultEvent;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         Ready.SetActive(false);
         Go.SetActive(false);
-        End.SetActive(false);
+        End.SetActive(false);        
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        ReadyGoStart(1.5f);
     }
 
     // Update is called once per frame
