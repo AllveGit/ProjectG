@@ -35,10 +35,6 @@ public class MapParser : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(FindObjectOfType<PlayerCameraShake>().Shake(1f, 0.1f));
-        }
     }
 
     void Parsing()
