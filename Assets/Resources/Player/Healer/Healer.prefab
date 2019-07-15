@@ -1369,6 +1369,7 @@ GameObject:
   - component: {fileID: -6430799880155838017}
   - component: {fileID: 9067239046602061004}
   - component: {fileID: 260000524110146064}
+  - component: {fileID: 7619853842573914098}
   m_Layer: 0
   m_Name: Healer
   m_TagString: Player
@@ -1638,6 +1639,18 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   attackSpeed: 0.3
+--- !u!114 &7619853842573914098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5719154031182743754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3173c6b672eca644da8cdeff83ca1725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5756763204229238726
 GameObject:
   m_ObjectHideFlags: 0

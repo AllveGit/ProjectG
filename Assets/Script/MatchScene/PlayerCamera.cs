@@ -30,7 +30,7 @@ public class PlayerCamera : MonoBehaviour
             TargetingObject();
     }
 
-    void TargetingObject()
+    public void TargetingObject()
     {
         // 카메라 캐싱
         Camera mainCamera = Camera.main;
