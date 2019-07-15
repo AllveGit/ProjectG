@@ -30,5 +30,6 @@ public class SoundManager : MonoBehaviour
     {
         EffectSource.clip = clip;
         EffectSource.Play();
+        EffectSource.loop = false;
     }
 }
