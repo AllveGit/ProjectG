@@ -40,9 +40,13 @@ public class TouchToScreen : MonoBehaviourPunCallbacks
         Application.targetFrameRate = 60;
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+#if UNITY_ANDROID
         Screen.SetResolution(Screen.width, Screen.height * (SetWidth / SetHeight), true);
-        
-        
+#else
+        Screen.SetResolution(Screen.width, Screen.height * (SetWidth / SetHeight), false);
+
+
     }
 
     void Start()
