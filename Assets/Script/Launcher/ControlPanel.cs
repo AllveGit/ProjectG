@@ -42,6 +42,8 @@ public class ControlPanel : MonoBehaviour
             matchButton.GetComponent<UnityEngine.UI.Image>().sprite = matchButtonImgs[0];
             panelState = MatchingState.None;
         }
+
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
     }
 
     public void OnMatchingButtonClick(int matchMode)
@@ -55,5 +57,7 @@ public class ControlPanel : MonoBehaviour
             matchButton.GetComponent<UnityEngine.UI.Image>().sprite = matchButtonImgs[1];
             panelState = MatchingState.Matching;
         }
+
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
     }
 }

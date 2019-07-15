@@ -202,6 +202,16 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4870784390606215661, guid: a72324bd6cc3e434c9e06740628317ac,
+        type: 3}
+      propertyPath: MusicSource
+      value: 
+      objectReference: {fileID: 539606714}
+    - target: {fileID: 4870784390606215661, guid: a72324bd6cc3e434c9e06740628317ac,
+        type: 3}
+      propertyPath: EffectSource
+      value: 
+      objectReference: {fileID: 157041789}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a72324bd6cc3e434c9e06740628317ac, type: 3}
 --- !u!1 &144189757
@@ -287,6 +297,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &157041789 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8956724897841774810, guid: a72324bd6cc3e434c9e06740628317ac,
+    type: 3}
+  m_PrefabInstance: {fileID: 110061695}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &539606714 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5102833940801462034, guid: a72324bd6cc3e434c9e06740628317ac,
+    type: 3}
+  m_PrefabInstance: {fileID: 110061695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &556370941
 GameObject:
   m_ObjectHideFlags: 0

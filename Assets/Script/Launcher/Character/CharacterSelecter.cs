@@ -57,6 +57,8 @@ public class CharacterSelecter : MonoBehaviour
             }
         }
 
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
+
         Apply();
     }
 
@@ -75,6 +77,8 @@ public class CharacterSelecter : MonoBehaviour
                 currentIndex = maxIndex;
             }
         }
+
+        SoundManager.instance.PlayEffect(Resources.Load<AudioClip>("Sounds/click3"));
 
         Apply();
     }
