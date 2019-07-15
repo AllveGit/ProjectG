@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 public class Maid : BasePlayer
 {
+    public AudioClip AttackSound;
+
     // 연사 카운트
     [SerializeField]
     private int currentSpeakerCount = 0;
@@ -67,6 +69,8 @@ public class Maid : BasePlayer
                 projectile.GetComponent<MaidBullet>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1.5f, direction);
             ++currentSpeakerCount;
+
+            SoundManager.instance.PlayEffect(AttackSound);
 
             yield return new WaitForSeconds(speakerDelay);
         }

@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class Archer : BasePlayer
 {
+    public AudioClip AttackSound;
+
     private GameObject ExplosionPrefab;
  
     void Start()
@@ -55,6 +57,8 @@ public class Archer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<IceArrow>().Cast(this, AttackDamage * 5, AttackDistance,
                     transform.position + transform.forward + new Vector3(0, 1.0f, 0), direction);
+
+            SoundManager.instance.PlayEffect(AttackSound);
 
         }, UltimateStick.JoyDir, 0.6f));
     }

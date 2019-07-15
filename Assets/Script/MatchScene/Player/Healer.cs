@@ -6,6 +6,8 @@ using Photon.Pun;
 
 public class Healer : BasePlayer
 {
+    public AudioClip AttackSound;
+
     public override void Attack()
     {
         animator.SetBool("Attack", true);
@@ -37,6 +39,8 @@ public class Healer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<HealerBullet>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + matRot.MultiplyPoint(new Vector3(-0.2f, 1f, 1.0f)), direction);
+
+            SoundManager.instance.PlayEffect(AttackSound);
 
         }, SkillJoyStick.JoyDir, AttackSpeed));
     }

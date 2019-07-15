@@ -2679,6 +2679,7 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   attackSpeed: 0.2
+  AttackSound: {fileID: 8300000, guid: b532037058bb1e3438e3846ec44b1131, type: 3}
   currentSpeakerCount: 0
   maxSpeakerCount: 5
 --- !u!114 &2864819248251914331
