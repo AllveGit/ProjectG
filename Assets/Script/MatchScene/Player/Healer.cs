@@ -46,6 +46,21 @@ public class Healer : BasePlayer
     }
     public override void UltimateSkill()
     {
-        if (!photonView.IsMine) return;
+        if (animator.GetBool("Attack"))
+            return;
+
+        animator.SetBool("Attack", true);
+
+        StartCoroutine(DelayAttack(delegate (Vector3 direction)
+        {
+            GameObject heal = PhotonNetwork.Instantiate(
+                "Skill/" + ultimateSkillPrefab.name,
+               transform.position,
+                transform.rotation);
+
+            if (heal != null)
+                heal.GetComponent<HealSkill>().Cast(this, AttackDamage, 0, transform.position, direction);
+
+        }, UltimateStick.JoyDir, 0.6f));
     }
 }

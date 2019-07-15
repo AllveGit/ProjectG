@@ -14,6 +14,8 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
     protected float attackDistance = 0f;
     protected float AccumulateDistance = 0f;
     protected int attackDamage = 0;
+    protected bool useDistance = true;
+    protected bool useAutoDeleteOnObstacle = true;
 
     protected Vector3 direction = default;
 
@@ -23,7 +25,7 @@ public abstract partial class BaseAttack : MonoBehaviourPun, IPunObservable
     public Vector3 Direction { get => direction; }
 
     public new Rigidbody rigidbody { get; protected set; }
-    public BasePlayer ownerPlayer { get; private set; }
+    public BasePlayer ownerPlayer { get; protected set; }
 
     #endregion
 }
@@ -136,7 +138,10 @@ public abstract partial class BaseAttack
             BaseCollisionProcess(player);
         }
         else if (!other.CompareTag("Attack") && !other.CompareTag("Bush") && !other.CompareTag("RealBush"))
+        {
+            if (useAutoDeleteOnObstacle == true)
                 PhotonNetwork.Destroy(this.gameObject);
+        }
     }
 
     /*
@@ -157,6 +162,9 @@ public abstract partial class BaseAttack
 
     IEnumerator DistanceCheck()
     {
+        if (useDistance == false)
+            yield break;
+
         while (true)
         {
             if (AccumulateDistance >= attackDistance)
@@ -165,7 +173,9 @@ public abstract partial class BaseAttack
             yield return null;
         }
 
-        if (photonView.IsMine) PhotonNetwork.Destroy(this.gameObject);
+        if (photonView.IsMine)
+            PhotonNetwork.Destroy(this.gameObject);
+
         yield break;
     }
 }
