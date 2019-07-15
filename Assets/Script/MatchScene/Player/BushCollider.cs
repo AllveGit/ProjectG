@@ -11,6 +11,9 @@ public partial class BushCollider : MonoBehaviourPun
 
     public event UnityAction onBushEnter;
     public event UnityAction onBushExit;
+    public event UnityAction onBushColliderEnter;
+    public event UnityAction OnBushColliderExit;
+    public bool onBush = false;
 
     private void Awake()
     {
@@ -30,6 +33,13 @@ public partial class BushCollider : MonoBehaviourPun
         {
             other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f,0.5f,0.5f,0.15f));
             onBushEnter?.Invoke();
+
+            onBush = true;
+        }
+        if (other.gameObject.tag == "Bush")
+        {
+            if (onBush)
+                onBushColliderEnter?.Invoke();
         }
     }
     private void OnTriggerExit(Collider other)
@@ -41,6 +51,13 @@ public partial class BushCollider : MonoBehaviourPun
         {
             other.gameObject.GetComponent<Bush>().m_Mat.material.SetColor("_TintColor", new Color(0.5f, 0.5f, 0.5f, 1f));
             onBushExit?.Invoke();
+
+            onBush = false;
+        }
+        if (other.gameObject.tag == "Bush")
+        {
+            if (onBush)
+                OnBushColliderExit?.Invoke();
         }
     }
 
