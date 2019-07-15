@@ -44,7 +44,7 @@ public class Maid : BasePlayer
                 transform.rotation);
 
             if (projectile != null)
-                projectile.GetComponent<Bam>().Cast(this, AttackDamage, AttackDistance * 10,
+                projectile.GetComponent<Bam>().Cast(this, AttackDamage * 10, AttackDistance * 10,
                     transform.position + transform.forward + new Vector3(0, 1.0f, 0), direction);
 
         }, UltimateStick.JoyDir, 0.6f));
