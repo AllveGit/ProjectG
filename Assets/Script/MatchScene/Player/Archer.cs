@@ -55,7 +55,7 @@ public class Archer : BasePlayer
                 projectile.GetComponent<IceArrow>().Cast(this, AttackDamage, AttackDistance,
                     transform.position + transform.forward + new Vector3(0, 0.5f, 0), direction);
 
-        }, SkillJoyStick.JoyDir, 0.6f));
+        }, UltimateStick.JoyDir, 0.6f));
     }
 
     // Archer 캐릭터의 애니메이션이 90도 돌아가있어서 재정의해서 특수화함.

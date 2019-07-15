@@ -220,6 +220,8 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         if (animator.GetBool("Attack") || animator.GetBool("Death"))
             return;
 
+        attackDirection = UltimateStick.JoyDir;
+        rigidbody.rotation = Quaternion.LookRotation(attackDirection);
         UltimateSkill();
     }
     public void OnDamaged(int damage)
@@ -409,6 +411,7 @@ public abstract partial class BasePlayer
     {
         if (!photonView.IsMine) return;
 
+        UltimateBehavior();
     }
     public void OnUltimateStickDown(Vector3 pos, Vector3 dir)
     {

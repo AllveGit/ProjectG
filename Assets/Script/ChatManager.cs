@@ -30,7 +30,7 @@ public class String2Event : UnityEvent<string, string> { }
 [System.Serializable]
 public class StatusEvent : UnityEvent<string, int, bool, object> { }
 
-public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListener
+public partial class ChatManager : MonoBehaviour, IChatClientListener
 {
     public static ChatManager Instance = null;
 
@@ -125,7 +125,7 @@ public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListene
         if (result == true)
         {
             FriendList.Add(userName);
-            photonView.RPC("RPCOnFriendRequest", RpcTarget.Others, new object[] { PlayerManager.Instance.PlayerName, userName });
+            // photonView.RPC("RPCOnFriendRequest", RpcTarget.Others, new object[] { PlayerManager.Instance.PlayerName, userName });
             return true;
         }
         return false;
@@ -149,7 +149,7 @@ public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListene
     }
 }
 
-public partial class ChatManager : MonoBehaviourPunCallbacks, IChatClientListener
+public partial class ChatManager : MonoBehaviour, IChatClientListener
 {
     void IChatClientListener.DebugReturn(DebugLevel level, string message)
     {

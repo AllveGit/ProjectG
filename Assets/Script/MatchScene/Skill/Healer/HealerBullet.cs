@@ -9,7 +9,7 @@ public class HealerBullet : BaseAttack
     [SerializeField]
     private int healValue = 3;
 
-    public override void BaseCollisionProcess(BasePlayer player)
+    public override bool BaseCollisionProcess(BasePlayer player)
     {
         if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
             player.OnDamaged(AttackDamage);
@@ -23,5 +23,7 @@ public class HealerBullet : BaseAttack
         }
 
         PhotonNetwork.Destroy(this.gameObject);
+
+        return true;
     }
 }
