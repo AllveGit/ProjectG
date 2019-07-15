@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 public class Bam : BaseAttack
 {
     [SerializeField]
@@ -23,9 +23,7 @@ public class Bam : BaseAttack
 
         if (result)
         {
-            GameObject explosion = Instantiate(Resources.Load("Effect/Explosion/Explosion") as GameObject);
-
-            explosion.transform.position = transform.position;
+            PhotonNetwork.Instantiate("Effect/Explosion /Explosion", transform.position, Quaternion.identity);
 
             return true;
         }
