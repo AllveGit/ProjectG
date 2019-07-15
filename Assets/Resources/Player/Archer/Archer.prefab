@@ -2243,6 +2243,7 @@ GameObject:
   - component: {fileID: 5294013288854618094}
   - component: {fileID: 603548337565551297}
   - component: {fileID: 6973422385254112847}
+  - component: {fileID: 5359864697469101340}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Player
@@ -2470,6 +2471,18 @@ MonoBehaviour:
   shieldPower: 10
   maxShieldPower: 10
   attackSpeed: 0.3
+--- !u!114 &5359864697469101340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8153430416613352638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3173c6b672eca644da8cdeff83ca1725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8186532760494613426
 GameObject:
   m_ObjectHideFlags: 0
