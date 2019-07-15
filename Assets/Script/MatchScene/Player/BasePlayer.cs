@@ -8,7 +8,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
 
-public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
+public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObservable
 {
     private GameObject DieEffect;
     private GameObject TempDieEffect = null;
@@ -263,6 +263,7 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
         CurHP = MaxHP;
         ShieldPower = MaxShieldPower;
+        photonView.RPC("RPCSetHpAndShield", RpcTarget.All, CurHP, ShieldPower);
 
         transform.position = GameManager.Instance.GetRespawnPos();
         photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
@@ -304,6 +305,12 @@ public abstract partial class BasePlayer
 
             OnBush = (bool)stream.ReceiveNext();
         }
+    }
+
+    public override void OnLeftRoom()
+    {
+        if (photonView.IsMine)
+            photonView.RPC("DestroyBar", RpcTarget.All, (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()]);
     }
 
     [PunRPC]
@@ -353,13 +360,22 @@ public abstract partial class BasePlayer
             = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
 
         if (!localTeamOption.Equals(playerTeam))
+        {
+            if (playerBar)
+                playerBar.gameObject.SetActive(false);
+
             bushUnActiveRendererEvent?.Invoke();
+        }
         
     }
     [PunRPC]
     protected virtual void RPCOnBushExit()
     {
         OnBush = false;
+
+        if (playerBar)
+            playerBar.gameObject.SetActive(true);
+
         bushActiveRendererEvent?.Invoke();
     }
 
@@ -378,6 +394,12 @@ public abstract partial class BasePlayer
         GameObject barPrefab = Instantiate(Resources.Load("Player/PlayerBar"), playerUIParent.transform) as GameObject;
         playerBar = barPrefab.GetComponent<PlayerBar>();
         playerBar.BarInit(gameObject, playerTeam, maxHP, maxShieldPower);
+    }
+    [PunRPC]
+    protected virtual void DestroyBar()
+    {
+        GameObject.Destroy(playerBar.gameObject);
+        playerBar = null;
     }
     [PunRPC]
     protected virtual void RPCSetHpAndShield(int inHpBar, int inShield)

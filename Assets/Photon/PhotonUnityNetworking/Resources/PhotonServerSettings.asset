@@ -46,5 +46,6 @@ MonoBehaviour:
   - WinLoseCheck
   - CreateBar
   - RPCSetHpAndShield
+  - DestroyBar
   DisableAutoOpenWizard: 1
   ShowSettings: 1
