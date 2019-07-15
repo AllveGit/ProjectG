@@ -2675,6 +2675,7 @@ MonoBehaviour:
   attackDistance: 5
   shieldPower: 10
   maxShieldPower: 10
+  attackSpeed: 0.2
   currentSpeakerCount: 0
   maxSpeakerCount: 5
 --- !u!1 &9198992569489413032

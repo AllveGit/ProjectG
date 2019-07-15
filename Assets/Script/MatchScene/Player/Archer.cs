@@ -30,7 +30,7 @@ public class Archer : BasePlayer
             if (projectile != null)
                 projectile.GetComponent<Arrow>().Cast(this, AttackDamage, AttackDistance, transform.position + new Vector3(0f, 1f, 0f) + transform.forward * 1, direction);
 
-        }, SkillJoyStick.JoyDir, 0.6f));
+        }, SkillJoyStick.JoyDir, AttackSpeed));
 
     }
 

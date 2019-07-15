@@ -47,5 +47,9 @@ MonoBehaviour:
   - SetHp
   - SetShieldPower
   - SetHpAndShield
+  - OnFriendRequest
+  - OnFriendRequestRPC
+  - RPCOnFriendRequest
+  - RPCOnGetMessage
   DisableAutoOpenWizard: 1
   ShowSettings: 1
