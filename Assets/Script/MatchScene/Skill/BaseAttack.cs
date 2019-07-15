@@ -102,8 +102,6 @@ public abstract partial class BaseAttack
             StartCoroutine(DistanceCheck());
     }
 
-    // 공격방식마다 추가적으로 해야할 작업이 있다면 이 함수를 오버라이딩 하세요
-
     protected bool IsAttackable(Photon.Realtime.Player me, Photon.Realtime.Player enumy)
     {
         bool Attackable = false; ;
@@ -125,6 +123,7 @@ public abstract partial class BaseAttack
                 Attackable = true;
                 break;
         }
+
         return Attackable;
     }
 
@@ -147,19 +146,21 @@ public abstract partial class BaseAttack
         else if (!other.CompareTag("Attack") && !other.CompareTag("Bush") && !other.CompareTag("RealBush"))
                 PhotonNetwork.Destroy(this.gameObject);
     }
-    
+
     /*
      * 만약 구현하는 공격의 프로세스가 기존 프로세스와 다를경우
      * 이 함수를 상속받아 사용한다.
      */
-    public virtual void BaseCollisionProcess(BasePlayer player)
+    public virtual bool BaseCollisionProcess(BasePlayer player)
     {
         if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
         {
-
             player.OnDamaged(AttackDamage);
             PhotonNetwork.Destroy(this.gameObject);
+            return true;
         }
+
+        return false;
     }
 
     IEnumerator DistanceCheck()

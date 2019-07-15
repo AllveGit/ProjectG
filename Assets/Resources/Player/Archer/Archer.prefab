@@ -2401,6 +2401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5c291304de73147b4e272d977c3166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DmgPopup: {fileID: 0}
   bushUnActiveRendererEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2457,7 +2458,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   attackLinePrefab: {fileID: 68841360481645050, guid: fe0f0ea6f4a6898469e35a4e83a15a2e,
     type: 3}
-  ultimateSkillPrefab: {fileID: 3233587937850596663, guid: 18921db94ca953e4bab54b5bbfdd5ca8,
+  ultimateSkillPrefab: {fileID: 3294055041409208873, guid: b97090657123c1747adac2fcc36b6625,
     type: 3}
   basicAttackPrefab: {fileID: 4607441206640468670, guid: 9114339463ecf944b968e5a049709f47,
     type: 3}
