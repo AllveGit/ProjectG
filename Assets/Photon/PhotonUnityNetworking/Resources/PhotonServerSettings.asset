@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: 18e0ae9f-1221-4e6f-af49-28960bb73351
-    AppIdChat: '96fa0995-46b6-415e-bf34-ad7c7dde369e '
+    AppIdChat: 
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
@@ -29,6 +29,8 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   RpcList:
+  - CreateBar
+  - DestroyBar
   - DestroySpaceship
   - Fire
   - GameResult
@@ -41,11 +43,8 @@ MonoBehaviour:
   - RPCOnGetMessage
   - RPCOnHeal
   - RPCRedTeamCounting
-  - RPCTranslatePosition
-  - SetHpAndShield
-  - WinLoseCheck
-  - CreateBar
   - RPCSetHpAndShield
-  - DestroyBar
+  - RPCTranslatePosition
+  - WinLoseCheck
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
