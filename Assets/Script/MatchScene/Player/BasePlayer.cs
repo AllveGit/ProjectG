@@ -87,6 +87,16 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             }
         };
 
+        bushCollider.onBushColliderEnter += () =>
+        {
+            if (photonView.IsMine)
+                photonView.RPC("RPCOnBushColliderEnter", RpcTarget.Others);
+        };
+        bushCollider.OnBushColliderExit += () =>
+        {
+            if (photonView.IsMine)
+                photonView.RPC("RPCOnBushColliderExit", RpcTarget.Others);
+        };
     }
     public void PlayerInit(Enums.TeamOption team, Vector3 pos)
     {
@@ -102,6 +112,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             MoveCalculate();
             RotateCalculate();
             AttackRangeCalculate();
+            UltimateRangeCalculate();
         }
         else
         {
@@ -110,9 +121,13 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
                 transform.position = currentPosition;
                 photonView.RPC("RPCTranslatePosition", RpcTarget.Others, transform.position);
             }
-
-            transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
-            transform.rotation = currentRotation;
+            else
+            {
+                if (Vector3.Distance(transform.position, currentPosition) > 0.1f)
+                    transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
+                if (Vector3.Distance(transform.rotation.eulerAngles, transform.rotation.eulerAngles) > 0.1f)
+                    transform.rotation = currentRotation;
+            }
         }
     }
 
@@ -199,6 +214,17 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
             currentUltimateCooldown -= Time.fixedDeltaTime;
         }
     }
+    public virtual void UltimateRangeCalculate()
+    {
+        if (isFocusOnUltimateAttack)
+        {
+            attackLine.transform.rotation = Quaternion.LookRotation(UltimateStick.JoyDir);
+
+            Vector3 vlocalPosition = UltimateStick.JoyDir * ((AttackDistance / 2f) + 1f);
+            vlocalPosition.y = 0.1f;
+            attackLine.transform.position = transform.position + vlocalPosition;
+        }
+    }
 
     private void AttackBehavior()
     {
@@ -275,7 +301,6 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
     public IEnumerator Respawn(float delay)
     {
         yield return new WaitForSeconds(delay);
-        animator.SetBool("Death", false);
 
         CurHP = MaxHP;
         ShieldPower = MaxShieldPower;
@@ -287,6 +312,7 @@ public abstract partial class BasePlayer : MonoBehaviourPunCallbacks, IPunObserv
         collider.enabled = true;
         rigidbody.useGravity = true;
         bushCollider.RespawnProccess();
+        animator.SetBool("Death", false);
 
         yield break;
     }
@@ -385,6 +411,22 @@ public abstract partial class BasePlayer
         
     }
     [PunRPC]
+    protected virtual void RPCOnBushColliderEnter()
+    {
+        if (!OnBush) return;
+
+        Enums.TeamOption localTeamOption
+        = (Enums.TeamOption)PhotonNetwork.LocalPlayer.CustomProperties[Enums.PlayerProperties.TEAM.ToString()];
+
+        if (!localTeamOption.Equals(playerTeam))
+        {
+            if (playerBar)
+                playerBar.gameObject.SetActive(true);
+
+            bushActiveRendererEvent?.Invoke();
+        }
+    }
+    [PunRPC]
     protected virtual void RPCOnBushExit()
     {
         OnBush = false;
@@ -394,6 +436,18 @@ public abstract partial class BasePlayer
 
         bushActiveRendererEvent?.Invoke();
     }
+
+    [PunRPC]
+    protected virtual void RPCOnBushColliderExit()
+    {
+        if (!OnBush) return;
+
+        if (playerBar)
+            playerBar.gameObject.SetActive(false);
+
+        bushUnActiveRendererEvent?.Invoke();
+    }
+
 
     [PunRPC]
     protected virtual void RPCTranslatePosition(Vector3 translationPos)
@@ -455,12 +509,20 @@ public abstract partial class BasePlayer
     {
         if (!photonView.IsMine) return;
 
+        attackLine.gameObject.SetActive(false);
+        isFocusOnUltimateAttack = false;
+
         UltimateBehavior();
     }
     public void OnUltimateStickDown(Vector3 pos, Vector3 dir)
     {
         if (!photonView.IsMine) return;
 
+        float scale = AttackDistance * 0.35f;
+        attackLine.gameObject.SetActive(true);
+        attackLine.transform.localScale = new Vector3(0.1f, 0.1f, scale);
+
+        isFocusOnUltimateAttack = true;
     }
 }
 
@@ -479,6 +541,7 @@ public abstract partial class BasePlayer
     protected Vector3 attackDirection = Vector3.zero;
 
     protected bool isFocusOnAttack = false;
+    protected bool isFocusOnUltimateAttack = false;
 
     protected JoyStick MoveJoyStick = null;
     protected JoyStick SkillJoyStick = null;

@@ -23,7 +23,7 @@ public class Bam : BaseAttack
 
         if (result)
         {
-            PhotonNetwork.Instantiate("Effect/Explosion /Explosion", transform.position, Quaternion.identity);
+            PhotonNetwork.Instantiate("Effect/Explosion/Explosion", transform.position, Quaternion.identity);
 
             return true;
         }

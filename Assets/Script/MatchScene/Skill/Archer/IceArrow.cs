@@ -26,10 +26,7 @@ public class IceArrow : BaseAttack
 
         if (result)
         {
-            GameObject explosion = Instantiate(Resources.Load("Effect/ice_hit") as GameObject);
-
-            explosion.transform.position = transform.position;
-
+            PhotonNetwork.Instantiate("Effect/ice_hit", transform.position, Quaternion.identity);
             return true;
         }
 
