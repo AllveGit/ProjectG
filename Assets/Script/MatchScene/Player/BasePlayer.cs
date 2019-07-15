@@ -9,8 +9,12 @@ using Photon.Pun.Demo.PunBasics;
 
 public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
+    private GameObject DieEffect;
+    private GameObject TempDieEffect = null;
     private void Awake()
     {
+        DieEffect = Resources.Load<GameObject>("Effect/DieEffect/DieEffect");
+
         rigidbody = GetComponent<Rigidbody>();
         if (rigidbody == null)
             Debug.LogError("BasePlayer.cs / rigidbody을 가져오지 못했습니다.");
@@ -217,7 +221,16 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
         bushCollider.DieProccess();
 
         animator.SetBool("Death", true);
+
+        if (TempDieEffect == null)
+        {
+            TempDieEffect = Instantiate(DieEffect, transform.position, Quaternion.identity, Camera.main.transform) as GameObject;
+            TempDieEffect.transform.localPosition = Vector3.zero;
+            TempDieEffect.transform.localEulerAngles = Vector3.zero;
+            TempDieEffect.transform.localPosition += Vector3.forward * 3;
+        }
         StartCoroutine(Respawn(5f));
+        StartCoroutine(TempDieEffect.GetComponent<DeathEffect>().ActiveFalse(4.9f));
     }
     public IEnumerator Respawn(float delay)
     {
