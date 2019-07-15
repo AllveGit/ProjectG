@@ -156,6 +156,7 @@ public abstract partial class BaseAttack
     {
         if (IsAttackable(PhotonNetwork.LocalPlayer, player.photonView.Owner))
         {
+
             player.OnDamaged(AttackDamage);
             PhotonNetwork.Destroy(this.gameObject);
         }

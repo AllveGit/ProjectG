@@ -12,6 +12,7 @@ TagManager:
   - RealBush
   - ScoreAdmin
   - UltimateAttackStick
+  - Canvas
   layers:
   - Default
   - TransparentFX

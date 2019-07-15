@@ -1525,6 +1525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7e5dad773a6414181dd1f133751885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DmgPopup: {fileID: 0}
   bushUnActiveRendererEvent:
     m_PersistentCalls:
       m_Calls:

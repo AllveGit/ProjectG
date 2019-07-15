@@ -20,8 +20,8 @@ public class DeathEffect : MonoBehaviour
         {
             fAmount += Time.deltaTime * 0.006f;
 
-            if (fAmount > 0.03f)
-                fAmount = 0.03f;
+            if (fAmount > 0.015f)
+                fAmount = 0.015f;
         }
 
         else

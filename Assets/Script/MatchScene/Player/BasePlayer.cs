@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 using Photon.Pun;
 using Photon.Realtime;
@@ -11,8 +12,10 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 {
     private GameObject DieEffect;
     private GameObject TempDieEffect = null;
+    public GameObject DmgPopup;
     private void Awake()
     {
+        DmgPopup = Resources.Load<GameObject>("Effect/DmgPopup/PopupText");
         DieEffect = Resources.Load<GameObject>("Effect/DieEffect/DieEffect");
 
         rigidbody = GetComponent<Rigidbody>();
@@ -104,6 +107,24 @@ public abstract partial class BasePlayer : MonoBehaviourPun, IPunObservable
 
             transform.position = Vector3.MoveTowards(transform.position, currentPosition, moveSpeed * Time.deltaTime);
             transform.rotation = currentRotation;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (photonView.IsMine) return;
+
+        if (other.CompareTag("Bush") && OnBush)
+        {
+            BasePlayer otherBasePlayer = other.transform.parent.GetComponent<BasePlayer>();
+
+            if (otherBasePlayer.photonView.IsMine)
+            {
+                if (otherBasePlayer.OnBush)
+                {
+                    otherBasePlayer.bushActiveRendererEvent?.Invoke();
+                }
+            }
         }
     }
 
@@ -300,9 +321,14 @@ public abstract partial class BasePlayer
                 CurHP = 0;
                 OnPlayerDeath();
             }
-
             photonView.RPC("UpdateShieldBar", RpcTarget.All, CurHP, ShieldPower);
         }
+
+        GameObject m_Canvas = GameObject.FindGameObjectWithTag("Canvas");
+        GameObject Temp = Instantiate(DmgPopup, Vector3.zero, Quaternion.identity, m_Canvas.transform) as GameObject;
+        Temp.transform.localPosition = Vector3.zero;
+
+        Temp.transform.GetChild(0).GetComponent<DamagePopup>().SetText(damage, this.transform.position);
     }
     [PunRPC]
     protected virtual void RPCOnHeal(int heal)
